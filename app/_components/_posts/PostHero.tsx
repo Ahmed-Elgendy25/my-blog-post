@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import React from 'react';
 import PostsDescription from './PostsDescription';
 import { posts, PostTyped } from '@/app/_models/post.model';
 import PostsSection from './PostsSection';
@@ -31,18 +30,51 @@ function PostHero() {
         height={200}
         alt="Mr.Robot"
       />
+      <div className="grid lg:grid-cols-7 gap-x-16  ">
+        <div className="lg:col-start-1 lg:col-end-6">
+          {DataOfPosts.map((post) => (
+            <PostsSection
+              key={post.id}
+              title={post.title}
+              author={post.author}
+              date={post.date}
+              description={post.description}
+              readTime={post.readTime}
+              imageUrl={post.imageUrl}
+            />
+          ))}
+        </div>
 
-      {DataOfPosts.map((post) => (
-        <PostsSection
-          key={post.id}
-          title={post.title}
-          author={post.author}
-          date={post.date}
-          description={post.description}
-          readTime={post.readTime}
-          imageUrl={post.imageUrl}
-        />
-      ))}
+        <aside className="lg:col-start-6 lg:col-end-8 p-3 bg-purple-500 ">
+          <div className="    ">
+            <header className="my-6">
+              <h3 className=" text-lg font-bold  ">STACK STORIES MAGAZINE</h3>
+              <h2 className="text-6xl  font-bold">04/2025</h2>
+            </header>
+
+            <figure className="relative  ">
+              <Image
+                className="brightness-75"
+                src="/90's desktop.jpg"
+                width={500}
+                height={250}
+                alt="90's Desktop"
+              />
+              <figcaption className="absolute flex justify-center left-4   top-1/2 text-[#e7e8e2] ">
+                <p className=" font-bold text-7xl tracking-[13]  ">
+                  STACK
+                  <span className="text-3xl block tracking-normal">
+                    STORIES
+                  </span>
+                </p>
+              </figcaption>
+            </figure>
+            <button className=" uppercase bg-[#222222]  text-[#e7e8e2] font-medium p-5 w-full my-3 cursor-pointer">
+              buy now
+            </button>
+          </div>
+        </aside>
+      </div>
     </section>
   );
 }

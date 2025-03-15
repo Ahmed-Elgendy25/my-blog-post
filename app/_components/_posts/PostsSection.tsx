@@ -11,13 +11,14 @@ function PostsSection({
   title,
 }: PostTyped) {
   return (
-    <section className=" border-b-1 bg-yellow-200  border-b-[#222222]">
-      <article className=" flex lg:flex-row lg:gap-y-0  gap-x-5 lg:p-10   ">
+    <section className=" border-b-1   border-b-[#222222] last:border-b-0">
+      <article className=" flex lg:flex-row lg:gap-y-0 lg:p-5 lg:items-center lg:justify-between   flex-col items-center  gap-x-5   ">
         <figure className=" my-3 h-fit   ">
           <Image
             src={imageUrl || ''}
             width={340}
             height={240}
+            quality={100}
             alt={description}
           />
         </figure>
