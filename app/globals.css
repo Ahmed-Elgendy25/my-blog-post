@@ -133,4 +133,10 @@ html {
   h3 {
     @apply text-xl font-bold;
   }
+  ul,menu {
+    @apply list-disc ;
+  }
+  ol {
+    @apply list-decimal;
+  }
 }

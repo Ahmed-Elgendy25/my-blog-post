@@ -10,7 +10,7 @@ function Navbar() {
     <header className=" mx-3 md:container md:mx-auto p-3 border-b-[1px]   text-[#222222] md:flex  md:justify-between md:items-center  mt-2">
       <h2 className=" text-2xl font-bold ">STACK STORIES </h2>
       <nav className="w-1/2 p-2  md:block hidden">
-        <ul className=" ">
+        <ul className=" list-none">
           <div className="flex text-[1.6rem] font-light justify-end  gap-x-10 items-center ">
             <div className="flex gap-x-5">
               <li>

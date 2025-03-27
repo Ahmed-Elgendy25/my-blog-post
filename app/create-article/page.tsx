@@ -1,12 +1,13 @@
-import React from 'react';
-import RichTextEditor from './_components/RichTextEditor';
+import EditorWrapper from "./_components/EditorWrapper";
+
 
 function page() {
-  return (
-    <div className="max-w-3xl mx-auto p-5 bg-amber-300">
-      <RichTextEditor />
-    </div>
-  );
+
+    return (
+        <main className=' flex lg:flex-row  flex-col gap-x-3   '>
+          <EditorWrapper/>
+        </main>
+    );
 }
 
 export default page;
