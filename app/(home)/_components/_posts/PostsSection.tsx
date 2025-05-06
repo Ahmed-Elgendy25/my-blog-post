@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import PostsDescription from './PostsDescription';
-import { PostTyped } from '@/app/_models/post.model';
+import { PostTyped } from '@/app/create-article/_models/post.model';
 
 function PostsSection({
   imageUrl,
