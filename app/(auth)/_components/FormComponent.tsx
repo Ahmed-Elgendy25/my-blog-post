@@ -1,7 +1,7 @@
 
 import HeadingComponent from './HeadingComponent';
 import { JSX } from 'react';
-function FormComponent({serverAction,style,children,sectionComponent}: {serverAction: string, style?: string,children: React.ReactNode,sectionComponent?:JSX.Element}) {
+function FormComponent({serverAction,style,children,sectionComponent}: {serverAction: (formData: FormData) => void | Promise<void>, style?: string,children: React.ReactNode,sectionComponent?:JSX.Element}) {
     return (
         <main>
             <HeadingComponent title="STACK STORIES" subtitle="Welcome back, User"/>
@@ -9,7 +9,6 @@ function FormComponent({serverAction,style,children,sectionComponent}: {serverAc
                 {children}
             </form>
             {sectionComponent}
-          
             </main>
 
     )

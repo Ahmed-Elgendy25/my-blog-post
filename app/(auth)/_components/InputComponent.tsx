@@ -1,5 +1,6 @@
 import  { JSX } from 'react'
 
+
 function InputComponent({input}: {
   input:JSX.Element
  
