@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+    
     }
   },
   "include": [
@@ -28,6 +29,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "tailwind.config.js"
-  ],
+, "app/(auth)/signup/_components/SignUpContainer/__tests__/SignUpContainer.test.jsx"  ],
   "exclude": ["node_modules"]
 }
