@@ -1,4 +1,3 @@
-import React from 'react'
 
 function RightColGrid({children}: {children: React.ReactNode}) {
     return (

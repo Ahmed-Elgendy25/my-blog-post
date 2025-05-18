@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { PostTyped } from '@/app/create-article/_models/post.model';
+import { PostTyped } from '@/app/create-article/_models/posts.model';
 import Link from 'next/link';
 
 function PostsDescription({

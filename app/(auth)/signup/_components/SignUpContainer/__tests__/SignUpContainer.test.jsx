@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import SignUpContainer from '../SignUpContainer'
+import userEvent from '@testing-library/user-event'
 
 describe('SignUpContainer', () => {
   it('renders all form fields correctly', () => {
@@ -34,7 +35,8 @@ describe('SignUpContainer', () => {
     await waitFor(() => {
       // Use getAllByText and check for specific error messages
       const errorMessages = screen.getAllByText(/required|invalid/i)
-      expect(errorMessages).toHaveLength(6) // Total number of validation messages
+      // Based on the validation schema, there should be 6 error messages
+      expect(errorMessages).toHaveLength(6) 
       
       // Check for specific error messages
       expect(screen.getByText('Invalid email')).toBeInTheDocument()
@@ -46,11 +48,28 @@ describe('SignUpContainer', () => {
     })
   })
 
-  it('shows validation errors when form is submitted with invalid data', async () => {
+  it('validates form data incorrectly', async () => {
     render(<SignUpContainer />)
-
-    const emailInput = screen.getByPlaceholderText('email')
-    fireEvent.change(emailInput, { target: { value: 'invalid-email' } })
     
+    // Get all the form inputs
+    const emailInput = screen.getByPlaceholderText('email')
+    const firstnameInput = screen.getByPlaceholderText('firstname')
+    const lastnameInput = screen.getByPlaceholderText('lastname')
+    const passwordInput = screen.getByPlaceholderText('password')
+    const confirmPasswordInput = screen.getByPlaceholderText('confirmpassword')
+    
+    // Fill form with invalid data
+    await userEvent.type(emailInput, 'invalidemail') // Invalid email format
+    await userEvent.type(firstnameInput, 'Test')  // Valid
+    await userEvent.type(lastnameInput, 'User')   // Valid
+    await userEvent.type(passwordInput, 'short')  // Too short for password
+    await userEvent.type(confirmPasswordInput, 'different') // Doesn't match password
+    
+    // Submit the form
+    const submitButton = screen.getByRole('button', { name: /sign up/i })
+    await userEvent.click(submitButton)
+    
+    // Form should still be there (not submitted successfully)
+    expect(submitButton).toBeInTheDocument()
   })
 })

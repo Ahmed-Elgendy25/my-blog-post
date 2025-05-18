@@ -2,9 +2,9 @@
 import LeftColGrid from "../../../_components/LeftColGrid";
 import SectionComponent from "../../../_components/SectionComponent";
 import InputComponent from "../../../_components/InputComponent";
-import ButtonComponent from "../../../_components/ButtonComponent";
+import ButtonComponent from "../../../../shared/ButtonComponent";
 import useSignUpForm from "../../_hooks/useSignUpForm";
-import signupSubmit from "../../_formActions/SignupSubmission";
+import signupSubmit from "../../_actions/SignupSubmission";
 import SignUpForm from "../SignUpForm/SignUpForm";
 import { SignupFormFields } from "../../_schema/SignupSchema";
 
@@ -105,7 +105,7 @@ function SignUpContainer() {
         </SectionComponent>
 
         <SectionComponent style='w-full mt-10'>
-          <ButtonComponent type="submit">Sign Up</ButtonComponent>
+          <ButtonComponent type="submit" overrideStyle={true} style="min-w-full">Sign Up</ButtonComponent>
         </SectionComponent>
         
       </SignUpForm>
