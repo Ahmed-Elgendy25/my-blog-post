@@ -2,10 +2,11 @@ import Image from 'next/image';
 import PostsDescription from './PostsDescription';
 import { posts, PostTyped } from '@/app/create-article/_models/posts.model';
 import PostsSection from './PostsSection';
+import AsideComponent from '../AsideComponent';
 const DataOfPosts: PostTyped[] = posts;
 function PostHero() {
   return (
-    <section className="container text-[#222222] mx-auto p-5">
+    <section className="container text-[#222222] mx-auto p-5 relative">
       <div className=" flex lg:flex-row lg:gap-y-0 gap-y-3 flex-col justify-between    items-start lg:p-5 p-3">
         <div className=" xl:w-1/2 ">
           <h1 className=" uppercase  leading-[1.3] font-extrabold lg:text-[2.5vmax] text-4xl   ">
@@ -45,8 +46,11 @@ function PostHero() {
           ))}
         </div>
 
-        <aside className="lg:col-start-6 lg:col-end-8 p-3 bg-purple-500 ">
-          <div className="    ">
+
+        {/* <AsideComponent /> */}
+
+        {/* <aside className="lg:col-start-6 lg:col-end-8 p-3 bg-purple-500  ">
+          <div className="   ">
             <header className="my-6">
               <h3 className=" text-lg font-bold  ">STACK STORIES MAGAZINE</h3>
               <h2 className="text-6xl  font-bold">04/2025</h2>
@@ -73,7 +77,7 @@ function PostHero() {
               buy now
             </button>
           </div>
-        </aside>
+        </aside> */}
       </div>
     </section>
   );

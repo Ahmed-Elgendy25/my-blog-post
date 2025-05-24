@@ -1,6 +1,6 @@
 
 
-import HeadingComponent from './HeadingComponent';
+import HeadingComponent from '../../shared/HeadingComponent';
 import { JSX } from 'react';
 function FormComponent({style,children,sectionComponent}: {onSubmit?: Promise<void>, style?: string,children: React.ReactNode,sectionComponent?:JSX.Element}) {
     return (

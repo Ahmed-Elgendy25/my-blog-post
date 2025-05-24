@@ -2,7 +2,7 @@
 
 import LeftColGrid from '../../_components/LeftColGrid'
 import SectionComponent from '../../_components/SectionComponent'
-import InputComponent from '../../_components/InputComponent'
+import InputComponent from '../../../shared/InputComponent'
 import Link from 'next/link'
 import ButtonComponent from '../../../shared/ButtonComponent'
 import SignInForm from './SignInForm'

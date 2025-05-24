@@ -1,0 +1,6 @@
+.authorHeading {
+    font-size:clamp(2rem, 15vw, 6.5rem);
+}
+.authorName {
+    font-size:clamp(2rem, 3vw, 2.5rem);
+}

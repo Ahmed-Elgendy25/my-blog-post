@@ -1,3 +1,4 @@
+import HeadingComponent from '@/app/shared/HeadingComponent';
 import React from 'react';
 
 // we need to fix responsive text of this div
@@ -5,14 +6,8 @@ import React from 'react';
 function HeroSection() {
   return (
     <section className="  container mx-auto  p-5 ">
-      <h1
-        className="text-center  font-bold  text-[#222222]  "
-        style={{
-          fontSize: '12vw',
-        }}
-      >
-        TECH & LIFE
-      </h1>
+
+      <HeadingComponent title="TECH & LIFE" headingStyle="text-center  font-bold  text-[#222222]  " overrideStyle={false} inlineStyle={{fontSize: '12vw'}}/>
 
       {/* we need to fix responsive text of this div */}
       <div className="flex justify-between  lg:p-5 p-2 bg-[#222222] items-center  text-[#E7E8E2]">
