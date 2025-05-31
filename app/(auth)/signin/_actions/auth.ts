@@ -5,6 +5,7 @@ import { API_BASE_URL, API_ENDPOINTS } from "@/constants/apiEndPoints";
 interface SignInResponse {
   token: string;
   roles: string[];
+  userId: number;
 }
 
 export async function signIn(formData: FormData): Promise<SignInResponse> {

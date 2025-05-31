@@ -1,7 +1,7 @@
 
 import { JSX } from "react"
 import HeadingComponent from "../../../shared/HeadingComponent"
-import pageStyle from '../../_styles/page.module.css'
+import pageStyle from '../_styles/page.module.css'
 
 function SignInForm({
   style,

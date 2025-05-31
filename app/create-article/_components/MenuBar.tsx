@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Editor } from '@tiptap/react';
 import {
   AlignCenter,
@@ -9,6 +10,8 @@ import {
   Heading2,
   Heading3,
   Highlighter,
+  ImageIcon,
+  ImageUpscale,
   Italic,
   List,
   ListOrdered,
@@ -17,11 +20,91 @@ import {
 } from 'lucide-react';
 
 import { Toggle } from '@/components/ui/toggle';
+import { uploadImage } from '../_actions/UploadImage';
 
-function MenuBar({ editor }: { editor: Editor | null }) {
+function MenuBar({ editor,title,bannerRef }: { editor: Editor | null ,title:string ,bannerRef:React.RefObject<string> }) {
+
+  const handleUploadImage = async () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.click();
+    
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (file) {
+        try {
+          // Read the file as a data URL (base64) for immediate preview
+          const reader = new FileReader();
+          reader.onload = async (e) => {
+            const result = e.target?.result as string;
+            if (result) {
+              // Display the image immediately using base64
+              editor?.chain().focus().setImage({ src: result }).run();
+              
+              try {
+                // Upload to Supabase
+                const uploadResult = await uploadImage(file, file.name,`/upload/${title}`);
+                
+           
+              } catch (error) {
+                console.error('Upload error:', error);
+                // Keep the base64 image if upload fails
+              }
+            }
+          };
+          reader.readAsDataURL(file);
+        } catch (error) {
+          console.error('Error handling image:', error);
+          alert('Failed to process image. Please try again.');
+        }
+      }
+    };
+  }
+
+
+  const handleUploadBanner = async () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.click();
+    
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (file) {
+        try {
+          // Read the file as a data URL (base64) for immediate preview
+          const reader = new FileReader();
+          reader.onload = async (e) => {
+            const result = e.target?.result as string;
+            if (result) {
+              try {
+                // Upload to Supabase
+                const uploadResult = await uploadImage(file, file.name, `/upload/${title}/banner`);
+                // Update bannerRef with the image URL and filename
+                if (bannerRef.current !== undefined) {
+                  bannerRef.current = uploadResult?.data;
+                  console.log(bannerRef.current)
+                }
+              } catch (error) {
+                console.error('Upload error:', error);
+                alert('Failed to upload banner image. Please try again.');
+              }
+            }
+          };
+          reader.readAsDataURL(file);
+        } catch (error) {
+          console.error('Error handling image:', error);
+          alert('Failed to process image. Please try again.');
+        }
+      }
+    };
+  }
+
   if (!editor) {
     return null;
   }
+
   const MenuOptions = [
     {
       element: <Heading1 className="size-4" />,
@@ -96,7 +179,18 @@ function MenuBar({ editor }: { editor: Editor | null }) {
       onClick: () => editor.chain().focus().toggleOrderedList().run(),
       isActive: editor.isActive('orderedList'),
     },
+    {
+      element: <ImageIcon className="size-4" />,
+      onClick: handleUploadImage,
+      isActive: editor.isActive('image'),
+    },
+    {
+      element: <ImageUpscale className="size-4" />,
+      onClick: handleUploadBanner,
+      isActive: !!bannerRef.current,
+    }
   ];
+
   return (
     <div>
       {MenuOptions.map((option, index) => (

@@ -1,55 +1,146 @@
 'use server'
 import { API_BASE_URL, API_ENDPOINTS } from "@/constants/apiEndPoints";
+import { verifySession } from "@/dal";
 import { cookies } from "next/headers";
 
 interface CreatePostResponse {
   success: boolean;
-  error?: Error;
+  error?: Error | unknown;
   data?: {
     id: string;
-    post: string;
+    postData: {
+      content:string;
+      title:string;
+      durationRead:string;
+   
+
+    };
     createdAt: string;
+
+    message?: string;
   };
   status?: number;
+
+}
+
+function replaceImagesWithPlaceholders(html: string): string {
+  return html.replace(/<img[^>]*src=["']([^"']+)["'][^>]*>/g, (match, src) => {
+    const parts = src.split('/');
+    const filename = parts[parts.length - 1];
+    return `{{image:${filename}}}`;
+  });
 }
 
 
-export default async function createPost(post: string): Promise<CreatePostResponse> {
-  const cookieStore = await cookies();
-  let token = cookieStore.get('token')?.value || '';
+export default async function createPost(postData: { content: string; title: string; durationRead: string; },banner:string): Promise<CreatePostResponse|null> {
 
-  // Remove surrounding quotes if present
-  if (token.startsWith('"') && token.endsWith('"')) {
-    token = token.substring(1, token.length - 1);
-  }
+      const session = await verifySession()
+      let {token} = session
+      if (!session) return null
   
-  // Remove Bearer prefix if present
-  if (token.startsWith('Bearer ')) {
-    token = token.substring(7);
-  }
+  const cookieStore = await cookies();
+  const userId = cookieStore.get('userId')?.value || '';
+
+  if (token.startsWith('"') && token.endsWith('"')) token = token.substring(1, token.length - 1);
+  if (token.startsWith('Bearer ')) token = token.substring(7);
   const authHeader = `Bearer ${token}`;
 
+  // Replace <img src="..."> with {{image:filename.jpg}}
+  
+  const parsedContent = replaceImagesWithPlaceholders(postData.content);
+
   try {
+
+ 
     const requestBody = {
-      authorId: 12,
-      content: post,
+      authorId: userId,
+      content: parsedContent,
+      title: postData.title,
+      durationRead: postData.durationRead,
+      postImg: banner,
     };
 
     const response = await fetch(API_BASE_URL + API_ENDPOINTS.CREATE_POST, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': authHeader, // Add prefix explicitly
+        'Authorization': authHeader,
       },
       body: JSON.stringify(requestBody),
     });
 
-    const data = await response.json();
-    return { success: true, data, status: response.status };
+    let data;
+    try {
+      const text = await response.text();
+      try {
+        data = JSON.parse(text);
+      } catch (parseError) {
+        console.error('Error parsing response as JSON:', parseError);
+        // Still return success if HTTP status is OK, even if we can't parse the JSON
+        if (response.ok) {
+          return { 
+            success: true, 
+            data: {
+              message: 'Post created but response could not be parsed',
+              id: "temp-id-" + Date.now(),
+              postData: {
+                content: postData.content.substring(0, 100) + "...",  // Only include a snippet
+                title: postData.title,
+                durationRead: postData.durationRead
+              },
+              createdAt: new Date().toISOString()
+            }, 
+            status: response.status 
+          };
+        } else {
+          return { 
+            success: false, 
+            error: new Error('Failed to parse response as JSON'), 
+            status: response.status 
+          };
+        }
+      }
+    } catch (textError) {
+      console.error('Error reading response text:', textError);
+      return { 
+        success: false, 
+        error: new Error('Failed to read server response'), 
+      };
+    }
+    
+    // Check if the HTTP status is successful (2xx)
+    if (response.ok) {
+      // Create a safe copy of the data to avoid circular references
+      const safeData = {
+        id: data.id || "unknown-id",
+        postData: {
+          content: typeof data.postData?.content === 'string' ? 
+            (data.postData.content.length > 1000 ? 
+              data.postData.content.substring(0, 1000) + "..." : 
+              data.postData.content) : 
+            "",
+          title: data.postData?.title || "",
+          durationRead: data.postData?.durationRead || ""
+        },
+        createdAt: data.createdAt || new Date().toISOString(),
+        message: data.message || "Post created successfully"
+      };
+      
+      return { success: true, data: safeData, status: response.status };
+    } else {
+      // The request completed but the server returned an error status
+      return { 
+        success: false, 
+        error: new Error(data?.message || 'Server returned an error'), 
+        status: response.status 
+      };
+    }
 
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error : new Error('Unknown error') };
+    console.error('Error creating post:', error);
+    return { 
+      success: false, 
+      error,
+    };
   }
 }
-
-

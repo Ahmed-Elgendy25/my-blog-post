@@ -14,13 +14,13 @@ function Navbar() {
           <div className="flex text-[1.6rem] font-light justify-end  gap-x-10 items-center ">
             <div className="flex gap-x-5">
               <li>
-                <Link href={'#'}>Magazine</Link>
+                <Link href={'/magazine'}>Magazine</Link>
               </li>
               <li>
-                <Link href={'#'}>Podcast</Link>
+                <Link href={'/podcast'}>Podcast</Link>
               </li>
               <li>
-                <Link href={'#'}>Authors</Link>
+                <Link href={'/authors'}>Authors</Link>
               </li>
             </div>
 

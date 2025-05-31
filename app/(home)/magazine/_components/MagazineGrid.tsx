@@ -1,7 +1,10 @@
 import Image from "next/image";
 import magazine1 from '@/public/post/post1_v2.jpg'
 import Link from "next/link";
-function MagazineGrid() {
+import {GetPaginateArticles } from "../_actions/GetPaginatedArticles";
+async function MagazineGrid() {
+    const articles = await GetPaginateArticles(0,'asc')
+    console.log("articles:  ",articles)
     return (
         <main className="container mx-auto my-5">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  ">

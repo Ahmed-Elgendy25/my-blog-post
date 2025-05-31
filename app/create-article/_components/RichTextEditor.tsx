@@ -9,8 +9,9 @@ import BulletList from '@tiptap/extension-bullet-list';
 import ListItem from '@tiptap/extension-list-item';
 import OrderedList from '@tiptap/extension-ordered-list';
 import Heading from '@tiptap/extension-heading';
+import Image from '@tiptap/extension-image';
 
-function RichTextEditor({ setContent }: { setContent: React.Dispatch<React.SetStateAction<string>> }) {
+function RichTextEditor({ setContent,title, bannerRef }: { setContent: React.Dispatch<React.SetStateAction<string>> ,title:string ,bannerRef:React.RefObject<string> }) {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -20,8 +21,9 @@ function RichTextEditor({ setContent }: { setContent: React.Dispatch<React.SetSt
       BulletList,
       OrderedList,
       ListItem,
+      Image,
     ],
-    content: '<p>Hello World! 🌎️</p>',
+    content: '',
     editorProps: {
       attributes: {
         class: 'h-full p-5 border-0 focus-visible:outline-0 overflow-y-auto',
@@ -31,14 +33,15 @@ function RichTextEditor({ setContent }: { setContent: React.Dispatch<React.SetSt
       setContent(editor.getHTML());
     },
     immediatelyRender:false,
+    
   });
 
   return (
     <div className='min-h-screen bg-[#ebebeb]'>
-      <MenuBar editor={editor} />
-      <EditorContent editor={editor} />
+    
+      <MenuBar editor={editor} title={title} bannerRef={bannerRef} />
+      <EditorContent editor={editor}  />
     </div>
   );
 }
 export default RichTextEditor;
-

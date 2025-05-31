@@ -5,6 +5,7 @@ import { signIn } from './_actions/auth';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
+
 export  default async function Page() {
 
     const signInAction = async (formData: FormData) => {
@@ -14,7 +15,8 @@ export  default async function Page() {
             const cookieStore =await cookies();
             cookieStore.set('token', JSON.stringify(result.token));
             cookieStore.set('roles', JSON.stringify(result.roles));
-            redirect('/create-article')
+            cookieStore.set('userId', JSON.stringify(result.userId));
+            redirect('/')
         }
     }
     return (
