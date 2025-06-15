@@ -24,12 +24,12 @@ interface CreatePostResponse {
 }
 
 function replaceImagesWithPlaceholders(html: string): string {
-  return html.replace(/<img[^>]*src=["']([^"']+)["'][^>]*>/g, (match, src) => {
-    const parts = src.split('/');
-    const filename = parts[parts.length - 1];
-    return `{{image:${filename}}}`;
+  let index = 0;
+  return html.replace(/<img[^>]*src=["']([^"']+)["'][^>]*>/g, () => {
+    return `{{image:img${index++}}}`;
   });
 }
+
 
 
 export default async function createPost(postData: { content: string; title: string; durationRead: string; },banner:string): Promise<CreatePostResponse|null> {

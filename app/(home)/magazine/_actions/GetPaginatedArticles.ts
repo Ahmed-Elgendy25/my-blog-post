@@ -1,5 +1,3 @@
-'use server'
-
 import { API_BASE_URL, API_ENDPOINTS } from "@/constants/apiEndPoints";
 import { verifySession } from "@/dal";
 import { BlogPostsResponse } from "../_schema/PaginatedArticles";
@@ -17,8 +15,7 @@ export async function GetPaginateArticles(page: number, direction: string): Prom
     const authHeader = `Bearer ${token}`;
 
     // Add timestamp to URL to force fresh request
-    const timestamp = Date.now();
-    const url = `${API_BASE_URL}${API_ENDPOINTS.GET_PAGINATED_ARTICLES}?page=${page}&size=6&sortBy=date&direction=${direction}&_t=${timestamp}`;
+    const url = `${API_BASE_URL}${API_ENDPOINTS.GET_PAGINATED_ARTICLES}?page=${page}&size=6&sortBy=date&direction=${direction}`;
     console.log('Fetching URL:', url);
 
     try {
@@ -28,7 +25,8 @@ export async function GetPaginateArticles(page: number, direction: string): Prom
                 'Authorization': authHeader,
                 'Cache-Control': 'no-cache',
             },
-            next: { revalidate: 0 }  
+            cache:'no-store',
+             
         });
 
         console.log('Response status:', response.status);
@@ -41,7 +39,6 @@ export async function GetPaginateArticles(page: number, direction: string): Prom
         }
 
         const data = await response.json();
-        console.log('Raw API Response Data:', JSON.stringify(data, null, 2));
         return data;
     } catch (error) {
         console.error("Fetch error:", error);

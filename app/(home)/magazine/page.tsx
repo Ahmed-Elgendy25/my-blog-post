@@ -5,13 +5,21 @@ import { GetPaginateArticles } from "./_actions/GetPaginatedArticles"
 import PaginationList from "./_components/PaginationList"
 import { BlogPostsResponse } from "./_schema/PaginatedArticles"
 
-async function page() {
+async function page({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const {page} = await searchParams;
   const session = await verifySession()
   if (!session) return null
 
   let articles: BlogPostsResponse | null = null;
+
+  console.log("Articles received from API:", articles);
+
   try {
-    articles = await GetPaginateArticles(0, 'asc')
+    articles = await GetPaginateArticles(Number(page)-1, 'asc')
     console.log("Articles received from API:", articles);
     
  
@@ -44,7 +52,7 @@ async function page() {
       
       <MagazineGrid articles={articles.content} />
       
-      <PaginationList totalPages={articles.totalPages} />
+      <PaginationList totalPages={articles.totalPages}  />
     </div>
   )
 }

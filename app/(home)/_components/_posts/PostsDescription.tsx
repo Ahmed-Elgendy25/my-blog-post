@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { PostTyped } from '@/app/create-article/_models/posts.model';
+import { PostTyped } from '@/app/create-article/_schema/posts.model';
 import ArticleInfoListComponent from '@/app/shared/ArticleInfoListComponent';
 
 function PostsDescription({

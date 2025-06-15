@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import PostsDescription from './PostsDescription';
-import { posts, PostTyped } from '@/app/create-article/_models/posts.model';
+import { posts, PostTyped } from '@/app/create-article/_schema/posts.model';
 import PostsSection from './PostsSection';
 import AsideComponent from '../AsideComponent';
 const DataOfPosts: PostTyped[] = posts;

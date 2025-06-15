@@ -1,38 +1,44 @@
-import HeadingComponent from "@/app/shared/HeadingComponent"
-import MagazineDetailedStyle from "./_styles/MagazineDetailed.module.css"
-import ArticleInfoListComponent from "@/app/shared/ArticleInfoListComponent"
+import Banner from "./_components/Banner"
+import HeadingDetails from "./_components/HeadingDetails"
+import Article from "./_components/Article"
+import { GetSpecificPost } from "./_actions/GetSpecificPost"
+import { GetImagesPost } from "./_actions/GetImagesPost"
+import { GetUserById } from "./_actions/GetUserById"
+import { SpecificPostTyped, UserTyped } from "./_schema/PostById"
 
-function page() {
+async function page({
+    params,
+  }: {
+    params: Promise<{ id: string }>
+  }) {
+    const {id} = await params;
+    
+    // First get the post
+    const post:SpecificPostTyped = await GetSpecificPost(id);
+    
+    if (!post) {
+      return null; // or handle error case as needed
+    }
+
+    console.log("post: ", post);
+    // Now get the images using the post title
+    const images:string[] = await GetImagesPost(post.title);
+    // get user by id
+    const user:UserTyped = await GetUserById(post.authorId);
+    console.log("user: ", user);
+
+
     return (
         <main>
-            <div className="container mx-auto p-5 bg-blue-400">
-                <div className="grid grid-cols-12  p-5 gap-5 bg-red-400">
-                    <section className="col-span-12 lg:col-span-6 bg-amber-500 min-h-[40vh]   p-3">
-                        <div className="bg-green-400 flex flex-col justify-evenly h-full p-3">
-                            <HeadingComponent
-                                title="HOPE DIES LAST"
-                                overrideInlineStyle={false}
-                                headingStyle={MagazineDetailedStyle.headingComponent}
-                                inlineStyle={{
-                                    marginBlock: '1rem'
-                                }}/>
+            <div className="container mx-auto p-5 ">
+                <div className="grid grid-cols-12  p-5 gap-5 ">
+                  
+                    <HeadingDetails title={post.title} durationRead={post.durationRead} author={user.firstName + " " + user.lastName} date={post.date}/>
+                    <Banner banner={post.postImg}/>
+                    <Article userImg={user.userImg} content={post.content} user={user} date={post.date} durationRead={post.durationRead} images={images}/>   
 
-                            <ArticleInfoListComponent
-                                author="John Doe"
-                                date="2021-01-01"
-                                readTime="10 minutes"/>
 
-                        </div>
-
-                    </section>
-                    <section className="col-span-12 lg:col-span-6 bg-amber-500  min-h-[40vh] p-3">
-                        <div className="bg-green-400 flex flex-col justify-evenly h-full p-3">
-                            <p className={` ${MagazineDetailedStyle.paragraph}`}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.Lorem
-                                ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.Lorem ipsum
-                                dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
-                        </div>
-
-                    </section>
+                    
                 </div>
 
             </div>

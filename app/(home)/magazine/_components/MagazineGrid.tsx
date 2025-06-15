@@ -12,15 +12,23 @@ async function MagazineGrid({ articles }: { articles: Post[] }) {
     secondElement: 'sm:border-l-1 sm:border-r-1 sm:border-b-1 lg:border-b-0 lg:border-r-0 border-l-0 border-t-1',
     thirdElement: 'sm:border-r-1 sm:border-l-1 sm:border-t-0 sm:border-b-0 sm:border-r-0 md:border-b-0 md:border-r-0 lg:border-t-1 lg:border-b-1 lg:border-r-1 border-l-0 border-t-1',
     fourthElement: 'sm:border-r-1 sm:border-l-1 sm:border-t-0 sm:border-r-0 lg:border-l-1 lg:border-r-0 lg:border-b-1 border-r-0 border-t-1 border-b-1',
-    fifthElement: 'sm:border-r-1 sm:border-l-1 sm:border-t-0 sm:border-b-1 sm:border-r-0 md:border-t-1 lg:border-b-1 border-r-0 border-l-0',
-  };
+    fifthElement: 'sm:border-r-1 sm:border-l-1 sm:border-t-0 sm:border-b-1 sm:border-r-0 md:border-t-1 lg:border-b-1 border-r-0 border-l-0 border',
+    sixthElement: 'sm:border-r-1 sm:border-l-1 sm: border-t-0 md:border-l-0 border',
 
+  };
+     
+  if(articles.length===1){
+    styledElements.firstElement='sm:border-b-0 md:border-b-1  lg:border-b-1 border-l-1 border-r-1 border-t-1'
+  }
+   
+   
   return (
     <main className="container mx-auto my-5">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {articles.map((article, index) => {
+        {
+   
+        articles.map((article, index) => {
           const cleanedUrl = cleanImageUrl(article.postImg);
-          console.log(`Article ${article.id} - Cleaned URL:`, cleanedUrl);
           
           return (
             <section 
@@ -31,6 +39,7 @@ async function MagazineGrid({ articles }: { articles: Post[] }) {
                 index === 2 ? styledElements.thirdElement :
                 index === 3 ? styledElements.fourthElement :
                 index === 4 ? styledElements.fifthElement :
+                index === 5 ? styledElements.sixthElement :
                 ''
               } border-[#222222]`}
             >

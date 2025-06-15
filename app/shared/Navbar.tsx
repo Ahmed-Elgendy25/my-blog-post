@@ -14,7 +14,7 @@ function Navbar() {
           <div className="flex text-[1.6rem] font-light justify-end  gap-x-10 items-center ">
             <div className="flex gap-x-5">
               <li>
-                <Link href={'/magazine'}>Magazine</Link>
+                <Link href={'/magazine?page=1'}>Magazine</Link>
               </li>
               <li>
                 <Link href={'/podcast'}>Podcast</Link>
