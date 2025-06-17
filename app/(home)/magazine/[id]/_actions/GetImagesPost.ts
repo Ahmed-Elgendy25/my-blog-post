@@ -1,8 +1,9 @@
 "use server"
 
 import { createClient } from "@/utils/supabase/client";
+import { imageUrls } from "../_schema/PostById";
 
-export async function GetImagesPost(folderName: string) {
+export async function GetImagesPost(folderName: string): Promise<imageUrls[]> {
   const supabase = createClient();
 
   // Clean the folder name and construct the path
@@ -28,11 +29,11 @@ export async function GetImagesPost(folderName: string) {
 
   // Get public URLs for all files
   const imageUrls = await Promise.all(
-    data.map(file => 
-      supabase.storage.from('posts').getPublicUrl(`${path}/${file.name}`)
-    )
+    data
+      .filter(file => file.id !== null)  
+      .map(file => 
+        supabase.storage.from('posts').getPublicUrl(`${path}/${file.name}`)
+      )
   );
-
-  // Extract the public URLs from the results
-  return imageUrls.map(result => result.data.publicUrl);
+return imageUrls;
 }

@@ -64,7 +64,7 @@ function EditorWrapper() {
         </section>
         
              <section className="md:w-[50rem] mx-auto p-5 bg-[#f6f6f6ec] mb-[10rem]">
-            <Preview content={content} />
+            <Preview content={content}  />
           </section>
         
       

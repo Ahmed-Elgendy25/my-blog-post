@@ -16,3 +16,9 @@ export type UserTyped = {
   
 }
 
+
+export type imageUrls ={
+    data:{
+        publicUrl:string;
+    }
+}

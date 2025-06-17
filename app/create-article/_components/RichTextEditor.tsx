@@ -1,6 +1,7 @@
 'use client';
 
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent} from '@tiptap/react';
+
 import StarterKit from '@tiptap/starter-kit';
 import MenuBar from './MenuBar';
 import TextAlign from '@tiptap/extension-text-align';
@@ -28,19 +29,38 @@ function RichTextEditor({ setContent,title, bannerRef }: { setContent: React.Dis
       attributes: {
         class: 'h-full p-5 border-0 focus-visible:outline-0 overflow-y-auto',
       },
+      handlePaste(view, event) {
+        const html = event.clipboardData?.getData('text/html');
+        const plain = event.clipboardData?.getData('text/plain');
+  
+        if (html) {
+          view.dispatch(
+            view.state.tr.replaceSelectionWith(
+              view.state.schema.nodeFromJSON(
+                view.state.schema.node(html).toJSON()
+              )
+            )
+          );
+          return true;
+        } else if (plain && plain.trim().startsWith('<')) {
+          // Interpret plain text that looks like HTML as HTML
+          view.dom.innerHTML = plain;
+          return true;
+        }
+  
+        return false; // fallback to default
+      },
     },
     onUpdate: ({ editor }) => {
       setContent(editor.getHTML());
     },
-    immediatelyRender:false,
-    
   });
 
   return (
     <div className='min-h-screen bg-[#ebebeb]'>
     
       <MenuBar editor={editor} title={title} bannerRef={bannerRef} />
-      <EditorContent editor={editor}  />
+      <EditorContent editor={editor}  className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl " />
     </div>
   );
 }
