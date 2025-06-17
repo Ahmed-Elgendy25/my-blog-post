@@ -81,6 +81,46 @@ function SignUpContainer() {
           }/>
         </SectionComponent>
 
+        <SectionComponent style='md:w-1/2 w-full mt-5'>
+          {errors.linkedinProfile && <div className="text-red-500 font-medium text-sm w-auto">{errors.linkedinProfile.message}</div>}
+          <InputComponent input={
+            <input
+              type="text"
+              {...register('linkedinProfile')}
+              placeholder="LinkedInProfile"
+              className="bg-none min-w-full placeholder:text-[#222222] placeholder:font-medium border-b-[1.9px] border-b-[#222222]/50 outline-none p-5"
+            />
+          }/>
+        </SectionComponent>
+
+
+
+        <SectionComponent style='md:w-1/2 w-full mt-5'>
+          {errors.twitterProfile && <div className="text-red-500 font-medium text-sm w-auto">{errors.twitterProfile.message}</div>}
+          <InputComponent input={
+            <input
+              type="password"
+              {...register('twitterProfile')}
+              placeholder="Twitter Profile"
+              className="bg-none min-w-full placeholder:text-[#222222] placeholder:font-medium border-b-[1.9px] border-b-[#222222]/50 outline-none p-5"
+            />
+          }/>
+        </SectionComponent>
+
+
+        <SectionComponent style='md:w-1/2 w-full mt-5'>
+          {errors.instagramProfile && <div className="text-red-500 font-medium text-sm w-auto">{errors.instagramProfile.message}</div>}
+          <InputComponent input={
+            <input
+              type="password"
+              {...register('instagramProfile')}
+              placeholder="Instagram Profile"
+              className="bg-none min-w-full placeholder:text-[#222222] placeholder:font-medium border-b-[1.9px] border-b-[#222222]/50 outline-none p-5"
+            />
+          }/>
+        </SectionComponent>
+
+
         <SectionComponent style='md:w-1/3 w-full mt-5'>
           {errors.role && <div className="text-red-500 font-medium text-sm w-auto">{errors.role.message}</div>}
           <div className="md:w-1/3 w-full flex justify-between">

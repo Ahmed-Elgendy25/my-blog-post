@@ -19,7 +19,6 @@ async function page({
     if (!post) {
       return null; // or handle error case as needed
     }
-
     // Now get the images using the post title
     const images:imageUrls[] = await GetImagesPost(post.title);
     // get user by id
@@ -29,10 +28,10 @@ async function page({
     return (
         <main>
             <div className="container mx-auto p-5 ">
-                <div className="grid grid-cols-12  p-5 gap-5 ">
+                <div className=" grid grid-cols-12  p-5 gap-5 ">
                   
                     <HeadingDetails title={post.title} durationRead={post.durationRead} author={user.firstName + " " + user.lastName} date={post.date}/>
-                    {/* <Banner banner={post.postImg}/> */}
+                    <Banner banner={post.postImg}/>
                     <Article userImg={user.userImg} content={post.content} user={user} date={post.date} durationRead={post.durationRead} images={images}/>   
 
 
