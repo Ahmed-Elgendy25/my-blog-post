@@ -11,6 +11,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@hookform/resolvers": "^5.0.1",
     "@phosphor-icons/react": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.3",
@@ -28,6 +29,7 @@
     "@tiptap/starter-kit": "^2.11.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "gsap": "^3.13.0",
     "html-react-parser": "^5.2.5",
     "lucide-react": "^0.482.0",
     "next": "15.2.2",

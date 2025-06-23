@@ -32,7 +32,7 @@ function replaceImagesWithPlaceholders(html: string): string {
 
 
 
-export default async function createPost(postData: { content: string; title: string; durationRead: string; },banner:string): Promise<CreatePostResponse|null> {
+export default async function createPost(postData: { content: string; title: string; durationRead: string; subTitle:string },banner:string): Promise<CreatePostResponse|null> {
 
       const session = await verifySession()
       let {token} = session
@@ -47,7 +47,19 @@ export default async function createPost(postData: { content: string; title: str
 
   // Replace <img src="..."> with {{image:filename.jpg}}
   
+  // Clean and validate the subTitle
+  const cleanSubTitle = (subTitle: string): string => {
+    if (!subTitle) return '';
+    
+    // Remove any HTML tags
+    const stripped = subTitle.replace(/<[^>]*>?/gm, '');
+    
+    // Trim whitespace and limit length to 255 characters (adjust as needed)
+    return stripped.trim().substring(0, 255);
+  };
+
   const parsedContent = replaceImagesWithPlaceholders(postData.content);
+  const cleanedSubTitle = cleanSubTitle(postData.subTitle);
 
   try {
 
@@ -58,6 +70,7 @@ export default async function createPost(postData: { content: string; title: str
       title: postData.title,
       durationRead: postData.durationRead,
       postImg: banner,
+      subTitle: cleanedSubTitle
     };
 
     const response = await fetch(API_BASE_URL + API_ENDPOINTS.CREATE_POST, {
@@ -73,7 +86,7 @@ export default async function createPost(postData: { content: string; title: str
     try {
       const text = await response.text();
       try {
-        data = JSON.parse(text);
+        data = await JSON.parse(text);
       } catch (parseError) {
         console.error('Error parsing response as JSON:', parseError);
         // Still return success if HTTP status is OK, even if we can't parse the JSON

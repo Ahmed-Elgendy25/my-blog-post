@@ -35,7 +35,6 @@ export async function signIn(formData: FormData): Promise<SignInResponse> {
     }
 
     const data: SignInResponse = await response.json()
-    console.log(data)
     return data
 
   } catch (error) {

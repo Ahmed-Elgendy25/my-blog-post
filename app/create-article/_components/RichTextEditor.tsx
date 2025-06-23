@@ -11,8 +11,10 @@ import ListItem from '@tiptap/extension-list-item';
 import OrderedList from '@tiptap/extension-ordered-list';
 import Heading from '@tiptap/extension-heading';
 import Image from '@tiptap/extension-image';
+import { EditorAction } from '../_schema/Editor.model';
 
-function RichTextEditor({ setContent,title, bannerRef }: { setContent: React.Dispatch<React.SetStateAction<string>> ,title:string ,bannerRef:React.RefObject<string> }) {
+function RichTextEditor({ setContent,title, bannerRef }: {  setContent: React.Dispatch<EditorAction>;
+title:string ,bannerRef:React.RefObject<string> }) {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -52,15 +54,16 @@ function RichTextEditor({ setContent,title, bannerRef }: { setContent: React.Dis
       },
     },
     onUpdate: ({ editor }) => {
-      setContent(editor.getHTML());
+      setContent({ type: 'SET_CONTENT', payload: editor.getHTML() });
     },
+    immediatelyRender:false,
   });
 
   return (
     <div className='min-h-screen bg-[#ebebeb]'>
     
       <MenuBar editor={editor} title={title} bannerRef={bannerRef} />
-      <EditorContent editor={editor}  className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl " />
+      <EditorContent editor={editor}  className=" p-2 " />
     </div>
   );
 }

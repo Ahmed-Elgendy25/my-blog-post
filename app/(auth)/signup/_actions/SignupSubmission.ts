@@ -21,7 +21,6 @@ export default async function signupSubmit(data: SignupFormFields) {
        })
      });
 
-     console.log(response.status);
      return { success: true };
    } catch (error) {
      console.error('Signup error:', error);

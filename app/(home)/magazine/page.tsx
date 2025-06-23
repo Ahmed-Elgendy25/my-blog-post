@@ -16,11 +16,9 @@ async function page({
 
   let articles: BlogPostsResponse | null = null;
 
-  console.log("Articles received from API:", articles);
 
   try {
     articles = await GetPaginateArticles(Number(page)-1, 'asc')
-    console.log("Articles received from API:", articles);
     
  
   } catch (error) {

@@ -38,7 +38,7 @@ function Article({
   
         if (imageUrl) {
           elements.push(
-            <div key={placeholder} className="relative w-full  min-h-[30rem]   my-4">
+            <div key={placeholder} className="relative w-full  min-h-[45rem]   my-4">
               <Image
                 src={imageUrl}
                 alt="Article image"
@@ -83,6 +83,8 @@ function Article({
         {`${user.firstName} ${user.lastName}`}
       </h2>
     </div>
+
+    
     <ul className='flex flex-col gap-y-2 py-3 px-4'>
       <li className='flex justify-between text-md text-[#222222]'>
         <span className='font-bold'>Date</span>
@@ -105,7 +107,7 @@ function Article({
 
       </aside>
 
-      <article className='col-span-7 mt-10 bg-red-400  h-full  p-5'>
+      <article className='col-span-8 mt-10   h-full  p-7'>
         {parsedContent}
       </article>
     </>

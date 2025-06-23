@@ -1,5 +1,5 @@
 'use server'
-import { createClient } from "@/app/utils/supabase/client";
+import { createClient } from "@/utils/supabase/client";
 import { verifySession } from "@/dal";
 
 export async function uploadImage(file: File, filename: string, path:string) {

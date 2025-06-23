@@ -21,6 +21,9 @@ async function MagazineGrid({ articles }: { articles: Post[] }) {
     styledElements.firstElement='sm:border-b-0 md:border-b-1  lg:border-b-1 border-l-1 border-r-1 border-t-1'
   }
    
+  if(articles.length===3) {
+    styledElements.thirdElement=''
+  }
    
   return (
     <main className="container mx-auto my-5">

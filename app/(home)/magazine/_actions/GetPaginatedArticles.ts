@@ -16,7 +16,6 @@ export async function GetPaginateArticles(page: number, direction: string): Prom
 
     // Add timestamp to URL to force fresh request
     const url = `${API_BASE_URL}${API_ENDPOINTS.GET_PAGINATED_ARTICLES}?page=${page}&size=6&sortBy=date&direction=${direction}`;
-    console.log('Fetching URL:', url);
 
     try {
         const response = await fetch(url, {
@@ -29,12 +28,9 @@ export async function GetPaginateArticles(page: number, direction: string): Prom
              
         });
 
-        console.log('Response status:', response.status);
-        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error("API Error:", response.status, errorText);
             throw new Error(`Failed to fetch articles: ${response.status} ${errorText}`);
         }
 
