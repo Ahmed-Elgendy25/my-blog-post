@@ -1,46 +1,69 @@
 'use client'
 import Preloader from './_preloader/Preloader'
 import { useEffect, useRef, useState } from 'react'
-import HeroSection from './HeroSection';
-import PostHero from './_posts/PostHero';
-import AuthorSection from './_author/AuthorSection';
-import gsap from "gsap";
+import HeroSection from './HeroSection'
+import PostHero from './_posts/PostHero'
+import AuthorSection from './_author/AuthorSection'
+import gsap from 'gsap'
 
+
+ import contentStyle from "./_style/content.module.css"
 
 function MainComponent() {
-    const [loading, setLoading] = useState(true);
-    const preloaderRef = useRef(null);
-    const contentRef = useRef(null);
-  
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        // Animate preloader out
-        gsap.to(preloaderRef.current, {
-          opacity: 0,
-          duration: 0.8,
-          delay:2,
-          onComplete: () => {
-            setLoading(false); // hide Preloader from DOM
-            // Animate content in
-            gsap.fromTo(contentRef.current, { opacity: 0, y: 30,duration:2 }, { opacity: 1, y: 0, duration: 1 });
-          }
-        });
-      }, 2000); // 2 seconds preload
-  
-      return () => clearTimeout(timer);
-    }, []);
+  const [loading, setLoading] = useState(true)
+  const preloaderRef = useRef(null)
+  const contentRef = useRef(null)
+
+
+
+
   
 
+  // Animate preloader out after delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      gsap.to(preloaderRef.current, {
+        yPercent: 100,
+        duration: 1.5,
+        ease:"power3.inOut",
+        onComplete: () => {
+          setLoading(false)
+        },
+      })
+    }, 3000)
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Animate content with timeline (after it's in DOM)
+  useEffect(() => {
+    if (!loading && contentRef.current) {
+      const tl = gsap.timeline({defaults:{duration:1,ease:'power2.out'}});
+
+      tl.to(contentRef.current, {
+        clipPath: 'polygon(100% 80%, 100% 100%, 0 100%, 0 60%)',
+      })
+      .to(contentRef.current, {
+        clipPath: 'polygon(100% 40%, 100% 100%, 0 100%, 0 20%)',
+      })
+      .to(contentRef.current, {
+        clipPath: 'polygon(100% 0%, 100% 100%, 0 100%, 0 0%)',
+      });
+    }
+  }, [loading]);
+  
+  
+  
+  
   return (
     <main className="relative">
-      {loading && (
-        <div ref={preloaderRef}>
-          <Preloader />
-        </div>
-      )}
+      {loading && <Preloader preloaderRef={preloaderRef} />}
 
       {!loading && (
-        <div ref={contentRef} >
+        <div
+          ref={contentRef}
+          className={contentStyle.content}
+        >
           <HeroSection />
           <PostHero />
           <AuthorSection />

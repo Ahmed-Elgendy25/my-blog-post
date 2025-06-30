@@ -1,12 +1,12 @@
 "use client";
-import { useRef } from "react";
+import { RefObject, useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 
 gsap.registerPlugin(DrawSVGPlugin, useGSAP);
 
-function Preloader() {
+function Preloader( {preloaderRef} :{preloaderRef:RefObject<null>}) {
   const svgRef = useRef<SVGSVGElement>(null);
   useGSAP(
     () => {
@@ -62,7 +62,7 @@ function Preloader() {
   );
 
   return (
-    <div className="bg-[#E7E8E2] text-[#E7E8E2] w-full h-screen">
+    <div ref={preloaderRef} className="bg-[#E7E8E2] text-[#E7E8E2] w-full h-screen">
       <div className="flex items-center justify-center h-full">
         <svg
           width="485"
