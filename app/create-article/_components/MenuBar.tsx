@@ -21,7 +21,7 @@ import {
 
 import { Toggle } from '@/components/ui/toggle';
 import { uploadImage } from '../_actions/UploadImage';
-
+import { toast } from "sonner"
 function MenuBar({ editor,title,bannerRef }: { editor: Editor | null ,title:string ,bannerRef:React.RefObject<string> }) {
 
   const handleUploadImage = async () => {
@@ -29,9 +29,10 @@ function MenuBar({ editor,title,bannerRef }: { editor: Editor | null ,title:stri
     input.type = 'file';
     input.accept = 'image/*';
     input.click();
-    
     input.onchange = async () => {
       const file = input.files?.[0];
+      toast("Uploading Image ⏳...")
+
       if (file) {
         try {
           // Read the file as a data URL (base64) for immediate preview
@@ -45,11 +46,14 @@ function MenuBar({ editor,title,bannerRef }: { editor: Editor | null ,title:stri
               try {
                 // Upload to Supabase
                 const uploadResult = await uploadImage(file, file.name,`/upload/${title}`);
-                
+                toast(`${uploadResult?.message}`)
+
            
               } catch (error) {
-                console.error('Upload error:', error);
                 // Keep the base64 image if upload fails
+                toast(`${error}`)
+                console.log("error: ", error)
+
               }
             }
           };
@@ -71,6 +75,7 @@ function MenuBar({ editor,title,bannerRef }: { editor: Editor | null ,title:stri
     
     input.onchange = async () => {
       const file = input.files?.[0];
+            toast("Uploading Banner ⏳...")
       if (file) {
         try {
           // Read the file as a data URL (base64) for immediate preview
@@ -81,14 +86,14 @@ function MenuBar({ editor,title,bannerRef }: { editor: Editor | null ,title:stri
               try {
                 // Upload to Supabase
                 const uploadResult = await uploadImage(file, file.name, `/upload/${title}/banner`);
+                toast(`${uploadResult?.message}`)
                 // Update bannerRef with the image URL and filename
                 if (bannerRef.current !== undefined) {
-                  bannerRef.current = uploadResult?.data;
-                  console.log(bannerRef.current)
+                  bannerRef.current = uploadResult!.data;
                 }
               } catch (error) {
-                console.error('Upload error:', error);
-                alert('Failed to upload banner image. Please try again.');
+                toast(`${error}`)
+  
               }
             }
           };

@@ -6,6 +6,8 @@ import ButtonComponent from '@/app/shared/ButtonComponent';
 import createPost from '../_actions/CreatePost';
 import InputComponent from '@/app/shared/InputComponent';
 import { editorReducer, initialState } from '../_hooks/editorReducer';
+import { useFormStatus } from 'react-dom';
+import { toast } from 'sonner';
 
 
 function EditorWrapper() {
@@ -21,9 +23,7 @@ function EditorWrapper() {
         durationRead: state.duration,
         subTitle: state.subTitle
       };
-        console.log("postData",postData)
         if (!state.title.trim()) {
-          console.error("Title is required");
           return;
         }
         
@@ -34,14 +34,11 @@ function EditorWrapper() {
         dispatch({ type: 'SET_DURATION', payload: '' });
         bannerRef.current = '';
         if (response?.success) {
-          console.log("Post created successfully");
-          console.log("Post data:", response?.data);
+          toast("Post created successfully");
         } else {
           // Instead of just logging, handle the error more gracefully
-          const errorMessage = response?.error instanceof Error 
-            ? response.error.message 
-            : "Failed to create post";
-          console.error(errorMessage);
+       
+            toast(`${response?.error}`);
         }
     
     }
@@ -50,8 +47,10 @@ function EditorWrapper() {
     * You might want to add a success notification or redirect here "Toast component"
     * 
     */
+   const {pending} = useFormStatus();
     return (
-      <>
+      <form action={handlePublish} className='flex flex-col  lg:flex-row    justify-between w-full'>
+
         <section className="md:w-[50rem] mx-auto lg:p-5 bg-[#f6f6f6ec] mb-[10rem]">
         <div className='flex flex-wrap justify-between  bg-amber-400  '>
           <section className="w-1/2"  >
@@ -85,17 +84,25 @@ function EditorWrapper() {
     
           <RichTextEditor  setContent={dispatch} title={state.title} bannerRef={bannerRef} />
 
-          <ButtonComponent type="submit" overrideStyle={true} style="min-w-full  mt-3" onClick={handlePublish}>Publish</ButtonComponent>
+          <ButtonComponent type="submit" overrideStyle={true} style="min-w-full  mt-3" onClick={handlePublish} pending={pending}>Publish</ButtonComponent>
 
         </section>
         
-             <section className="md:w-[50rem] mx-auto p-5 bg-[#f6f6f6ec] mb-[10rem]">
+          <section className="md:w-[50rem] mx-auto p-5 bg-[#f6f6f6ec] w-full mb-[10rem] ">
             <Preview content={state.content}  />
           </section>
         
       
-      </>
+      </form>
     );
 }
 
 export default EditorWrapper;
+
+
+
+
+
+
+
+

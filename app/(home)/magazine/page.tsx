@@ -4,6 +4,8 @@ import { verifySession } from "@/dal"
 import { GetPaginateArticles } from "./_actions/GetPaginatedArticles"
 import PaginationList from "./_components/PaginationList"
 import { BlogPostsResponse } from "./_schema/PaginatedArticles"
+import Footer from "../_components/_footer/Footer"
+import Navbar from "@/app/shared/Navbar"
 
 async function page({
   searchParams,
@@ -19,10 +21,10 @@ async function page({
 
   try {
     articles = await GetPaginateArticles(Number(page)-1, 'asc')
-    
+    console.log("articles: ",articles);
  
   } catch (error) {
-    console.error("Error fetching articles:", error)
+    console.error(error);
     return (
       <div className="text-center text-red-500">
         Failed to load articles. Please try again later.
@@ -40,7 +42,8 @@ async function page({
   }
 
   return (
-    <div>
+    <>
+      <Navbar/>
       <HeadingComponent 
         title="MAGAZINE" 
         headingStyle="text-center font-bold text-[#222222]" 
@@ -51,7 +54,8 @@ async function page({
       <MagazineGrid articles={articles.content} />
       
       <PaginationList totalPages={articles.totalPages}  />
-    </div>
+      <Footer/>
+    </>
   )
 }
 

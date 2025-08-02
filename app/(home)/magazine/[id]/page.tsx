@@ -25,11 +25,12 @@ async function page({
     const user:UserTyped = await GetUserById(post.authorId);
 
 
+
     return (
         <main>
             <div className="container mx-auto p-5 ">
                 <div className=" grid grid-cols-12  p-5 gap-5 ">
-                    <HeadingDetails title={post.title} durationRead={post.durationRead} author={user.firstName + " " + user.lastName} date={post.date}/>
+                    <HeadingDetails subTitle={post.subTitle} title={post.title} durationRead={post.durationRead} author={user.firstName + " " + user.lastName} date={post.date}/>
                     <Banner banner={post.postImg}/>
                     <Article  userImg={user.userImg} content={post.content} user={user} date={post.date} durationRead={post.durationRead} images={images}/>   
                 </div>

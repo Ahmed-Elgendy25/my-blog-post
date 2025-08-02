@@ -29,7 +29,7 @@ export async function uploadImage(file: File, filename: string, path:string) {
                 const { data: { publicUrl } } = await supabase.storage
                 .from('posts')
                 .getPublicUrl(`${path}/${filename}`);
-            return { data: publicUrl, error: null };
+                return { data: publicUrl, error: null,message:"Image has been Uploaded Succesfully" };
             } catch (error) {
                 console.error('Upload error:', error);
                 throw error;

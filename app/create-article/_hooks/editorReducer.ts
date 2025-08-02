@@ -10,6 +10,8 @@ export const editorReducer = (state: EditorState, action: EditorAction): EditorS
         return { ...state, subTitle: action.payload };
       case 'SET_DURATION':
         return { ...state, duration: action.payload };
+      case 'RESET':
+       return initialState;
       default:
         return state;
     }

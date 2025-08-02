@@ -1,23 +1,53 @@
 import HeadingComponent from '@/app/shared/HeadingComponent';
-import React from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import React, { useRef } from 'react';
 
-// we need to fix responsive text of this div
+gsap.registerPlugin(useGSAP);
 
 function HeroSection() {
+  const tickerRef = useRef(null);
+  const containerRef= useRef<HTMLDivElement>(null);
+  useGSAP(() => {
+    const containerWidth = containerRef.current?.scrollWidth;
+ 
+
+    gsap.to(tickerRef.current, {
+      x: `-${containerWidth }`, 
+      duration: 10,
+      ease: 'linear',
+      repeat: -1,
+    
+      
+    });
+  });
+
   return (
-    <section className="  container mx-auto  p-5 ">
+    <section className="container mx-auto p-5">
+      <HeadingComponent
+        title="TECH & LIFE"
+        headingStyle="text-center font-bold text-[#222222]"
+        overrideStyle={false}
+        inlineStyle={{ fontSize: '12vw' }}
+      />
 
-      <HeadingComponent title="TECH & LIFE" headingStyle="text-center  font-bold  text-[#222222]  " overrideStyle={false} inlineStyle={{fontSize: '12vw'}}/>
-
-      {/* we need to fix responsive text of this div */}
-      <div className="flex justify-between  lg:p-5 p-2 bg-[#222222] items-center  text-[#E7E8E2]">
-        <div className="lg:p-2 p-2 md:w-2/12 ">
-          <h2 className="font-bold text-xl  ">NEW TICKER+++</h2>
+      <div ref={containerRef} className="relative overflow-hidden bg-[#222222] text-[#E7E8E2] flex items-center py-3  ">
+        <div className="z-20 relative bg-[#222222] p-2 md:w-auto w-4/12 min-h-full ">
+          <h2 className="font-bold text-xl ">NEW TICKER+++</h2>
         </div>
-        <div className="lg:p-2 p-2  w-full md:w-10/12">
-          <p className="font-normal text-xl text-end ">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          </p>
+
+        {/* Scrolling ticker content */}
+        <div className="absolute left-0 top-0 w-full h-full z-10 flex items-center overflow-hidden">
+          <div
+            ref={tickerRef}
+            className="whitespace-nowrap flex text-xl font-normal"
+          >
+            <p className="px-4">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <p className="px-4">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <p className="px-4">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+
+           
+          </div>
         </div>
       </div>
     </section>

@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 function Navbar() {
   return (
-    <header className=" mx-3 md:container md:mx-auto p-3 border-b-[1px]   text-[#222222] md:flex  md:justify-between md:items-center  mt-2">
+    <header className=" mx-3 md:container md:mx-auto p-3 border-b-[1px]   text-[#222222] md:flex  md:justify-between md:items-center  ">
       <h2 className=" text-2xl font-bold ">
         <Link href={'/'}>
         STACK STORIES 

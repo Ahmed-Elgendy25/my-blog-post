@@ -8,13 +8,16 @@ import gsap from 'gsap'
 
 
  import contentStyle from "./_style/content.module.css"
+import Footer from './_footer/Footer'
+import Navbar from '@/app/shared/Navbar'
+import { BlogPostsResponse } from '../magazine/_schema/PaginatedArticles'
 
-function MainComponent() {
+function MainComponent({articles}:{articles:BlogPostsResponse}) {
   const [loading, setLoading] = useState(true)
   const preloaderRef = useRef(null)
   const contentRef = useRef(null)
 
-
+console.log("Articles: ",articles.content)
 
 
   
@@ -64,9 +67,12 @@ function MainComponent() {
           ref={contentRef}
           className={contentStyle.content}
         >
+          <Navbar/>
           <HeroSection />
           <PostHero />
           <AuthorSection />
+          <Footer/>
+
         </div>
       )}
     </main>

@@ -2,60 +2,45 @@ import Image from "next/image";
 import Link from "next/link";
 import { Post } from "../_schema/PaginatedArticles";
 
+import placeholderImage from '@/public/landscape-placeholder-svgrepo-com.png'
+
 const cleanImageUrl = (url: string) => url.replace(/([^:]\/)\/+/g, '$1'); // removes double slashes except after 'https://'
 
 async function MagazineGrid({ articles }: { articles: Post[] }) {
 
-
-  const styledElements = {
-    firstElement: 'sm:border-b-0 md:border-b-1 md:border-r-0 lg:border-b-1 border-l-1 border-r-1 border-t-1',
-    secondElement: 'sm:border-l-1 sm:border-r-1 sm:border-b-1 lg:border-b-0 lg:border-r-0 border-l-0 border-t-1',
-    thirdElement: 'sm:border-r-1 sm:border-l-1 sm:border-t-0 sm:border-b-0 sm:border-r-0 md:border-b-0 md:border-r-0 lg:border-t-1 lg:border-b-1 lg:border-r-1 border-l-0 border-t-1',
-    fourthElement: 'sm:border-r-1 sm:border-l-1 sm:border-t-0 sm:border-r-0 lg:border-l-1 lg:border-r-0 lg:border-b-1 border-r-0 border-t-1 border-b-1',
-    fifthElement: 'sm:border-r-1 sm:border-l-1 sm:border-t-0 sm:border-b-1 sm:border-r-0 md:border-t-1 lg:border-b-1 border-r-0 border-l-0 border',
-    sixthElement: 'sm:border-r-1 sm:border-l-1 sm: border-t-0 md:border-l-0 border',
-
-  };
-     
-  if(articles.length===1){
-    styledElements.firstElement='sm:border-b-0 md:border-b-1  lg:border-b-1 border-l-1 border-r-1 border-t-1'
-  }
-   
-  if(articles.length===3) {
-    styledElements.thirdElement=''
-  }
-   
   return (
     <main className="container mx-auto my-5">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2  ">
         {
    
-        articles.map((article, index) => {
+        articles.map((article) => {
           const cleanedUrl = cleanImageUrl(article.postImg);
           
           return (
             <section 
               key={article.id} 
-              className={`p-5 ${
-                index === 0 ? styledElements.firstElement :
-                index === 1 ? styledElements.secondElement :
-                index === 2 ? styledElements.thirdElement :
-                index === 3 ? styledElements.fourthElement :
-                index === 4 ? styledElements.fifthElement :
-                index === 5 ? styledElements.sixthElement :
-                ''
-              } border-[#222222]`}
-            >
+              className= "p-5 border-[0.1px]   border-[#222222]" >
               <span className="text-[#222222] text-sm font-medium">{article.date}</span>
               <figure className="p-3">
                 <Link href={`/magazine/${article.id}`}>
+                  {
+                    article.postImg===""?     
                   <Image
-                    src={cleanedUrl}
-                    alt={article.title}
-                    width={500}
-                    height={500}
-                    className="object-cover object-center max-w-full"
-                  />
+                  placeholder="empty"
+                  src={placeholderImage}
+                  alt={article.title}
+                  width={500}
+                  height={500}
+                  className="object-cover object-center max-w-full"
+                />: <Image
+                src={cleanedUrl}
+                alt={article.title}
+                width={500}
+                height={500}
+                className="object-cover object-center max-w-full"
+              /> 
+                  }
+              
                 </Link>
                 <figcaption className="p-3">
                   <Link href={`/magazine/${article.id}`}>

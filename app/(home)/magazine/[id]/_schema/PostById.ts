@@ -5,6 +5,7 @@ export type SpecificPostTyped = {
     postImg:string;
     title:string;
     date:string;
+    subTitle:string;
     
 }
 
