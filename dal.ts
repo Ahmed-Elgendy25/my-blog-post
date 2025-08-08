@@ -14,3 +14,8 @@ export const verifySession = cache(async () => {
  
   return { isAuth: true, token: token }
 })
+
+// export const deleteSession = async() => {
+//   (await cookies()).delete('token')
+
+// }

@@ -15,7 +15,8 @@ export default async function Home() {
   
   
     try {
-      articles = await GetPaginateArticles(1, 'asc',7)
+      articles = await GetPaginateArticles(0, 'asc',6)
+
    
     } catch (error) {
       console.error(error);
@@ -36,7 +37,7 @@ export default async function Home() {
     }
   
   return <>
-        <MainComponent articles={articles}/>
+          <MainComponent articles={articles}/>
          </>
       
   

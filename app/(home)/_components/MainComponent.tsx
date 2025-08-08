@@ -69,8 +69,8 @@ console.log("Articles: ",articles.content)
         >
           <Navbar/>
           <HeroSection />
-          <PostHero />
-          <AuthorSection />
+          <PostHero articles={articles.content} />
+          <AuthorSection/>
           <Footer/>
 
         </div>

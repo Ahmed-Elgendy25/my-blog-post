@@ -1,11 +1,25 @@
+'use client'
+import { deleteCookie } from '@/utils/auth';
 import {
   InstagramLogo,
   LinkedinLogo,
+  SignOut,
   XLogo,
 } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
 
-function Navbar() {
+ function handleLogOut() {
+  deleteCookie("token", "userId", "roles");
+
+
+}
+
+ function Navbar() {
+
+
+
+  
+    
   return (
     <header className=" mx-3 md:container md:mx-auto p-3 border-b-[1px]   text-[#222222] md:flex  md:justify-between md:items-center  ">
       <h2 className=" text-2xl font-bold ">
@@ -32,11 +46,17 @@ function Navbar() {
 
             <div className="w-5 h-[1px] bg-black"></div>
 
-            <div className=" flex gap-x-3  ">
+            <div className=" flex gap-x-3 items-center ">
               <InstagramLogo size={25} />
               <XLogo size={25} />
               <LinkedinLogo size={25} />
+              <Link href={"/signin"} >
+              <SignOut size={25} onClick={handleLogOut}/>
+
+              </Link>
             </div>
+
+
           </div>
         </ul>
       </nav>

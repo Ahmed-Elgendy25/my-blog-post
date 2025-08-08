@@ -1,47 +1,45 @@
 import Image from 'next/image';
 import PostsDescription from './PostsDescription';
-import { posts, PostTyped } from '@/app/create-article/_schema/posts.model';
 import PostsSection from './PostsSection';
 import AsideComponent from '../AsideComponent';
-const DataOfPosts: PostTyped[] = posts;
-function PostHero() {
+import { Post } from '../../magazine/_schema/PaginatedArticles';
+import Link from 'next/link';
+function PostHero({articles}:{articles:Post[]}) {
   return (
     <section className="container text-[#222222] mx-auto p-5 relative">
       <div className=" flex lg:flex-row lg:gap-y-0 gap-y-3 flex-col justify-between    items-start lg:p-5 p-3">
         <div className=" xl:w-1/2 ">
           <h1 className=" uppercase  leading-[1.3] font-extrabold lg:text-[2.5vmax] text-4xl   ">
-            Why Mr.Robot consider the best tv show among geeks?
+            {articles[0].title}
           </h1>
         </div>
         <PostsDescription
-          description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Egestas dui id
-        ornare arcu odio ut sem. Cras ornare arcu dui vivamus arcu felis
-        bibendum ut. Porttitor leo a diam Eget nunc lobortis mattis aliquam`}
-          author={'Cristofer Vaccaro'}
-          date={'September 22, 2022'}
-          readTime={'50 Min'}
+          title={articles[0].title}
+          author={articles[0].authorName.toLocaleUpperCase()}
+          date={articles[0].date}
+          readTime={articles[0].durationRead}
         />
       </div>
-
-      <Image
-        className="my-5"
-        src="/Mr_Robot.png"
-        width={1550}
-        height={200}
-        alt="Mr.Robot"
-      />
+      <Link href={`/magazine/${articles[0].id}`}>
+        <Image
+          className="my-5"
+          src={articles[0].postImg}
+          width={1550}
+          height={200}
+          alt="Mr.Robot"
+        />
+      </Link>
+    
       <div className="grid lg:grid-cols-7 gap-x-16  ">
         <div className="lg:col-start-1 lg:col-end-6">
-          {DataOfPosts.map((post) => (
+          {articles.map((post) => (
             <PostsSection
               key={post.id}
               title={post.title}
-              author={post.author}
+              author={post.authorName}
               date={post.date}
-              description={post.description}
-              readTime={post.readTime}
-              imageUrl={post.imageUrl}
+              readTime={post.durationRead}
+              imageUrl={post.postImg}
             />
           ))}
         </div>

@@ -1,13 +1,13 @@
 import Image from 'next/image';
 import PostsDescription from './PostsDescription';
 import { PostTyped } from '@/app/create-article/_schema/posts.model';
+import placeholderImage from '@/public/landscape-placeholder-svgrepo-com.png'
 
 function PostsSection({
   imageUrl,
   author,
   date,
   readTime,
-  description,
   title,
 }: PostTyped) {
   return (
@@ -15,11 +15,11 @@ function PostsSection({
       <article className=" flex lg:flex-row lg:gap-y-0 lg:p-5 lg:items-center lg:justify-between   flex-col items-center  gap-x-5   ">
         <figure className=" my-3 h-fit   ">
           <Image
-            src={imageUrl || ''}
+            src={imageUrl || placeholderImage}
             width={340}
             height={240}
             quality={100}
-            alt={description}
+            alt={title}
           />
         </figure>
         <div className=" w-full  my-3 p-10 ">
@@ -27,7 +27,6 @@ function PostsSection({
             author={author}
             date={date}
             readTime={readTime}
-            description={description}
             title={title}
           />
         </div>

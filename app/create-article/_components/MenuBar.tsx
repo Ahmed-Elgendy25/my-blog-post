@@ -15,14 +15,20 @@ import {
   Italic,
   List,
   ListOrdered,
+  Minus,
   Pilcrow,
   Strikethrough,
+  
 } from 'lucide-react';
 
 import { Toggle } from '@/components/ui/toggle';
 import { uploadImage } from '../_actions/UploadImage';
 import { toast } from "sonner"
+import { CodeBlock, YoutubeLogoIcon } from '@phosphor-icons/react/dist/ssr';
+import { useState } from 'react';
+
 function MenuBar({ editor,title,bannerRef }: { editor: Editor | null ,title:string ,bannerRef:React.RefObject<string> }) {
+
 
   const handleUploadImage = async () => {
     const input = document.createElement('input');
@@ -106,6 +112,19 @@ function MenuBar({ editor,title,bannerRef }: { editor: Editor | null ,title:stri
     };
   }
 
+
+  const addYoutubeVideo = () => {
+    const url = prompt('Enter YouTube URL')
+
+    if (url) {
+      editor!.commands.setYoutubeVideo({
+        src: url,
+        width:  640,
+        height:  480,
+      })
+    }
+  }
+  
   if (!editor) {
     return null;
   }
@@ -193,8 +212,24 @@ function MenuBar({ editor,title,bannerRef }: { editor: Editor | null ,title:stri
       element: <ImageUpscale className="size-4" />,
       onClick: handleUploadBanner,
       isActive: !!bannerRef.current,
+    },
+    {
+      element: <CodeBlock className="size-4" />,
+      onClick: ()=>editor.chain().focus().toggleCodeBlock().run(),
+      isActive: editor.isActive('codeBlock'),
+    },
+    {
+      element:<Minus className="size-4"/>,
+      onClick: ()=>editor.chain().focus().setHorizontalRule().run(),
+      isActive: editor.isActive('horizontalRule'),
+    },
+    {
+      element:<YoutubeLogoIcon className="size-4"/>,
+      onClick: ()=>addYoutubeVideo(),
+      isActive: editor.isActive('youtube'),
     }
-  ];
+
+  ];  
 
   return (
     <div>

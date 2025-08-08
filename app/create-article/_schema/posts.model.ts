@@ -1,10 +1,10 @@
 export interface PostTyped {
   id?: number;
-  title?: string;
+  title: string;
   author: string;
   date: string;
   readTime: string;
-  description: string;
+  description?: string;
   category?: string;
   imageUrl?: string;
 }
