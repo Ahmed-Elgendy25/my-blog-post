@@ -26,16 +26,39 @@ import Youtube from '@tiptap/extension-youtube'
 
 
 import styles from "../_styles/tiptap.module.css"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+async function fetchStreamedAI(selectedText: string, onChunk: (chunk: string) => void) {
+  const res = await fetch("/api/gemini", {
+    method: "POST",
+    body: JSON.stringify({ text: selectedText }),
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (!res.body) throw new Error("No response body");
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let done = false;
+
+  while (!done) {
+    const { value, done: readerDone } = await reader.read();
+    done = readerDone;
+    if (value) {
+      onChunk(decoder.decode(value, { stream: true }));
+    }
+  }
+}
 
 
 function RichTextEditor({ setContent,title, bannerRef }: {  setContent: React.Dispatch<EditorAction>;
 title:string ,bannerRef:React.RefObject<string> }) {
 
+  let selectionTimer:NodeJS.Timeout ;
 
-  const [height, setHeight] = useState(480);
-  const [width, setWidth] = useState(640);
 
+
+  
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -85,6 +108,27 @@ title:string ,bannerRef:React.RefObject<string> }) {
     onUpdate: ({ editor }) => {
       setContent({ type: 'SET_CONTENT', payload: editor.getHTML() });
     },
+    onSelectionUpdate: ({ editor }) => {
+      clearTimeout(selectionTimer);
+    
+      selectionTimer = setTimeout(async () => {
+        const { from, to } = editor.state.selection;
+        const selectedText = editor.state.doc.textBetween(from, to);
+    
+        if (selectedText.trim()) {
+          editor.chain().focus().insertContentAt({ from, to }, "").run(); // clear selection
+    
+          await fetchStreamedAI(selectedText, (chunk) => {
+            editor.chain().focus().insertContent(chunk).run(); // append chunk
+          });
+        }
+      }, 500);
+    },
+     // waits 500ms after last selection update
+  
+    
+    
+
     immediatelyRender:false,
   });
 

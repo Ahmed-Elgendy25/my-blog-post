@@ -1,5 +1,5 @@
 'use client'
-import { deleteCookie } from '@/utils/auth';
+import { deleteCookie } from '@/utils/auth/logout';
 import {
   InstagramLogo,
   LinkedinLogo,
