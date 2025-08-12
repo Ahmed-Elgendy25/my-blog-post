@@ -10,7 +10,9 @@ export const editorReducer = (state: EditorState, action: EditorAction): EditorS
         return { ...state, subTitle: action.payload };
       case 'SET_DURATION':
         return { ...state, duration: action.payload };
-      case 'RESET':
+      case 'GENERATE_CONTENT':
+          return { ...state, generateContent:!state.generateContent };
+      case 'RESET_EDITOR':
        return initialState;
       default:
         return state;
@@ -21,5 +23,6 @@ export const editorReducer = (state: EditorState, action: EditorAction): EditorS
     content: '',
     title: '',
     subTitle: '',
-    duration: ''
+    duration: '',
+    generateContent:false
   };

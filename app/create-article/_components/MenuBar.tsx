@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react/display-name */
 import { Editor } from '@tiptap/react';
 import {
   AlignCenter,
@@ -17,7 +17,10 @@ import {
   ListOrdered,
   Minus,
   Pilcrow,
+  Sparkles,
   Strikethrough,
+  
+  
   
 } from 'lucide-react';
 
@@ -25,9 +28,10 @@ import { Toggle } from '@/components/ui/toggle';
 import { uploadImage } from '../_actions/UploadImage';
 import { toast } from "sonner"
 import { CodeBlock, YoutubeLogoIcon } from '@phosphor-icons/react/dist/ssr';
-import { useState } from 'react';
+import { EditorAction } from '../_schema/Editor.model';
+import { memo } from 'react';
 
-function MenuBar({ editor,title,bannerRef }: { editor: Editor | null ,title:string ,bannerRef:React.RefObject<string> }) {
+const MenuBar= memo(({ editor,title,bannerRef,generateContent,dispatch}: { editor: Editor | null ,title:string ,bannerRef:React.RefObject<string>,generateContent:boolean,dispatch: React.Dispatch<EditorAction> }) => {
 
 
   const handleUploadImage = async () => {
@@ -227,9 +231,15 @@ function MenuBar({ editor,title,bannerRef }: { editor: Editor | null ,title:stri
       element:<YoutubeLogoIcon className="size-4"/>,
       onClick: ()=>addYoutubeVideo(),
       isActive: editor.isActive('youtube'),
+    },
+    {
+      element:<Sparkles className="size-4"/>,
+      onClick:()=> dispatch({type:"GENERATE_CONTENT"}) ,
+      isActive: generateContent,
     }
 
   ];  
+console.log("GenerateContent: ", generateContent)
 
   return (
     <div>
@@ -244,6 +254,6 @@ function MenuBar({ editor,title,bannerRef }: { editor: Editor | null ,title:stri
       ))}
     </div>
   );
-}
+})
 
 export default MenuBar;

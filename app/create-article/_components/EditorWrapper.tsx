@@ -13,7 +13,6 @@ import { toast } from 'sonner';
 function EditorWrapper() {
     const [state, dispatch] = useReducer(editorReducer, initialState);
     const bannerRef = useRef<string>('');
-  
 
     const handlePublish = async () => {
      
@@ -82,7 +81,7 @@ function EditorWrapper() {
       </section>
         </div>
     
-          <RichTextEditor  setContent={dispatch} title={state.title} bannerRef={bannerRef} />
+          <RichTextEditor  dispatch={dispatch} title={state.title} bannerRef={bannerRef} generateContent = {state.generateContent} />
 
           <ButtonComponent type="submit" overrideStyle={true} style="min-w-full  mt-3" onClick={handlePublish} pending={pending}>Publish</ButtonComponent>
 
