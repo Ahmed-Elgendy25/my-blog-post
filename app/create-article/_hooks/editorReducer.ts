@@ -1,6 +1,6 @@
-import { EditorAction, EditorState } from "../_schema/Editor.model";
+import { EditorActionTyped, EditorState } from "../_schema/Editor.model";
 
-export const editorReducer = (state: EditorState, action: EditorAction): EditorState => {
+export const editorReducer = (state: EditorState, action: EditorActionTyped): EditorState => {
     switch (action.type) {
       case 'SET_CONTENT':
         return { ...state, content: action.payload };
@@ -11,7 +11,7 @@ export const editorReducer = (state: EditorState, action: EditorAction): EditorS
       case 'SET_DURATION':
         return { ...state, duration: action.payload };
       case 'GENERATE_CONTENT':
-          return { ...state, generateContent:!state.generateContent };
+          return { ...state, generateContent:!state.generateContent||action.payload };
       case 'RESET_EDITOR':
        return initialState;
       default:

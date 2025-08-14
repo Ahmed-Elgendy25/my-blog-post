@@ -28,10 +28,10 @@ import { Toggle } from '@/components/ui/toggle';
 import { uploadImage } from '../_actions/UploadImage';
 import { toast } from "sonner"
 import { CodeBlock, YoutubeLogoIcon } from '@phosphor-icons/react/dist/ssr';
-import { EditorAction } from '../_schema/Editor.model';
+import { EditorActionTyped } from '../_schema/Editor.model';
 import { memo } from 'react';
 
-const MenuBar= memo(({ editor,title,bannerRef,generateContent,dispatch}: { editor: Editor | null ,title:string ,bannerRef:React.RefObject<string>,generateContent:boolean,dispatch: React.Dispatch<EditorAction> }) => {
+const MenuBar= memo(({ editor,title,bannerRef,generateContent,dispatch}: { editor: Editor | null ,title:string ,bannerRef:React.RefObject<string>,generateContent:boolean,dispatch: React.Dispatch<EditorActionTyped> }) => {
 
 
   const handleUploadImage = async () => {
