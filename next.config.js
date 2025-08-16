@@ -16,7 +16,8 @@ const nextConfig = {
     },
     serverActions: {
       bodySizeLimit: '4mb' // Increase the limit to 4MB
-    }
+    },
+
   }
 };
 
