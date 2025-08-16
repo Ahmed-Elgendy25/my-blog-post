@@ -11,13 +11,13 @@ export const metadata: Metadata = {
   description: 'The page you are looking for does not exist.',
 }
  
-export default function RootLayout({children} :{  children: React.ReactNode
+export default function Layout({children} :{  children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={inter.className}>
+    <main  className={inter.className}>
       <body>
         {children}
       </body>
-    </html>
+    </main>
   )
 }

@@ -9,15 +9,15 @@ export const metadata: Metadata = {
   description: "Content management dashboard for authors",
 }
 
-export default function Layout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <main className={inter.className} >
-    {children}
-    </main>
+    <html lang="en" className="dark">
+      <body className={inter.className}>{children}</body>
+    </html>
   )
 }
 

@@ -8,10 +8,10 @@ export default function NotFound() {
   
 
   return (
-    <main>
+    <>
       <Spline
-scene="https://prod.spline.design/opqFRHpzmsvaCjEF/scene.splinecode"
-/>
-    </main>
+        scene="https://prod.spline.design/opqFRHpzmsvaCjEF/scene.splinecode"
+        />
+    </>
   )
 }

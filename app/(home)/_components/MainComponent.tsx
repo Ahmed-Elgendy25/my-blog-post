@@ -27,7 +27,7 @@ console.log("Articles: ",articles.content)
     const timer = setTimeout(() => {
       gsap.to(preloaderRef.current, {
         yPercent: 100,
-        duration: 1.5,
+        duration:1,
         ease:"power3.inOut",
         onComplete: () => {
           setLoading(false)
@@ -41,7 +41,7 @@ console.log("Articles: ",articles.content)
   // Animate content with timeline (after it's in DOM)
   useEffect(() => {
     if (!loading && contentRef.current) {
-      const tl = gsap.timeline({defaults:{duration:1,ease:'power2.out'}});
+      const tl = gsap.timeline({defaults:{duration:0.45,ease:'power2.out'}});
 
       tl.to(contentRef.current, {
         clipPath: 'polygon(100% 80%, 100% 100%, 0 100%, 0 60%)',
