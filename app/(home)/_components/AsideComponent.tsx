@@ -1,9 +1,8 @@
-import ButtonComponent from "@/app/shared/ButtonComponent"
 import Image from "next/image"
 
 function AsideComponent() {
   return (
-    <aside className="lg:col-start-6 lg:col-end-8 p-3 bg-purple-500 ">
+    <aside className="lg:col-start-6 lg:col-end-8 p-3 ">
     <header className="my-6">
       <h3 className=" text-lg font-bold  ">STACK STORIES MAGAZINE</h3>
       <h2 className="text-6xl  font-bold">04/2025</h2>
@@ -26,11 +25,6 @@ function AsideComponent() {
         </p>
       </figcaption>
     </figure>
-
-
-    <ButtonComponent type='button' style='uppercase bg-[#222222]  text-[#e7e8e2] font-medium p-5 w-full my-3 cursor-pointer'>
-      buy now
-    </ButtonComponent>
 
 </aside>
   )

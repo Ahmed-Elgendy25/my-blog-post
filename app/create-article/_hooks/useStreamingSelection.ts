@@ -2,6 +2,7 @@ import { useCallback, useRef } from 'react';
 import type { Editor } from '@tiptap/react';
 import type { EditorActionTyped } from '../_schema/Editor.model';
 import { fetchStreamedAI } from '../_actions/FetchStreamedAI';
+import { marked } from 'marked';
 
 export function useStreamingSelection(
   deferredGenerateContent: boolean,
@@ -28,10 +29,22 @@ export function useStreamingSelection(
           const flushBuffer = () => {
             if (buffer) {
               setLoadingPos(null);
-              editor.chain().focus().insertContent(buffer).run();
+              const html = marked.parse(buffer); // Convert markdown to HTML
+              
+              editor.chain()
+                .focus()
+                .insertContent({
+                  type: 'paragraph', // fallback if HTML parsing fails
+                  content: [],
+                  // let TipTap parse the HTML
+                })
+                .run();
+          
+              editor.commands.insertContent(html, { parseOptions: { preserveWhitespace: false } });
               buffer = '';
             }
           };
+          
 
           await fetchStreamedAI(selectedText, (chunk) => {
             buffer += chunk;
