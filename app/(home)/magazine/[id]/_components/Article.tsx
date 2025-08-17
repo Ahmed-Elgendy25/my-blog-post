@@ -4,6 +4,7 @@ import { imageUrls, UserTyped } from '../_schema/PostById';
 import React from 'react';
 import {  InstagramLogo, LinkedinLogo, XLogo } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
+import placeholderImage from '@/public/landscape-placeholder-svgrepo-com.png'
 
 function Article({
   userImg,
@@ -42,9 +43,7 @@ function Article({
               <Image
                 src={imageUrl}
                 alt="Article image"
-             
                 fill
-
                 className='  object-cover '
               />
             </div>
@@ -72,13 +71,26 @@ function Article({
       <aside className='col-span-4 mt-10  '>
       <div className='sticky top-10'>
     <div className='flex items-center gap-x-2 border-[#222222] border-b-1 p-4'>
-      <Image
-        src={userImg}
-        alt="User"
-        width={120}
-        height={100}
-        className='rounded-[50%] p-3 w-[120px] h-[100px] object-cover'
-      />
+
+    {
+                             !userImg?     
+                              <Image
+                                placeholder="empty"
+                                src={placeholderImage}
+                                alt={`${user.firstName} ${user.lastName}`}
+                                width={150} 
+                                height={500}
+                                className="object-cover rounded-[50%]"
+                              />: 
+                              <Image
+                              src={userImg}
+                              alt={`${user.firstName} ${user.lastName}`}
+                              width={150} 
+                              height={500}
+                              className="object-cover rounded-[50%]"
+                              /> 
+                                }
+
       <h2 className='text-3xl font-bold text-[#222222]'>
         {`${user.firstName} ${user.lastName}`}
       </h2>

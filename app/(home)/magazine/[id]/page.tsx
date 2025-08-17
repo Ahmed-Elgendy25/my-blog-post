@@ -5,6 +5,23 @@ import { GetSpecificPost } from "./_actions/GetSpecificPost"
 import { GetImagesPost } from "./_actions/GetImagesPost"
 import { GetUserById } from "./_actions/GetUserById"
 import { imageUrls, SpecificPostTyped, UserTyped } from "./_schema/PostById"
+ 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const {id} = await params;
+
+  const post:SpecificPostTyped = await GetSpecificPost(id);
+
+
+
+  return {
+    title: `${post.title}`,
+    description: `${post.title}`
+  }
+}
 
 async function page({
     params,

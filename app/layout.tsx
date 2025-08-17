@@ -14,10 +14,16 @@ export const metadata: Metadata = {
 export default function Layout({children} :{  children: React.ReactNode
 }) {
   return (
-    <main  className={inter.className}>
-      <body>
+    <html  className={inter.className}>
+      <head>
+      <link rel="icon" href="/logo2.ico" sizes="any" />
+      </head> 
+    <body>
+
         {children}
-      </body>
-    </main>
+    </body>
+    
+   
+    </html>
   )
 }

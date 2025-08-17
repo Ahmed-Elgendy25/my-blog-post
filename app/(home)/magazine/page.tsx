@@ -7,6 +7,19 @@ import { BlogPostsResponse } from "./_schema/PaginatedArticles"
 import Footer from "../_components/_footer/Footer"
 import Navbar from "@/app/shared/Navbar"
 
+type SearchParamsTyped = Promise<{ [key: string]: string | string[] | undefined }>
+ 
+export async function generateMetadata(props: {
+  searchParams: SearchParamsTyped
+}) {
+  const {page} = await props.searchParams
+  return {
+    title: `Page ${page}`,
+    description: `This is the page ${page}.`
+  }
+}
+ 
+
 async function page({
   searchParams,
 }: {
