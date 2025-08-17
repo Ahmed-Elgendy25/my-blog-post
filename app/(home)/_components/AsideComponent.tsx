@@ -2,7 +2,7 @@ import Image from "next/image"
 
 function AsideComponent() {
   return (
-    <aside className="lg:col-start-6 lg:col-end-8 p-3 ">
+    <aside className="   ">
     <header className="my-6">
       <h3 className=" text-lg font-bold  ">STACK STORIES MAGAZINE</h3>
       <h2 className="text-6xl  font-bold">04/2025</h2>

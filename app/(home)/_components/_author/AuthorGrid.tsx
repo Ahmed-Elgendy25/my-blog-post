@@ -6,7 +6,7 @@ import Link from "next/link"
 
 function AuthorGrid() {
   return (
-    <section className='grid grid-cols-12 grid-rows-3 '>
+    <section className='grid grid-cols-12 '>
         <div className=' col-span-12 border-1 border-[#222222]  px-3 py-8'>
             <div className="flex items-center  gap-x-5 p-3">
             <Image src={author1} alt="Meet the mind behind The Grinder — hustler, coder, and creator Ahmed Ashraf El-Gendy." width={150} height={500} className="  object-cover rounded-[50%]" />

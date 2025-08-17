@@ -30,25 +30,27 @@ function PostHero({articles}:{articles:Post[]}) {
         />
       </Link>
     
-      <div className="grid lg:grid-cols-7 gap-x-16  ">
-        <div className="lg:col-start-1 lg:col-end-6">
-          {articles.map((post) => (
-            <PostsSection
-              key={post.id}
-              title={post.title}
-              author={post.authorName}
-              date={post.date}
-              readTime={post.durationRead}
-              imageUrl={post.postImg}
-            />
-          ))}
-        </div>
+      <div className=" grid lg:grid-cols-7 gap-x-16">
+  <div className="lg:col-start-1 lg:col-end-6">
+    {articles.map((post) => (
+      <PostsSection
+        key={post.id}
+        title={post.title}
+        author={post.authorName}
+        date={post.date}
+        readTime={post.durationRead}
+        imageUrl={post.postImg}
+      />
+    ))}
+  </div>
 
-        <AsideComponent />
+  <div className="lg:col-start-6 lg:col-end-8 p-3 ">
+    <div className="sticky top-0">
+      <AsideComponent />
+    </div>
+  </div>
+</div>
 
-
-    
-      </div>
 
 
     </section>
