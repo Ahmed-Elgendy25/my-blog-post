@@ -31,7 +31,7 @@ import Link from 'next/link';
         </h2>
       <nav className="w-1/2 p-2  md:block hidden">
         <ul className=" list-none">
-          <div className="flex text-[1.6rem] font-light justify-end  gap-x-10 items-center ">
+          <div className="flex text-[1.3rem] font-light justify-end  gap-x-10 items-center ">
             <div className="flex gap-x-5">
               <li>
                 <Link href={'/magazine?page=1'}>Magazine</Link>
@@ -47,11 +47,11 @@ import Link from 'next/link';
             <div className="w-5 h-[1px] bg-black"></div>
 
             <div className=" flex gap-x-3 items-center ">
-              <InstagramLogo size={25} />
-              <XLogo size={25} />
-              <LinkedinLogo size={25} />
+              <InstagramLogo size={22} />
+              <XLogo size={22}   />
+              <LinkedinLogo size={22}  />
               <Link href={"/signin"} >
-              <SignOut size={25} onClick={handleLogOut}/>
+              <SignOut size={22}   onClick={handleLogOut}/>
 
               </Link>
             </div>

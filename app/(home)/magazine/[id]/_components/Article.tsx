@@ -44,7 +44,7 @@ function Article({
                 src={imageUrl}
                 alt="Article image"
                 fill
-                className='  object-cover '
+                className='object-cover'
               />
             </div>
           );
@@ -68,7 +68,7 @@ function Article({
 
   return (
     <>
-      <aside className='col-span-4 mt-10  '>
+      <aside className=' order-1 lg:order-none lg:col-span-4 col-start-1 col-end-13 mt-10  '>
       <div className='sticky top-10'>
     <div className='flex items-center gap-x-2 border-[#222222] border-b-1 p-4'>
 
@@ -78,16 +78,16 @@ function Article({
                                 placeholder="empty"
                                 src={placeholderImage}
                                 alt={`${user.firstName} ${user.lastName}`}
-                                width={150} 
+                                width={95} 
                                 height={500}
-                                className="object-cover rounded-[50%]"
+                                className="object-cover rounded-[50%] me-4"
                               />: 
                               <Image
                               src={userImg}
                               alt={`${user.firstName} ${user.lastName}`}
-                              width={150} 
+                              width={95} 
                               height={500}
-                              className="object-cover rounded-[50%]"
+                              className="object-cover rounded-[50%] me-4"
                               /> 
                                 }
 
@@ -119,7 +119,7 @@ function Article({
 
       </aside>
 
-      <article className='col-span-8 mt-10   h-full  p-7'>
+      <article className='lg:col-span-8 col-span-full mt-10   h-full  p-7'>
         {parsedContent}
       </article>
     </>

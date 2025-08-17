@@ -25,14 +25,18 @@ console.log("Articles: ",articles.content)
   // Animate preloader out after delay
   useEffect(() => {
     const timer = setTimeout(() => {
-      gsap.to(preloaderRef.current, {
-        yPercent: 100,
-        duration:1,
-        ease:"power3.inOut",
-        onComplete: () => {
-          setLoading(false)
-        },
-      })
+      const tl = gsap.timeline({defaults:{ease:'power3.inOut'}});
+      // reveal content underneath while preloader exits
+      if (contentRef.current) tl.set(contentRef.current, { opacity: 1 }, 0);
+      // avoid interaction/repaint delays during the overlap
+      if (preloaderRef.current) tl.set(preloaderRef.current, { pointerEvents: 'none' }, 0);
+      // fade preloader bg to transparent and slide out simultaneously
+      tl.to(preloaderRef.current, { backgroundColor: 'rgba(231,232,226,0)', duration: 0.2 }, 0)
+        .to(preloaderRef.current, { yPercent: 100, autoAlpha: 0, duration: 0.8 }, 0)
+        .add(() => {
+          gsap.set(preloaderRef.current, { display: 'none' });
+          setLoading(false);
+        });
     }, 3000)
 
     return () => clearTimeout(timer)

@@ -30,15 +30,13 @@ async function page({
   }) {
     const {id} = await params;
     
-    // First get the post
     const post:SpecificPostTyped = await GetSpecificPost(id);
     
     if (!post) {
-      return null; // or handle error case as needed
+      return null; 
     }
-    // Now get the images using the post title
+
     const images:imageUrls[] = await GetImagesPost(post.title);
-    // get user by id
     const user:UserTyped = await GetUserById(post.authorId);
 
 

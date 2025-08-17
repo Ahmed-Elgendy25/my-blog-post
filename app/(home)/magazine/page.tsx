@@ -5,7 +5,6 @@ import { GetPaginateArticles } from "./_actions/GetPaginatedArticles"
 import PaginationList from "./_components/PaginationList"
 import { BlogPostsResponse } from "./_schema/PaginatedArticles"
 import Footer from "../_components/_footer/Footer"
-import Navbar from "@/app/shared/Navbar"
 
 type SearchParamsTyped = Promise<{ [key: string]: string | string[] | undefined }>
  
@@ -56,7 +55,6 @@ async function page({
 
   return (
     <>
-      <Navbar/>
       <HeadingComponent 
         title="MAGAZINE" 
         headingStyle="text-center font-bold text-[#222222]" 
