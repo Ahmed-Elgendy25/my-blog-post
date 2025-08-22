@@ -10,144 +10,164 @@ import { SignupFormFields } from "../../_schema/SignupSchema";
 
 function SignUpContainer() {
   const { register, handleSubmit, errors, reset } = useSignUpForm();
-  
+
   const onSubmit = async (data: SignupFormFields) => {
     const result = await signupSubmit(data);
-    if (result.success) {
-      reset();
-    }
+    if (result.success) reset();
   };
 
   return (
     <LeftColGrid>
-      <SignUpForm style='p-5 flex flex-wrap gap-x-15 items-center content-center' submit={handleSubmit(onSubmit)}>
-        <SectionComponent style='md:w-1/2 w-full mt-5'>
-          {errors.email && <div className="text-red-500 font-medium text-sm w-auto">{errors.email.message}</div>}
+      <SignUpForm 
+        style="p-5 grid grid-cols-1 md:grid-cols-2 gap-5 items-start" 
+        submit={handleSubmit(onSubmit)}
+      >
+        {/* Email */}
+        <SectionComponent>
+          {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
           <InputComponent input={
-            <input
+            <input 
               type="email"
               {...register('email')}
-              placeholder="email"
-              className="bg-none min-w-full placeholder:text-[#222222] placeholder:font-medium border-b-[1.9px] border-b-[#222222]/50 outline-none p-5"
+              placeholder="Email"
+              className="w-full border-b-2 border-[#222]/50 p-5 placeholder:font-medium outline-none"
             />
           }/>
         </SectionComponent>
 
-        <SectionComponent style='md:w-1/3 w-full mt-5'>
-          {errors.firstName && <div className="text-red-500 font-medium text-sm w-auto">{errors.firstName.message}</div>}
+        {/* First Name */}
+        <SectionComponent>
+          {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName.message}</p>}
           <InputComponent input={
-            <input
+            <input 
               type="text"
               {...register('firstName')}
-              placeholder="firstname"
-              className="bg-none min-w-full placeholder:text-[#222222] placeholder:font-medium border-b-[1.9px] border-b-[#222222]/50 outline-none p-5"
+              placeholder="First Name"
+              className="w-full border-b-2 border-[#222]/50 p-5 placeholder:font-medium outline-none"
             />
           }/>
         </SectionComponent>
 
-        <SectionComponent style='md:w-1/2 w-full mt-5'>
-          {errors.lastName && <div className="text-red-500 font-medium text-sm w-auto">{errors.lastName.message}</div>}
+        {/* Last Name */}
+        <SectionComponent>
+          {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName.message}</p>}
           <InputComponent input={
-            <input
+            <input 
               type="text"
               {...register('lastName')}
-              placeholder="lastname"
-              className="bg-none min-w-full placeholder:text-[#222222] placeholder:font-medium border-b-[1.9px] border-b-[#222222]/50 outline-none p-5"
+              placeholder="Last Name"
+              className="w-full border-b-2 border-[#222]/50 p-5 placeholder:font-medium outline-none"
             />
           }/>
         </SectionComponent>
 
-        <SectionComponent style='md:w-1/3 w-full mt-5'>
-          {errors.password && <div className="text-red-500 font-medium text-sm w-auto">{errors.password.message}</div>}
+        {/* Password */}
+        <SectionComponent>
+          {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
           <InputComponent input={
-            <input
+            <input 
               type="password"
               {...register('password')}
-              placeholder="password"
-              className="bg-none min-w-full placeholder:text-[#222222] placeholder:font-medium border-b-[1.9px] border-b-[#222222]/50 outline-none p-5"
+              placeholder="Password"
+              className="w-full border-b-2 border-[#222]/50 p-5 placeholder:font-medium outline-none"
             />
           }/>
         </SectionComponent>
 
-        <SectionComponent style='md:w-1/2 w-full mt-5'>
-          {errors.confirmPassword && <div className="text-red-500 font-medium text-sm w-auto">{errors.confirmPassword.message}</div>}
+        {/* Confirm Password */}
+        <SectionComponent>
+          {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>}
           <InputComponent input={
-            <input
+            <input 
               type="password"
               {...register('confirmPassword')}
-              placeholder="confirmpassword"
-              className="bg-none min-w-full placeholder:text-[#222222] placeholder:font-medium border-b-[1.9px] border-b-[#222222]/50 outline-none p-5"
+              placeholder="Confirm Password"
+              className="w-full border-b-2 border-[#222]/50 p-5 placeholder:font-medium outline-none"
             />
           }/>
         </SectionComponent>
 
-        <SectionComponent style='md:w-1/2 w-full mt-5'>
-          {errors.linkedinProfile && <div className="text-red-500 font-medium text-sm w-auto">{errors.linkedinProfile.message}</div>}
+        {/* LinkedIn */}
+        <SectionComponent>
+          {errors.linkedinProfile && <p className="text-red-500 text-sm">{errors.linkedinProfile.message}</p>}
           <InputComponent input={
-            <input
+            <input 
               type="text"
               {...register('linkedinProfile')}
-              placeholder="LinkedInProfile"
-              className="bg-none min-w-full placeholder:text-[#222222] placeholder:font-medium border-b-[1.9px] border-b-[#222222]/50 outline-none p-5"
+              placeholder="LinkedIn Profile"
+              className="w-full border-b-2 border-[#222]/50 p-5 placeholder:font-medium outline-none"
             />
           }/>
         </SectionComponent>
 
-
-
-        <SectionComponent style='md:w-1/2 w-full mt-5'>
-          {errors.twitterProfile && <div className="text-red-500 font-medium text-sm w-auto">{errors.twitterProfile.message}</div>}
+        {/* Twitter */}
+        <SectionComponent>
+          {errors.twitterProfile && <p className="text-red-500 text-sm">{errors.twitterProfile.message}</p>}
           <InputComponent input={
-            <input
-              type="password"
+            <input 
+              type="text"
               {...register('twitterProfile')}
               placeholder="Twitter Profile"
-              className="bg-none min-w-full placeholder:text-[#222222] placeholder:font-medium border-b-[1.9px] border-b-[#222222]/50 outline-none p-5"
+              className="w-full border-b-2 border-[#222]/50 p-5 placeholder:font-medium outline-none"
             />
           }/>
         </SectionComponent>
 
-
-        <SectionComponent style='md:w-1/2 w-full mt-5'>
-          {errors.instagramProfile && <div className="text-red-500 font-medium text-sm w-auto">{errors.instagramProfile.message}</div>}
+        {/* Instagram */}
+        <SectionComponent>
+          {errors.instagramProfile && <p className="text-red-500 text-sm">{errors.instagramProfile.message}</p>}
           <InputComponent input={
-            <input
-              type="password"
+            <input 
+              type="text"
               {...register('instagramProfile')}
               placeholder="Instagram Profile"
-              className="bg-none min-w-full placeholder:text-[#222222] placeholder:font-medium border-b-[1.9px] border-b-[#222222]/50 outline-none p-5"
+              className="w-full border-b-2 border-[#222]/50 p-5 placeholder:font-medium outline-none"
             />
           }/>
         </SectionComponent>
 
-
-        <SectionComponent style='md:w-1/3 w-full mt-5'>
-          {errors.role && <div className="text-red-500 font-medium text-sm w-auto">{errors.role.message}</div>}
-          <div className="md:w-1/3 w-full flex justify-between">
-            <div className="flex flex-col justify-center items-center p-5 min-w-auto">
-              <label htmlFor='user' className="font-medium">User</label>
-              <InputComponent input={<input type="checkbox" {...register('role')} id='user' value='user' className="bg-none min-w-full placeholder:text-[#222222] placeholder:font-medium border-b-[1.9px] border-b-[#222222]/50 outline-none p-5"/>}/>
-            </div>
-            <div className="flex flex-col justify-center items-center p-5 min-w-auto">
-              <label htmlFor='author' className="font-medium">Author</label>
-              <InputComponent input={<input type="checkbox" {...register('role')} id='author' value='author' className="bg-none min-w-full placeholder:text-[#222222] placeholder:font-medium border-b-[1.9px] border-b-[#222222]/50 outline-none p-5"/>}/>
-            </div>
+        {/* Role Selection - full width */}
+        <SectionComponent style="col-span-1 md:col-span-2">
+          {errors.role && <p className="text-red-500 text-sm mb-2">{errors.role.message}</p>}
+          <div className="flex flex-wrap justify-center gap-8">
+            {['user', 'author'].map(role => (
+              <label key={role} className="flex items-center gap-2 font-medium">
+                <input 
+                  type="checkbox" 
+                  {...register('role')} 
+                  value={role}
+                  className="accent-[#222]"
+                />
+                {role.charAt(0).toUpperCase() + role.slice(1)}
+              </label>
+            ))}
           </div>
         </SectionComponent>
 
-        <SectionComponent style='md:w-1/2 w-full mt-5'>
-          <label
-            htmlFor="profileimage"
-            className="bg-[#222222] mt-2 text-[#e7e8e2] cursor-pointer min-w-full p-5 rounded-2xl flex justify-center items-center">
-            Upload Profile Image
-          </label>
-          <InputComponent input={<input id='profileimage' {...register('profileImage')} placeholder='Upload' style={{ display: 'none' }} type="file" />}/>
+        {/* Profile Image */}
+        <SectionComponent>
+        <label 
+  htmlFor="profileimage"
+  className="bg-[#222] text-[#e7e8e2] cursor-pointer min-w-full inline-block p-5 rounded-2xl text-center"
+>
+  Upload Profile Image
+</label>
+
+          <InputComponent input={
+            <input 
+              id="profileimage" 
+              {...register('profileImage')} 
+              type="file" 
+              style={{ display: 'none' }} 
+            />
+          }/>
         </SectionComponent>
 
-        <SectionComponent style='w-full mt-10'>
-          <ButtonComponent type="submit" overrideStyle={true} style="min-w-full">Sign Up</ButtonComponent>
+        {/* Submit button full width */}
+        <SectionComponent style="col-span-1 md:col-span-2">
+          <ButtonComponent type="submit" overrideStyle={true} style="w-full">Sign Up</ButtonComponent>
         </SectionComponent>
-        
+
       </SignUpForm>
     </LeftColGrid>
   );

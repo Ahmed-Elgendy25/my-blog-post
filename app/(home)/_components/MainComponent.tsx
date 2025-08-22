@@ -1,86 +1,41 @@
-'use client'
-import Preloader from './_preloader/Preloader'
-import { useEffect, useRef, useState } from 'react'
-import HeroSection from './HeroSection'
-import PostHero from './_posts/PostHero'
-import AuthorSection from './_author/AuthorSection'
-import gsap from 'gsap'
+'use client';
+import HeroSection from './HeroSection';
+import PostHero from './_posts/PostHero';
+import AuthorSection from './_author/AuthorSection';
+import contentStyle from "./_style/content.module.css";
+import Footer from './_footer/Footer';
+import Navbar from '@/app/shared/Navbar';
+import { BlogPostsResponse } from '../magazine/_schema/PaginatedArticles';
+import { usePageTransition } from '@/hooks/usePageTransition';
+import Preloader from '@/app/shared/_preloader/Preloader';
 
+function MainComponent({ articles }: { articles: BlogPostsResponse }) {
+  const { isLoading, preloaderRef, contentRef } = usePageTransition({
+    preloaderDuration: 3000,
+    onPreloaderComplete: () => {
+      console.log('Preloader animation complete');
+    },
+    onContentReveal: () => {
+      console.log('Content reveal animation complete');
+    },
+  });
 
- import contentStyle from "./_style/content.module.css"
-import Footer from './_footer/Footer'
-import Navbar from '@/app/shared/Navbar'
-import { BlogPostsResponse } from '../magazine/_schema/PaginatedArticles'
-
-function MainComponent({articles}:{articles:BlogPostsResponse}) {
-  const [loading, setLoading] = useState(true)
-  const preloaderRef = useRef(null)
-  const contentRef = useRef(null)
-
-console.log("Articles: ",articles.content)
-
-
-  
-
-  // Animate preloader out after delay
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const tl = gsap.timeline({defaults:{ease:'power3.inOut'}});
-      // reveal content underneath while preloader exits
-      if (contentRef.current) tl.set(contentRef.current, { opacity: 1 }, 0);
-      // avoid interaction/repaint delays during the overlap
-      if (preloaderRef.current) tl.set(preloaderRef.current, { pointerEvents: 'none' }, 0);
-      // fade preloader bg to transparent and slide out simultaneously
-      tl.to(preloaderRef.current, { backgroundColor: 'rgba(231,232,226,0)', duration: 0.2 }, 0)
-        .to(preloaderRef.current, { yPercent: 100, autoAlpha: 0, duration: 0.8 }, 0)
-        .add(() => {
-          gsap.set(preloaderRef.current, { display: 'none' });
-          setLoading(false);
-        });
-    }, 3000)
-
-    return () => clearTimeout(timer)
-  }, [])
-
-  // Animate content with timeline (after it's in DOM)
-  useEffect(() => {
-    if (!loading && contentRef.current) {
-      const tl = gsap.timeline({defaults:{duration:0.45,ease:'power2.out'}});
-
-      tl.to(contentRef.current, {
-        clipPath: 'polygon(100% 80%, 100% 100%, 0 100%, 0 60%)',
-      })
-      .to(contentRef.current, {
-        clipPath: 'polygon(100% 40%, 100% 100%, 0 100%, 0 20%)',
-      })
-      .to(contentRef.current, {
-        clipPath: 'polygon(100% 0%, 100% 100%, 0 100%, 0 0%)',
-      });
-    }
-  }, [loading]);
-  
-  
-  
-  
   return (
     <main className="relative">
-      {loading && <Preloader preloaderRef={preloaderRef} />}
+      {isLoading && <Preloader   preloaderRef={preloaderRef} />}
 
-      {!loading && (
-        <div
-          ref={contentRef}
-          className={contentStyle.content}
-        >
-          <Navbar/>
-          <HeroSection />
-          <PostHero articles={articles.content} />
-          <AuthorSection/>
-          <Footer/>
-
-        </div>
-      )}
+      <div
+        ref={contentRef}
+        className={`${contentStyle.content} ${isLoading ? 'opacity-0' : ''}`}
+      >
+        <Navbar />
+        <HeroSection />
+        <PostHero articles={articles.content} />
+        <AuthorSection />
+        <Footer />
+      </div>
     </main>
-  )
+  );
 }
 
-export default MainComponent
+export default MainComponent;

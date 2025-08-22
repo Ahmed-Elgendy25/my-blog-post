@@ -5,6 +5,7 @@ import { GetSpecificPost } from "./_actions/GetSpecificPost"
 import { GetImagesPost } from "./_actions/GetImagesPost"
 import { GetUserById } from "./_actions/GetUserById"
 import { imageUrls, SpecificPostTyped, UserTyped } from "./_schema/PostById"
+import Navbar from "@/app/shared/Navbar"
  
 export async function generateMetadata({
   params,
@@ -41,7 +42,9 @@ async function page({
 
 
 
-    return (
+    return ( 
+      <>
+            <Navbar/>
         <main>
             <div className="container mx-auto p-5 ">
                 <div className=" grid grid-cols-12  p-5 gap-5 ">
@@ -52,6 +55,7 @@ async function page({
 
             </div>
         </main>
+      </>
     )
 }
 

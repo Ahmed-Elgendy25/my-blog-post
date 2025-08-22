@@ -1,12 +1,12 @@
 "use client";
-import { RefObject, useRef } from "react";
+import { useRef, RefObject } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 
 gsap.registerPlugin(DrawSVGPlugin, useGSAP);
 
-function Preloader( {preloaderRef} :{preloaderRef:RefObject<null>}) {
+function Preloader({ preloaderRef }: { preloaderRef: RefObject<HTMLDivElement | null> }) {
   const svgRef = useRef<SVGSVGElement>(null);
   useGSAP(
     () => {

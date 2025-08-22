@@ -11,15 +11,15 @@ function page() {
         //  Make the form submission Actions (DONE)
         //  Add Zod validation for form (DONE)
         //  Make an API Request and test (DONE)
-        <div className='mx-auto container'>
-            <main className="  min-w-full grid grid-cols-12">
-               <SignUpContainer />
-                <RightColGrid >
-                        <RightSideImage/>
-                </RightColGrid>
+<div className='mx-auto container'>
+  <main className="min-w-full grid grid-cols-12">
+    <SignUpContainer />
+    <RightColGrid className="hidden lg:block">
+      <RightSideImage />
+    </RightColGrid>
+  </main>
+</div>
 
-            </main>
-        </div>
 
     );
 }
