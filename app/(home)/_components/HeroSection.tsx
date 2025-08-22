@@ -42,9 +42,15 @@ function HeroSection() {
             ref={tickerRef}
             className="whitespace-nowrap flex text-xl font-normal"
           >
-            <p className="px-4">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p className="px-4">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p className="px-4">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+          <p className="px-4">React 19 introduces server components support.</p>
+          <p className="px-4">Next.js 15 TurboPack speeds up dev builds.</p>
+          <p className="px-4">Angular 19 adds better hydration for SSR apps.</p>
+          <p className="px-4">Vite 6 launches with improved HMR performance.</p>
+          <p className="px-4">Tailwind CSS 4.0 brings new design tokens.</p>
+          <p className="px-4">ShadCN/UI components simplify design workflows.</p>
+          <p className="px-4">React Testing Library updates with async utils.</p>
+          <p className="px-4">TypeScript 6 enhances JSX type safety.</p>
+
 
            
           </div>
