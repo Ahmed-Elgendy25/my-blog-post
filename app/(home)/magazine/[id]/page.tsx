@@ -6,6 +6,7 @@ import { GetImagesPost } from "./_actions/GetImagesPost"
 import { GetUserById } from "./_actions/GetUserById"
 import { imageUrls, SpecificPostTyped, UserTyped } from "./_schema/PostById"
 import Navbar from "@/app/shared/Navbar"
+import Comments from "./_components/Comments"
  
 export async function generateMetadata({
   params,
@@ -52,6 +53,10 @@ async function page({
                     <Banner banner={post.postImg}/>
                     <Article  userImg={user.userImg} content={post.content} user={user} date={post.date} durationRead={post.durationRead} images={images}/>   
                 </div>
+
+                <hr/>
+               
+                <Comments/>
 
             </div>
         </main>
