@@ -40,7 +40,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
             <Navbar />
             <main>
                 <div className="container mx-auto p-5 ">
-                    <div className=" grid grid-cols-12   p-5 gap-5 ">
+                    <div className=" grid grid-cols-12  p-5 gap-5 ">
                         <HeadingDetails
                             subTitle={post.subTitle}
                             title={post.title}
@@ -59,7 +59,7 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
                         />
                     </div>
 
-                    <hr />
+                    <hr className="my-5 border-t border-gray-300" />
 
                     <Comments />
                 </div>
