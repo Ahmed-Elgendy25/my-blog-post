@@ -1,37 +1,27 @@
-import type { Metadata } from 'next';
-import { DM_Sans } from 'next/font/google';
-import '../globals.css';
+import type { Metadata } from "next";
+import { DM_Sans } from "next/font/google";
+import "../globals.css";
 // import Navbar from '../shared/Navbar';
 
 const dmSans = DM_Sans({
-  variable: '--font-dm-sans',
-  subsets: ['latin'],
+    variable: "--font-dm-sans",
+    subsets: ["latin"],
 });
 
-
-
 export const metadata: Metadata = {
-  title: 'Stack Stories',
-  description: 'Stack Stories" by Ahmed Ashraf El-Gendy shares real-world lessons from building modern applications. Drawing on experience in React, Next.js, TypeScript, Spring Boot, and SQL, Ahmed blends technical depth with practical insights from internships, projects, and constant self-improvement. This blog explores not just the tools in the stack, but the stories and challenges behind them.',
+    title: "Stack Stories",
+    description:
+        'Stack Stories" by Ahmed Ashraf El-Gendy shares real-world lessons from building modern applications. Drawing on experience in React, Next.js, TypeScript, Spring Boot, and SQL, Ahmed blends technical depth with practical insights from internships, projects, and constant self-improvement. This blog explores not just the tools in the stack, but the stories and challenges behind them.',
 };
 
 export default function Layout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <>
-   
- 
-
-    <main className={`${dmSans.variable}   `}>
-  
-        {children}
-    
-    </main>
-
-    </>
-
-  );
+    return (
+        <>
+            <main className={`${dmSans.variable}   `}>{children}</main>
+        </>
+    );
 }
