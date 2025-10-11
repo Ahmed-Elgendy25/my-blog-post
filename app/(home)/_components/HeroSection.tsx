@@ -1,26 +1,48 @@
-import HeadingComponent from '@/app/shared/HeadingComponent';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
-import React, { useRef } from 'react';
+"use client";
+
+import HeadingComponent from "@/app/shared/HeadingComponent";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import React, { useRef } from "react";
 
 gsap.registerPlugin(useGSAP);
 
 function HeroSection() {
-  const tickerRef = useRef(null);
-  const containerRef= useRef<HTMLDivElement>(null);
-  useGSAP(() => {
-    const containerWidth = containerRef.current?.scrollWidth;
- 
+  const tickerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-    gsap.to(tickerRef.current, {
-      x: `-${containerWidth }`, 
-      duration: 10,
-      ease: 'linear',
-      repeat: -1,
-    
-      
-    });
-  });
+  const tickerItems = [
+    "React 19 introduces server components support.",
+    "Next.js 15 TurboPack speeds up dev builds.",
+    "Angular 19 adds better hydration for SSR apps.",
+    "Vite 6 launches with improved HMR performance.",
+    "Tailwind CSS 4.0 brings new design tokens.",
+    "ShadCN/UI components simplify design workflows.",
+    "React Testing Library updates with async utils.",
+    "TypeScript 6 enhances JSX type safety.",
+  ];
+
+  useGSAP(() => {
+    if (!tickerRef.current) return;
+
+    // Get the width of one complete set of ticker items
+    const tickerWidth = tickerRef.current.scrollWidth / 2; // Divided by 2 because we duplicate content
+
+    // Animate with seamless infinite loop using GSAP's wrap functionality
+    gsap.fromTo(
+      tickerRef.current,
+      { x: 0 },
+      {
+        x: -tickerWidth,
+        duration: 20,
+        ease: "linear",
+        repeat: -1,
+        modifiers: {
+          x: gsap.utils.unitize(gsap.utils.wrap(-tickerWidth, 0)),
+        },
+      },
+    );
+  }, []);
 
   return (
     <section className="container mx-auto p-5">
@@ -28,10 +50,13 @@ function HeroSection() {
         title="TECH & LIFE"
         headingStyle="text-center font-bold text-[#222222]"
         overrideStyle={false}
-        inlineStyle={{ fontSize: '12vw' }}
+        inlineStyle={{ fontSize: "12vw" }}
       />
 
-      <div ref={containerRef} className="relative overflow-hidden bg-[#222222] text-[#E7E8E2] flex items-center py-3  ">
+      <div
+        ref={containerRef}
+        className="relative overflow-hidden bg-[#222222] text-[#E7E8E2] flex items-center py-3  "
+      >
         <div className="z-20 relative bg-[#222222] p-2 md:w-auto w-4/12 min-h-full ">
           <h2 className="font-bold text-xl ">NEW TICKER+++</h2>
         </div>
@@ -42,17 +67,18 @@ function HeroSection() {
             ref={tickerRef}
             className="whitespace-nowrap flex text-xl font-normal"
           >
-          <p className="px-4">React 19 introduces server components support.</p>
-          <p className="px-4">Next.js 15 TurboPack speeds up dev builds.</p>
-          <p className="px-4">Angular 19 adds better hydration for SSR apps.</p>
-          <p className="px-4">Vite 6 launches with improved HMR performance.</p>
-          <p className="px-4">Tailwind CSS 4.0 brings new design tokens.</p>
-          <p className="px-4">ShadCN/UI components simplify design workflows.</p>
-          <p className="px-4">React Testing Library updates with async utils.</p>
-          <p className="px-4">TypeScript 6 enhances JSX type safety.</p>
-
-
-           
+            {/* First set of ticker items */}
+            {tickerItems.map((item, idx) => (
+              <p className="px-4" key={`ticker-1-${idx}`}>
+                {item}
+              </p>
+            ))}
+            {/* Duplicate set for seamless loop */}
+            {tickerItems.map((item, idx) => (
+              <p className="px-4" key={`ticker-2-${idx}`}>
+                {item}
+              </p>
+            ))}
           </div>
         </div>
       </div>
@@ -61,16 +87,3 @@ function HeroSection() {
 }
 
 export default HeroSection;
-
-{
-  /* <div className="bg-[#222222]  relative text-[#E7E8E2] w-5/6 mx-auto  grid grid-cols-12 md:p-3 ">
-<div className=" col-start-1 col-end-3 z-20  p-2  ">
-  <h2 className="font-bold  text-xl ">NEW TICKER+++</h2>
-</div>
-<div className="  col-start-3 col-end-13 z-10 p-2 bg-amber-700 justify-self-end  ">
-  <p className=" absolute  top-[1.3rem] font-normal text-lg  ">
-    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-  </p>
-</div>
-</div> */
-}

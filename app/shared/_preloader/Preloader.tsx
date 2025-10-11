@@ -6,7 +6,11 @@ import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 
 gsap.registerPlugin(DrawSVGPlugin, useGSAP);
 
-function Preloader({ preloaderRef }: { preloaderRef: RefObject<HTMLDivElement | null> }) {
+function Preloader({
+  preloaderRef,
+}: {
+  preloaderRef: RefObject<HTMLDivElement | null>;
+}) {
   const svgRef = useRef<SVGSVGElement>(null);
   useGSAP(
     () => {
@@ -33,7 +37,7 @@ function Preloader({ preloaderRef }: { preloaderRef: RefObject<HTMLDivElement | 
           drawSVG: "100%",
           duration: 2.5,
           stagger: 0.02,
-        }
+        },
       );
 
       // 2. Fill color fade-in
@@ -44,7 +48,7 @@ function Preloader({ preloaderRef }: { preloaderRef: RefObject<HTMLDivElement | 
           duration: 1,
           stagger: 0.02,
         },
-        "-=1.2" // start fading in before draw ends
+        "-=1.2", // start fading in before draw ends
       );
 
       // 3. Remove stroke after fill
@@ -53,16 +57,15 @@ function Preloader({ preloaderRef }: { preloaderRef: RefObject<HTMLDivElement | 
         {
           stroke: "transparent",
           duration: 0.3,
-      
         },
-        "-=0.5"
+        "-=0.5",
       );
     },
-    { scope: svgRef }
+    { scope: svgRef },
   );
 
   return (
-    <div ref={preloaderRef} className="bg-[#E7E8E2] text-[#E7E8E2] w-full h-screen">
+    <div ref={preloaderRef} className="preloader-container">
       <div className="flex items-center justify-center h-full">
         <svg
           width="485"
@@ -103,4 +106,3 @@ function Preloader({ preloaderRef }: { preloaderRef: RefObject<HTMLDivElement | 
 }
 
 export default Preloader;
-

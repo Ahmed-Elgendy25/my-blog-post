@@ -4,7 +4,7 @@ import { BlogPostsResponse } from "../_schema/PaginatedArticles";
 export async function GetPaginateArticles(
   page: number,
   direction: string,
-  size = 4,
+  size = 6,
 ): Promise<BlogPostsResponse | null> {
   // Add timestamp to URL to force fresh request
   const url = `${API_BASE_URL}${API_ENDPOINTS.GET_PAGINATED_ARTICLES}?page=${page}&size=${size}&sortBy=date&direction=${direction}`;

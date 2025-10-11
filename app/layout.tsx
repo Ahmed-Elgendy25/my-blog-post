@@ -4,6 +4,7 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 import { PostHogProvider } from "@/lib/posthog/PostHogProvider";
+import GlobalPreloader from "@/app/shared/_preloader/GlobalPreloader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <link rel="icon" href="/logo2.ico" sizes="any" />
             </head>
             <body>
-                <PostHogProvider>{children}</PostHogProvider>
+                <PostHogProvider>
+                    <GlobalPreloader />
+                    {children}
+                </PostHogProvider>
             </body>
         </html>
     );

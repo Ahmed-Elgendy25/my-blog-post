@@ -6,7 +6,7 @@ export default async function Home() {
   let articles: BlogPostsResponse | null = null;
 
   try {
-    articles = await GetPaginateArticles(0, "asc", 6);
+    articles = await GetPaginateArticles(0, "asc", 4);
   } catch (error) {
     console.error(error);
     return (
