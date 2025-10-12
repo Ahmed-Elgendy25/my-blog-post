@@ -1,10 +1,10 @@
-import Image from 'next/image';
-import PostsDescription from './PostsDescription';
-import PostsSection from './PostsSection';
-import AsideComponent from '../AsideComponent';
-import { Post } from '../../magazine/_schema/PaginatedArticles';
-import Link from 'next/link';
-function PostHero({articles}:{articles:Post[]}) {
+import Image from "next/image";
+import PostsDescription from "./PostsDescription";
+import PostsSection from "./PostsSection";
+import AsideComponent from "../AsideComponent";
+import { Post } from "../../magazine/_schema/PaginatedArticles";
+import Link from "next/link";
+function PostHero({ articles }: { articles: Post[] }) {
   return (
     <section className="container text-[#222222] mx-auto p-5 relative">
       <div className=" flex lg:flex-row lg:gap-y-0 gap-y-3 flex-col justify-between    items-start lg:p-5 p-3">
@@ -29,30 +29,28 @@ function PostHero({articles}:{articles:Post[]}) {
           alt={articles[0].title}
         />
       </Link>
-    
+
       <div className=" grid lg:grid-cols-7 gap-x-16">
-  <div className="lg:col-start-1 lg:col-end-6">
-    {articles.map((post) => (
-      <PostsSection
-        key={post.id}
-        title={post.title}
-        author={post.authorName}
-        date={post.date}
-        readTime={post.durationRead}
-        imageUrl={post.postImg}
-      />
-    ))}
-  </div>
+        <div className="lg:col-start-1 lg:col-end-6">
+          {articles.map((post) => (
+            <PostsSection
+              key={post.id}
+              id={post.id}
+              title={post.title}
+              author={post.authorName}
+              date={post.date}
+              readTime={post.durationRead}
+              imageUrl={post.postImg}
+            />
+          ))}
+        </div>
 
-  <div className="lg:col-start-6 lg:col-end-8 p-3 ">
-    <div className="sticky top-0">
-      <AsideComponent />
-    </div>
-  </div>
-</div>
-
-
-
+        <div className="lg:col-start-6 lg:col-end-8 p-3 ">
+          <div className="sticky top-0">
+            <AsideComponent />
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
