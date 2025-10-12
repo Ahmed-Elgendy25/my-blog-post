@@ -2,6 +2,7 @@
 
 import type React from "react";
 import { useState } from "react";
+import MarqueeComponent from "@/app/shared/MarqueeComponent";
 
 export default function Footer() {
   const [email, setEmail] = useState("");
@@ -15,18 +16,7 @@ export default function Footer() {
   return (
     <section className="bg-foreground text-background">
       {/* Scrolling Text Banner */}
-      <div className="border-y border-background/20 py-4 overflow-hidden">
-        <div className="animate-marquee whitespace-nowrap">
-          <span className="text-sm font-medium mx-8">NEWSLETTER+++</span>
-          <span className="text-sm font-medium mx-8">NEWSLETTER+++</span>
-          <span className="text-sm font-medium mx-8">NEWSLETTER+++</span>
-          <span className="text-sm font-medium mx-8">NEWSLETTER+++</span>
-          <span className="text-sm font-medium mx-8">NEWSLETTER+++</span>
-          <span className="text-sm font-medium mx-8">NEWSLETTER+++</span>
-          <span className="text-sm font-medium mx-8">NEWSLETTER+++</span>
-          <span className="text-sm font-medium mx-8">NEWSLETTER+++</span>
-        </div>
-      </div>
+      <MarqueeComponent text="NEWSLETTER+++" />
 
       {/* Newsletter Content */}
       <div className="container mx-auto px-6 py-20">
@@ -58,79 +48,6 @@ export default function Footer() {
                 SIGN UP
               </button>
             </form>
-          </div>
-        </div>
-
-        {/* Footer Links */}
-        <div className="mt-20 pt-12 border-t border-background/20">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="text-sm font-medium mb-4">FYRRE MAGAZINE</h3>
-            </div>
-            <div className="space-y-2">
-              <a
-                href="#"
-                className="block text-sm hover:opacity-60 transition-opacity"
-              >
-                Art
-              </a>
-              <a
-                href="#"
-                className="block text-sm hover:opacity-60 transition-opacity"
-              >
-                Sculptures
-              </a>
-              <a
-                href="#"
-                className="block text-sm hover:opacity-60 transition-opacity"
-              >
-                Street Art
-              </a>
-            </div>
-            <div className="space-y-2">
-              <a
-                href="#"
-                className="block text-sm hover:opacity-60 transition-opacity"
-              >
-                Magazine
-              </a>
-              <a
-                href="#"
-                className="block text-sm hover:opacity-60 transition-opacity"
-              >
-                Podcast
-              </a>
-              <a
-                href="#"
-                className="block text-sm hover:opacity-60 transition-opacity"
-              >
-                Authors
-              </a>
-            </div>
-            <div className="space-y-2">
-              <a
-                href="#"
-                className="block text-sm hover:opacity-60 transition-opacity"
-              >
-                Binyville
-              </a>
-              <a
-                href="#"
-                className="block text-sm hover:opacity-60 transition-opacity"
-              >
-                Licensing
-              </a>
-              <a
-                href="#"
-                className="block text-sm hover:opacity-60 transition-opacity"
-              >
-                Changelog
-              </a>
-            </div>
-          </div>
-
-          <div className="mt-12 text-xs text-background/60">
-            © Made by Pawel Gola. Powered by Webflow.
           </div>
         </div>
       </div>

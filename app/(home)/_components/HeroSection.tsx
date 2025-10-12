@@ -1,7 +1,7 @@
 "use client";
 
 import HeadingComponent from "@/app/shared/HeadingComponent";
-import Ticker from "@/app/(home)/_components/Ticker";
+import MarqueeComponent from "@/app/shared/MarqueeComponent";
 import React from "react";
 
 function HeroSection() {
@@ -25,14 +25,10 @@ function HeroSection() {
         inlineStyle={{ fontSize: "12vw" }}
       />
 
-      <Ticker
+      <MarqueeComponent
         items={tickerItems}
         label="NEW TICKER+++"
-        duration={20}
-        bgColor="bg-[#222222]"
-        textColor="text-[#E7E8E2]"
-        labelBgColor="bg-[#222222]"
-        fontSize="text-xl"
+        duration={50}
       />
     </section>
   );
