@@ -1,46 +1,35 @@
-'use client'
-import { deleteCookie } from '@/utils/auth/logout';
+"use client";
+import { deleteCookie } from "@/utils/auth/logout";
 import {
   InstagramLogo,
   LinkedinLogo,
   SignOut,
   XLogo,
-} from '@phosphor-icons/react/dist/ssr';
-import Link from 'next/link';
+} from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
 
- function handleLogOut() {
+function handleLogOut() {
   deleteCookie("token", "userId", "roles");
-
-
 }
 
- function Navbar() {
-
-
-
-  
-    
+function Navbar() {
   return (
     <header className=" mx-3 md:container md:mx-auto p-3 border-b-[1px]   text-[#222222] md:flex  md:justify-between md:items-center  ">
       <h2 className=" text-2xl font-bold ">
-        <Link href={'/'}>
-        STACK STORIES 
-        </Link>
-        
-        
-        </h2>
+        <Link href={"/"}>STACK STORIES</Link>
+      </h2>
       <nav className="w-1/2 p-2  md:block hidden">
         <ul className=" list-none">
           <div className="flex text-[1.3rem] font-light justify-end  gap-x-10 items-center ">
             <div className="flex gap-x-5">
               <li>
-                <Link href={'/magazine?page=1'}>Magazine</Link>
+                <Link href={"/magazine?page=1"}>Magazine</Link>
               </li>
               <li>
-                <Link href={'/podcast'}>Podcast</Link>
+                <Link href={"/podcast"}>Podcast</Link>
               </li>
               <li>
-                <Link href={'/authors'}>Authors</Link>
+                <Link href={"/authors"}>Authors</Link>
               </li>
             </div>
 
@@ -48,15 +37,12 @@ import Link from 'next/link';
 
             <div className=" flex gap-x-3 items-center ">
               <InstagramLogo size={22} />
-              <XLogo size={22}   />
-              <LinkedinLogo size={22}  />
-              <Link href={"/signin"} >
-              <SignOut size={22}   onClick={handleLogOut}/>
-
+              <XLogo size={22} />
+              <LinkedinLogo size={22} />
+              <Link href={"/signin"}>
+                <SignOut size={22} onClick={handleLogOut} />
               </Link>
             </div>
-
-
           </div>
         </ul>
       </nav>
