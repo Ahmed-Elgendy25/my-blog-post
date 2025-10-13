@@ -31,7 +31,7 @@ import { EditorActionTyped } from "../_schema/Editor.model";
 import { memo } from "react";
 
 import { marked } from "marked";
-
+import DOMPurify from "dompurify";
 const MenuBar = memo(
   ({
     editor,
@@ -147,10 +147,16 @@ const MenuBar = memo(
       return null;
     }
 
+    marked.setOptions({
+      gfm: true, // Enable GitHub-Flavored Markdown
+      breaks: true, // Line breaks
+    });
+
     const handlePasteMarkdown = async () => {
       const markdownText = await navigator.clipboard.readText();
-      const html = marked.parse(markdownText); // Markdown → HTML
-      editor.commands.setContent(html); // HTML → rendered Tiptap content
+      const html = await marked.parse(markdownText);
+      const cleanHTML = DOMPurify.sanitize(html);
+      editor.commands.setContent(cleanHTML);
     };
     const MenuOptions = [
       {

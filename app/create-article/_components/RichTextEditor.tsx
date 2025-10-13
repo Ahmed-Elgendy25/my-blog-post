@@ -16,7 +16,9 @@ import Emoji, { gitHubEmojis } from "@tiptap/extension-emoji";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Youtube from "@tiptap/extension-youtube";
 import { TableKit } from "@tiptap/extension-table";
-
+import { TableRow } from "@tiptap/extension-table-row";
+import { TableCell } from "@tiptap/extension-table-cell";
+import { TableHeader } from "@tiptap/extension-table-header";
 import { Markdown } from "tiptap-markdown";
 import styles from "../_styles/tiptap.module.css";
 
@@ -71,6 +73,9 @@ function RichTextEditor({
         nocookie: true,
       }),
       TableKit,
+      TableRow,
+      TableHeader,
+      TableCell,
       Markdown.configure({
         html: true, // Enables Markdown → HTML rendering
       }),
