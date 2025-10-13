@@ -18,7 +18,6 @@ import Youtube from "@tiptap/extension-youtube";
 import { TableKit } from "@tiptap/extension-table";
 
 import { Markdown } from "tiptap-markdown";
-
 import styles from "../_styles/tiptap.module.css";
 
 import { useDeferredValue, useEffect, useRef, useState } from "react";

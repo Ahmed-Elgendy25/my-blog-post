@@ -6,6 +6,7 @@ import {
   AlignLeft,
   AlignRight,
   Bold,
+  ClipboardPaste,
   Heading1,
   Heading2,
   Heading3,
@@ -28,6 +29,8 @@ import { toast } from "sonner";
 import { CodeBlock, YoutubeLogoIcon } from "@phosphor-icons/react/dist/ssr";
 import { EditorActionTyped } from "../_schema/Editor.model";
 import { memo } from "react";
+
+import { marked } from "marked";
 
 const MenuBar = memo(
   ({
@@ -144,6 +147,11 @@ const MenuBar = memo(
       return null;
     }
 
+    const handlePasteMarkdown = async () => {
+      const markdownText = await navigator.clipboard.readText();
+      const html = marked.parse(markdownText); // Markdown → HTML
+      editor.commands.setContent(html); // HTML → rendered Tiptap content
+    };
     const MenuOptions = [
       {
         element: <Heading1 className="size-4" />,
@@ -258,6 +266,11 @@ const MenuBar = memo(
         element: <Sparkles className="size-4" />,
         onClick: () => dispatch({ type: "GENERATE_CONTENT" }),
         isActive: generateContent,
+      },
+      {
+        element: <ClipboardPaste className="size-4" />,
+        onClick: () => handlePasteMarkdown(),
+        isActive: false,
       },
     ];
     console.log("GenerateContent: ", generateContent);
