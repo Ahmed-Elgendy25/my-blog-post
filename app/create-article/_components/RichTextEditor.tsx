@@ -19,8 +19,9 @@ import { TableKit } from "@tiptap/extension-table";
 import { TableRow } from "@tiptap/extension-table-row";
 import { TableCell } from "@tiptap/extension-table-cell";
 import { TableHeader } from "@tiptap/extension-table-header";
+import { Link } from "@tiptap/extension-link";
+
 import { Markdown } from "tiptap-markdown";
-import styles from "../_styles/tiptap.module.css";
 
 import { useDeferredValue, useEffect, useRef, useState } from "react";
 import { EditorActionTyped } from "../_schema/Editor.model";
@@ -34,11 +35,13 @@ function RichTextEditor({
   title,
   bannerRef,
   generateContent,
+  content,
 }: {
   dispatch: React.Dispatch<EditorActionTyped>;
   title: string;
   bannerRef: React.RefObject<string>;
   generateContent: boolean | undefined;
+  content: string;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const deferredGenerateContent = useDeferredValue(generateContent);
@@ -76,14 +79,21 @@ function RichTextEditor({
       TableRow,
       TableHeader,
       TableCell,
+      Link.configure({
+        openOnClick: false,
+      }),
       Markdown.configure({
         html: true, // Enables Markdown → HTML rendering
       }),
+
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
     ],
-    content: "",
+    content: content || "",
     editorProps: {
       attributes: {
-        class: `h-full p-5 border-0 focus-visible:outline-0 overflow-y-auto ${styles.tiptap}`,
+        class: `min-h-[500px] resize-none border-0 p-0 text-base leading-relaxed focus-visible:outline-0 focus-visible:ring-0 `,
       },
       handlePaste,
     },
@@ -93,6 +103,13 @@ function RichTextEditor({
     onSelectionUpdate: handleSelectionUpdate,
     immediatelyRender: false,
   });
+
+  // Sync external content changes to editor
+  useEffect(() => {
+    if (editor && content !== editor.getHTML()) {
+      editor.commands.setContent(content || "");
+    }
+  }, [content, editor]);
 
   useEffect(() => {
     const timer = selectionTimer.current;
@@ -110,10 +127,7 @@ function RichTextEditor({
   );
 
   return (
-    <div
-      ref={containerRef}
-      className="relative min-h-screen bg-[#ebebeb] overflow-hidden"
-    >
+    <div ref={containerRef} className="relative bg-card">
       <MenuBar
         editor={editor}
         title={title}
@@ -121,7 +135,9 @@ function RichTextEditor({
         generateContent={deferredGenerateContent || false}
         dispatch={dispatch}
       />
-      <EditorContent editor={editor} className="p-2" />
+      <div className="p-6 lg:p-8">
+        <EditorContent editor={editor} className="min-h-[500px]" />
+      </div>
       {loadingCoords && (
         <SkeletonOverlay top={loadingCoords.top} left={loadingCoords.left} />
       )}

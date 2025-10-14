@@ -7,23 +7,19 @@ import {
   AlignRight,
   Bold,
   ClipboardPaste,
-  Heading1,
-  Heading2,
-  Heading3,
-  Highlighter,
   ImageIcon,
   ImageUpscale,
   Italic,
   List,
   ListOrdered,
   Minus,
-  Pilcrow,
   Sparkles,
   Strikethrough,
   Table,
 } from "lucide-react";
 
 import { Toggle } from "@/components/ui/toggle";
+import { Separator } from "@/components/ui/separator";
 import { uploadImage } from "../_actions/UploadImage";
 import { toast } from "sonner";
 import { CodeBlock, YoutubeLogoIcon } from "@phosphor-icons/react/dist/ssr";
@@ -158,27 +154,8 @@ const MenuBar = memo(
       const cleanHTML = DOMPurify.sanitize(html);
       editor.commands.setContent(cleanHTML);
     };
-    const MenuOptions = [
-      {
-        element: <Heading1 className="size-4" />,
-        onClick: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
-        isActive: editor.isActive("heading", { level: 1 }),
-      },
-      {
-        element: <Heading2 className="size-4" />,
-        onClick: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
-        isActive: editor.isActive("heading", { level: 2 }),
-      },
-      {
-        element: <Heading3 className="size-4" />,
-        onClick: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
-        isActive: editor.isActive("heading", { level: 3 }),
-      },
-      {
-        element: <Pilcrow className="size-4" />,
-        onClick: () => editor.chain().focus().setParagraph().run(),
-        isActive: editor.isActive("paragraph"),
-      },
+
+    const textFormatting = [
       {
         element: <Bold className="size-4" />,
         onClick: () => editor.chain().focus().toggleBold().run(),
@@ -189,18 +166,14 @@ const MenuBar = memo(
         onClick: () => editor.chain().focus().toggleItalic().run(),
         isActive: editor.isActive("italic"),
       },
-
       {
         element: <Strikethrough className="size-4" />,
         onClick: () => editor.chain().focus().toggleStrike().run(),
         isActive: editor.isActive("strike"),
       },
-      {
-        element: <Highlighter className="size-4" />,
-        onClick: () => editor.chain().focus().toggleHighlight().run(),
-        isActive: editor.isActive("highlight"),
-      },
+    ];
 
+    const alignment = [
       {
         element: <AlignLeft className="size-4" />,
         onClick: () => editor.chain().focus().setTextAlign("left").run(),
@@ -211,7 +184,6 @@ const MenuBar = memo(
         onClick: () => editor.chain().focus().setTextAlign("center").run(),
         isActive: editor.isActive({ textAlign: "center" }),
       },
-
       {
         element: <AlignRight className="size-4" />,
         onClick: () => editor.chain().focus().setTextAlign("right").run(),
@@ -222,11 +194,45 @@ const MenuBar = memo(
         onClick: () => editor.chain().focus().setTextAlign("justify").run(),
         isActive: editor.isActive({ textAlign: "justify" }),
       },
+    ];
+
+    const lists = [
       {
         element: <List className="size-4" />,
         onClick: () => editor.chain().focus().toggleBulletList().run(),
         isActive: editor.isActive("bulletList"),
       },
+      {
+        element: <ListOrdered className="size-4" />,
+        onClick: () => editor.chain().focus().toggleOrderedList().run(),
+        isActive: editor.isActive("orderedList"),
+      },
+    ];
+
+    const media = [
+      {
+        element: <ImageIcon className="size-4" />,
+        onClick: handleUploadImage,
+        isActive: editor.isActive("image"),
+      },
+      {
+        element: <ImageUpscale className="size-4" />,
+        onClick: handleUploadBanner,
+        isActive: !!bannerRef.current,
+      },
+      {
+        element: <YoutubeLogoIcon className="size-4" />,
+        onClick: () => addYoutubeVideo(),
+        isActive: editor.isActive("youtube"),
+      },
+      {
+        element: <CodeBlock className="size-4" />,
+        onClick: () => editor.chain().focus().toggleCodeBlock().run(),
+        isActive: editor.isActive("codeBlock"),
+      },
+    ];
+
+    const utilities = [
       {
         element: <Table className="size-4" />,
         onClick: () => {
@@ -239,34 +245,9 @@ const MenuBar = memo(
         isActive: editor.isActive("table"),
       },
       {
-        element: <ListOrdered className="size-4" />,
-        onClick: () => editor.chain().focus().toggleOrderedList().run(),
-        isActive: editor.isActive("orderedList"),
-      },
-      {
-        element: <ImageIcon className="size-4" />,
-        onClick: handleUploadImage,
-        isActive: editor.isActive("image"),
-      },
-      {
-        element: <ImageUpscale className="size-4" />,
-        onClick: handleUploadBanner,
-        isActive: !!bannerRef.current,
-      },
-      {
-        element: <CodeBlock className="size-4" />,
-        onClick: () => editor.chain().focus().toggleCodeBlock().run(),
-        isActive: editor.isActive("codeBlock"),
-      },
-      {
         element: <Minus className="size-4" />,
         onClick: () => editor.chain().focus().setHorizontalRule().run(),
         isActive: editor.isActive("horizontalRule"),
-      },
-      {
-        element: <YoutubeLogoIcon className="size-4" />,
-        onClick: () => addYoutubeVideo(),
-        isActive: editor.isActive("youtube"),
       },
       {
         element: <Sparkles className="size-4" />,
@@ -279,19 +260,85 @@ const MenuBar = memo(
         isActive: false,
       },
     ];
+
     console.log("GenerateContent: ", generateContent);
 
     return (
-      <div>
-        {MenuOptions.map((option, index) => (
-          <Toggle
-            key={index}
-            pressed={option.isActive}
-            onPressedChange={option.onClick}
-          >
-            {option.element}
-          </Toggle>
-        ))}
+      <div className="border-b bg-muted/50 px-4 py-3">
+        <div className="flex flex-wrap items-center gap-1">
+          {textFormatting.map((option, index) => (
+            <Toggle
+              key={`text-${index}`}
+              pressed={option.isActive}
+              onPressedChange={option.onClick}
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0"
+            >
+              {option.element}
+            </Toggle>
+          ))}
+
+          <Separator orientation="vertical" className="mx-1 h-6" />
+
+          {alignment.map((option, index) => (
+            <Toggle
+              key={`align-${index}`}
+              pressed={option.isActive}
+              onPressedChange={option.onClick}
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0"
+            >
+              {option.element}
+            </Toggle>
+          ))}
+
+          <Separator orientation="vertical" className="mx-1 h-6" />
+
+          {lists.map((option, index) => (
+            <Toggle
+              key={`list-${index}`}
+              pressed={option.isActive}
+              onPressedChange={option.onClick}
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0"
+            >
+              {option.element}
+            </Toggle>
+          ))}
+
+          <Separator orientation="vertical" className="mx-1 h-6" />
+
+          {media.map((option, index) => (
+            <Toggle
+              key={`media-${index}`}
+              pressed={option.isActive}
+              onPressedChange={option.onClick}
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0"
+            >
+              {option.element}
+            </Toggle>
+          ))}
+
+          <Separator orientation="vertical" className="mx-1 h-6" />
+
+          {utilities.map((option, index) => (
+            <Toggle
+              key={`util-${index}`}
+              pressed={option.isActive}
+              onPressedChange={option.onClick}
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0"
+            >
+              {option.element}
+            </Toggle>
+          ))}
+        </div>
       </div>
     );
   },
