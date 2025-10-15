@@ -4,6 +4,7 @@ export type EditorState = {
   subTitle: string;
   duration: string;
   generateContent?: boolean;
+  thumbnail: File | null;
 };
 
 export type EditorActionTyped =
@@ -12,4 +13,5 @@ export type EditorActionTyped =
   | { type: "SET_SUBTITLE"; payload: string }
   | { type: "SET_DURATION"; payload: string }
   | { type: "GENERATE_CONTENT"; payload?: boolean }
+  | { type: "SET_THUMBNAIL"; payload: File | null }
   | { type: "RESET_EDITOR" };

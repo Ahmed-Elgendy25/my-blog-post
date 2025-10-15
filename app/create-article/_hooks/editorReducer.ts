@@ -13,6 +13,8 @@ export const editorReducer = (
       return { ...state, subTitle: action.payload };
     case "SET_DURATION":
       return { ...state, duration: action.payload };
+    case "SET_THUMBNAIL":
+      return { ...state, thumbnail: action.payload };
     case "GENERATE_CONTENT":
       return {
         ...state,
@@ -31,4 +33,5 @@ export const initialState: EditorState = {
   subTitle: "",
   duration: "",
   generateContent: false,
+  thumbnail: null,
 };

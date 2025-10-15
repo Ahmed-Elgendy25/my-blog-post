@@ -13,6 +13,10 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ContentPreview } from "@/app/create-article/_components/content-preview";
 import { FileText, Eye, Edit3 } from "lucide-react";
+import { ThumbnailUpload } from "./ThumbnailUpload";
+import { uploadImage } from "../_actions/UploadImage";
+import { contentSchema } from "../_schema/contentValidation";
+import { ZodError } from "zod";
 
 function EditorWrapper() {
   const [state, dispatch] = useReducer(editorReducer, initialState);
@@ -20,6 +24,13 @@ function EditorWrapper() {
   const [activeView, setActiveView] = useState<"edit" | "preview">("edit");
   const [isPending, setIsPending] = useState(false);
   const [currentTime, setCurrentTime] = useState<string>("");
+  const [validationErrors, setValidationErrors] = useState<{
+    title?: string;
+    subtitle?: string;
+    duration?: string;
+    thumbnail?: string;
+    content?: string;
+  }>({});
 
   // Get the current pathname
   const pathname = usePathname();
@@ -29,47 +40,108 @@ function EditorWrapper() {
     setCurrentTime(new Date().toLocaleTimeString());
   }, []);
 
+  // Clear content validation error when content changes
+  useEffect(() => {
+    if (validationErrors.content && state.content) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        content: undefined,
+      }));
+    }
+  }, [state.content, validationErrors.content]);
+
   const handlePublish = async () => {
-    const postData = {
-      content: state.content,
-      title: state.title,
-      durationRead: state.duration,
-      subTitle: state.subTitle,
-    };
+    // Clear previous validation errors
+    setValidationErrors({});
 
-    if (!state.title.trim()) {
-      toast("Please enter a title");
-      return;
-    }
+    // Validate the form data
+    try {
+      const validatedData = contentSchema.parse({
+        title: state.title,
+        subtitle: state.subTitle,
+        duration: state.duration,
+        thumbnail: state.thumbnail,
+        content: state.content,
+      });
 
-    setIsPending(true);
-    const response = await createPost(postData, bannerRef.current);
+      setIsPending(true);
 
-    if (response?.success) {
-      dispatch({ type: "SET_CONTENT", payload: "" });
-      dispatch({ type: "SET_TITLE", payload: "" });
-      dispatch({ type: "SET_SUBTITLE", payload: "" });
-      dispatch({ type: "SET_DURATION", payload: "" });
-      bannerRef.current = "";
-      toast("Post created successfully");
-
-      // Notify users about the new post using Promise.allSettled for independent execution
-      Promise.allSettled([NotifyUsers(state.title, pathname)])
-        .then(([notificationResult]) => {
-          if (notificationResult.status === "fulfilled") {
-            toast("Subscribers notified! 🎉");
-          } else {
-            console.error("Notification failed:", notificationResult.reason);
-            toast("Post published, but notification failed");
+      // Upload thumbnail
+      let thumbnailUrl = "";
+      if (validatedData.thumbnail) {
+        toast("Uploading thumbnail ⏳...");
+        try {
+          const uploadResult = await uploadImage(
+            validatedData.thumbnail,
+            validatedData.thumbnail.name,
+            `/upload/${validatedData.title}/banner`,
+          );
+          if (uploadResult?.data) {
+            thumbnailUrl = uploadResult.data;
+            toast("Thumbnail uploaded successfully ✅");
           }
-        })
-        .catch((error) => {
-          console.error("Unexpected notification error:", error);
+        } catch (error) {
+          toast("Failed to upload thumbnail");
+          console.error("Thumbnail upload error:", error);
+          setIsPending(false);
+          return;
+        }
+      }
+
+      const postData = {
+        content: validatedData.content,
+        title: validatedData.title,
+        durationRead: validatedData.duration,
+        subTitle: validatedData.subtitle,
+      };
+
+      const response = await createPost(postData, thumbnailUrl);
+
+      if (response?.success) {
+        dispatch({ type: "SET_CONTENT", payload: "" });
+        dispatch({ type: "SET_TITLE", payload: "" });
+        dispatch({ type: "SET_SUBTITLE", payload: "" });
+        dispatch({ type: "SET_DURATION", payload: "" });
+        dispatch({ type: "SET_THUMBNAIL", payload: null });
+        bannerRef.current = "";
+        toast("Post created successfully");
+
+        // Notify users about the new post using Promise.allSettled for independent execution
+        Promise.allSettled([NotifyUsers(state.title, pathname)])
+          .then(([notificationResult]) => {
+            if (notificationResult.status === "fulfilled") {
+              toast("Subscribers notified! 🎉");
+            } else {
+              console.error("Notification failed:", notificationResult.reason);
+              toast("Post published, but notification failed");
+            }
+          })
+          .catch((error) => {
+            console.error("Unexpected notification error:", error);
+          });
+      } else {
+        toast(`${response?.error}`);
+      }
+      setIsPending(false);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        // Extract validation errors
+        const errors: Record<string, string> = {};
+        error.errors.forEach((err) => {
+          const path = err.path[0] as string;
+          errors[path] = err.message;
         });
-    } else {
-      toast(`${response?.error}`);
+        setValidationErrors(errors);
+
+        // Show the first error in a toast
+        const firstError = error.errors[0];
+        toast.error(firstError.message);
+      } else {
+        toast.error("An unexpected error occurred");
+        console.error("Validation error:", error);
+      }
+      setIsPending(false);
     }
-    setIsPending(false);
   };
 
   return (
@@ -124,7 +196,7 @@ function EditorWrapper() {
               <div className="border-b bg-card p-6 lg:p-8">
                 <div className="space-y-6">
                   <div className="grid gap-6 lg:grid-cols-[1fr,auto]">
-                    <div className="space-y-2">
+                    <section className="space-y-2">
                       <Label htmlFor="title" className="text-base font-medium">
                         Title
                       </Label>
@@ -132,16 +204,28 @@ function EditorWrapper() {
                         id="title"
                         placeholder="Enter your title here..."
                         value={state.title}
-                        onChange={(e) =>
+                        onChange={(e) => {
                           dispatch({
                             type: "SET_TITLE",
                             payload: e.target.value,
-                          })
-                        }
+                          });
+                          // Clear title error when user starts typing
+                          if (validationErrors.title) {
+                            setValidationErrors((prev) => ({
+                              ...prev,
+                              title: undefined,
+                            }));
+                          }
+                        }}
                         className="text-lg"
                       />
-                    </div>
-                    <div className="space-y-2 lg:w-48">
+                      {validationErrors.title && (
+                        <p className="text-sm text-destructive">
+                          {validationErrors.title}
+                        </p>
+                      )}
+                    </section>
+                    <section className="space-y-2 lg:w-48">
                       <Label
                         htmlFor="duration"
                         className="text-base font-medium"
@@ -152,17 +236,29 @@ function EditorWrapper() {
                         id="duration"
                         placeholder="e.g., 5 min"
                         value={state.duration}
-                        onChange={(e) =>
+                        onChange={(e) => {
                           dispatch({
                             type: "SET_DURATION",
                             payload: e.target.value,
-                          })
-                        }
+                          });
+                          // Clear duration error when user starts typing
+                          if (validationErrors.duration) {
+                            setValidationErrors((prev) => ({
+                              ...prev,
+                              duration: undefined,
+                            }));
+                          }
+                        }}
                       />
-                    </div>
+                      {validationErrors.duration && (
+                        <p className="text-sm text-destructive">
+                          {validationErrors.duration}
+                        </p>
+                      )}
+                    </section>
                   </div>
 
-                  <div className="space-y-2">
+                  <section className="space-y-2">
                     <Label htmlFor="subtitle" className="text-base font-medium">
                       Subtitle
                     </Label>
@@ -170,14 +266,41 @@ function EditorWrapper() {
                       id="subtitle"
                       placeholder="Add a subtitle or description..."
                       value={state.subTitle}
-                      onChange={(e) =>
+                      onChange={(e) => {
                         dispatch({
                           type: "SET_SUBTITLE",
                           payload: e.target.value,
-                        })
-                      }
+                        });
+                        // Clear subtitle error when user starts typing
+                        if (validationErrors.subtitle) {
+                          setValidationErrors((prev) => ({
+                            ...prev,
+                            subtitle: undefined,
+                          }));
+                        }
+                      }}
                     />
-                  </div>
+                    {validationErrors.subtitle && (
+                      <p className="text-sm text-destructive">
+                        {validationErrors.subtitle}
+                      </p>
+                    )}
+                  </section>
+
+                  <ThumbnailUpload
+                    value={state.thumbnail}
+                    onChange={(file) => {
+                      dispatch({ type: "SET_THUMBNAIL", payload: file });
+                      // Clear thumbnail error when user uploads a file
+                      if (validationErrors.thumbnail) {
+                        setValidationErrors((prev) => ({
+                          ...prev,
+                          thumbnail: undefined,
+                        }));
+                      }
+                    }}
+                    error={validationErrors.thumbnail}
+                  />
                 </div>
               </div>
 
@@ -189,6 +312,13 @@ function EditorWrapper() {
                 generateContent={state.generateContent}
                 content={state.content}
               />
+              {validationErrors.content && (
+                <div className="border-t bg-destructive/10 px-6 py-3">
+                  <p className="text-sm text-destructive">
+                    {validationErrors.content}
+                  </p>
+                </div>
+              )}
             </Card>
 
             {/* Footer Info */}

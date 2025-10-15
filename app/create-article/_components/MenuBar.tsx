@@ -8,7 +8,6 @@ import {
   Bold,
   ClipboardPaste,
   ImageIcon,
-  ImageUpscale,
   Italic,
   List,
   ListOrdered,
@@ -32,13 +31,12 @@ const MenuBar = memo(
   ({
     editor,
     title,
-    bannerRef,
     generateContent,
     dispatch,
   }: {
     editor: Editor | null;
     title: string;
-    bannerRef: React.RefObject<string>;
+    bannerRef?: React.RefObject<string>;
     generateContent: boolean;
     dispatch: React.Dispatch<EditorActionTyped>;
   }) => {
@@ -71,48 +69,6 @@ const MenuBar = memo(
                   toast(`${uploadResult?.message}`);
                 } catch (error) {
                   // Keep the base64 image if upload fails
-                  toast(`${error}`);
-                }
-              }
-            };
-            reader.readAsDataURL(file);
-          } catch (error) {
-            console.error("Error handling image:", error);
-            alert("Failed to process image. Please try again.");
-          }
-        }
-      };
-    };
-
-    const handleUploadBanner = async () => {
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "image/*";
-      input.click();
-
-      input.onchange = async () => {
-        const file = input.files?.[0];
-        toast("Uploading Banner ⏳...");
-        if (file) {
-          try {
-            // Read the file as a data URL (base64) for immediate preview
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-              const result = e.target?.result as string;
-              if (result) {
-                try {
-                  // Upload to Supabase
-                  const uploadResult = await uploadImage(
-                    file,
-                    file.name,
-                    `/upload/${title}/banner`,
-                  );
-                  toast(`${uploadResult?.message}`);
-                  // Update bannerRef with the image URL and filename
-                  if (bannerRef.current !== undefined) {
-                    bannerRef.current = uploadResult!.data;
-                  }
-                } catch (error) {
                   toast(`${error}`);
                 }
               }
@@ -213,11 +169,6 @@ const MenuBar = memo(
         element: <ImageIcon className="size-4" />,
         onClick: handleUploadImage,
         isActive: editor.isActive("image"),
-      },
-      {
-        element: <ImageUpscale className="size-4" />,
-        onClick: handleUploadBanner,
-        isActive: !!bannerRef.current,
       },
       {
         element: <YoutubeLogoIcon className="size-4" />,
