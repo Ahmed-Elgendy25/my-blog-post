@@ -57,10 +57,6 @@ function EditorWrapper() {
       Promise.allSettled([NotifyUsers(state.title, pathname)])
         .then(([notificationResult]) => {
           if (notificationResult.status === "fulfilled") {
-            console.log(
-              "Notification sent successfully:",
-              notificationResult.value,
-            );
             toast("Subscribers notified! 🎉");
           } else {
             console.error("Notification failed:", notificationResult.reason);

@@ -1,35 +1,25 @@
-'use client'
+"use client";
 import { useForm } from "react-hook-form";
 import { SignupFormFields, SignupSchema } from "../_schema/SignupSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-
-
 function useSignUpForm() {
-  
-    const {register,handleSubmit,formState:{errors},reset} = useForm<SignupFormFields>({
-        defaultValues:{
-            role:[]
-        },
-        resolver:zodResolver(SignupSchema)
-    });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<SignupFormFields>({
+    defaultValues: {
+      role: [],
+    },
+    resolver: zodResolver(SignupSchema),
+  });
 
-
-
-    return {register,handleSubmit,errors,reset   }
-
-
-
+  return { register, handleSubmit, errors, reset };
 }
 
-export default useSignUpForm
-    
-
-
-
-
-
-
+export default useSignUpForm;
 
 /*
 
@@ -93,7 +83,6 @@ function useSignUpForm() {
             confirmpassword:'',
             role:[],
             profileimage:null})
-        console.log(files);
     };
 
 

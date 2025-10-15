@@ -27,9 +27,6 @@ export async function NotifyUsers(
   // Add timestamp to URL to force fresh request
   const url = `${API_BASE_URL}${API_ENDPOINTS.NOTIFY_USERS}`;
 
-  console.log("NotifyUsers - Making request to:", url);
-  console.log("NotifyUsers - Payload:", { title, url: path });
-
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -56,7 +53,6 @@ export async function NotifyUsers(
     const responseText = await response.text();
 
     if (!responseText || responseText.trim() === "") {
-      console.log("Empty response received, treating as success");
       return { success: true, message: "Notification sent successfully" };
     }
 

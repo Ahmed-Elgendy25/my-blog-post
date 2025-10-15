@@ -17,7 +17,6 @@ export default async function Home() {
   }
 
   if (!articles) {
-    console.log("No articles found");
     return (
       <div className="text-center text-gray-500">No articles available</div>
     );

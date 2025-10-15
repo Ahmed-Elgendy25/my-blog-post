@@ -31,7 +31,6 @@ async function page({
 
   try {
     articles = await GetPaginateArticles(Number(page) - 1, "asc");
-    console.log("articles: ", articles);
   } catch (error) {
     console.error(error);
     return (
@@ -42,7 +41,6 @@ async function page({
   }
 
   if (!articles) {
-    console.log("No articles found");
     return (
       <div className="text-center text-gray-500">No articles available</div>
     );

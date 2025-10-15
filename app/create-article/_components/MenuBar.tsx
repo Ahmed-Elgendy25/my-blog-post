@@ -72,7 +72,6 @@ const MenuBar = memo(
                 } catch (error) {
                   // Keep the base64 image if upload fails
                   toast(`${error}`);
-                  console.log("error: ", error);
                 }
               }
             };
@@ -260,8 +259,6 @@ const MenuBar = memo(
         isActive: false,
       },
     ];
-
-    console.log("GenerateContent: ", generateContent);
 
     return (
       <div className="border-b bg-muted/50 px-4 py-3">

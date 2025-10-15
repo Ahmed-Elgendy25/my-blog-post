@@ -15,9 +15,6 @@ function GlobalPreloader() {
 
   // Check if we should exclude preloader for this route
   const shouldExcludePreloader = useCallback(() => {
-    // Add debug logging
-    console.log("Checking exclusion for pathname:", pathname);
-
     // Check various ways to detect error/404 pages
     const isNotFoundPage =
       pathname === "/not-found" ||
@@ -60,15 +57,6 @@ function GlobalPreloader() {
     const isExcluded =
       isNotFoundPage || isPotential404 || hasTitleIndicator || shouldExclude;
 
-    console.log("Route analysis:", {
-      pathname,
-      isNotFoundPage,
-      isValidRoute,
-      isPotential404,
-      hasTitleIndicator,
-      finalExclusion: isExcluded,
-    });
-
     return isExcluded;
   }, [pathname, shouldExclude]);
 
@@ -82,7 +70,6 @@ function GlobalPreloader() {
           document.title.includes("Not Found") ||
           document.title.includes("Page Not Found");
         if (has404Title) {
-          console.log("Detected 404 page via title, excluding preloader");
           setShouldExclude(true);
         }
       }
@@ -178,7 +165,6 @@ function GlobalPreloader() {
   useEffect(() => {
     // Check if we should exclude preloader for this route
     if (shouldExcludePreloader()) {
-      console.log("Excluding preloader for this route:", pathname);
       setIsLoading(false);
       setShowPreloader(false);
       // Ensure content is visible
@@ -195,15 +181,8 @@ function GlobalPreloader() {
       return;
     }
 
-    console.log("Route change detected:", {
-      currentPath: pathname,
-      previousPath: prevPathname.current,
-      isInitialLoad: isInitialLoad.current,
-    });
-
     // On route changes, show preloader again
     if (!isInitialLoad.current && pathname !== prevPathname.current) {
-      console.log("Triggering preloader for route change");
       setIsLoading(true);
       setShowPreloader(true);
       // Hide content immediately on route change
