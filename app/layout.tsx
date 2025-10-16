@@ -3,7 +3,6 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
-import { PostHogProvider } from "@/lib/posthog/PostHogProvider";
 import GlobalPreloader from "@/app/shared/_preloader/GlobalPreloader";
 import { PreloaderProvider } from "@/app/shared/_preloader/PreloaderContext";
 
@@ -21,12 +20,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <link rel="icon" href="/logo2.ico" sizes="any" />
       </head>
       <body className="min-h-screen">
-        <PostHogProvider>
-          <PreloaderProvider>
-            <GlobalPreloader />
-            {children}
-          </PreloaderProvider>
-        </PostHogProvider>
+        <PreloaderProvider>
+          <GlobalPreloader />
+          {children}
+        </PreloaderProvider>
       </body>
     </html>
   );
