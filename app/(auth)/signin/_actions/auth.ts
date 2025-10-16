@@ -1,6 +1,8 @@
-'use server'
+"use server";
 
 import { API_BASE_URL, API_ENDPOINTS } from "@/constants/apiEndPoints";
+import { ZodError } from "zod";
+import { signInSchema } from "../_schema/signin.schema";
 
 interface SignInResponse {
   token: string;
@@ -8,37 +10,55 @@ interface SignInResponse {
   userId: number;
 }
 
-export async function signIn(formData: FormData): Promise<SignInResponse> {
+export interface SignInState {
+  error?: string;
+  success?: boolean;
+  data?: SignInResponse;
+}
+
+export async function signIn(
+  prevState: SignInState | null,
+  formData: FormData,
+): Promise<SignInState> {
   try {
     // Extract form data
-    const email = formData.get('email')
-    const password = formData.get('password')
+    const rawFormData = {
+      email: formData.get("email"),
+      password: formData.get("password"),
+    };
 
-    // Validate form data
-    if (!email || !password) {
-      throw new Error('Missing required fields')
-    }
+    // Validate form data with Zod
+    const validatedData = signInSchema.parse(rawFormData);
 
     const response = await fetch(API_BASE_URL + API_ENDPOINTS.LOGIN, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email,
-        password,
-      })
+        email: validatedData.email,
+        password: validatedData.password,
+      }),
     });
 
     if (!response.ok) {
-      throw new Error('Sign in failed')
+      const errorData = await response.json().catch(() => ({}));
+      const errorMessage = errorData.error || "Invalid email or password";
+      return { error: errorMessage, success: false };
     }
 
-    const data: SignInResponse = await response.json()
-    return data
-
+    const data: SignInResponse = await response.json();
+    return { data, success: true };
   } catch (error) {
-    // Handle any errors
-    throw new Error(error instanceof Error ? error.message : 'Sign in failed')
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      const firstError = error.errors[0];
+      return { error: firstError.message, success: false };
+    }
+    // Handle any other errors
+    return {
+      error: error instanceof Error ? error.message : "Sign in failed",
+      success: false,
+    };
   }
-} 
+}

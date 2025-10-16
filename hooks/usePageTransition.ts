@@ -18,6 +18,23 @@ export const usePageTransition = (options: PageTransitionOptions = {}) => {
   const preloaderRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  // Prevent scrolling during preloader
+  useEffect(() => {
+    if (isLoading) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [isLoading]);
+
   // Handle preloader animation
   const startPreloaderExit = useCallback(() => {
     if (!preloaderRef.current) return;
@@ -88,7 +105,6 @@ export const usePageTransition = (options: PageTransitionOptions = {}) => {
     isLoading,
     preloaderRef,
     contentRef,
-    startTransition: startPreloaderExit, // Manually trigger the transition if needed
   };
 };
 

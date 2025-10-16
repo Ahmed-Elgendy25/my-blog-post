@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 // Make sure File is available in the browser context
 declare global {
@@ -8,10 +8,10 @@ declare global {
 }
 
 export const SignupSchema = z.object({
-  email: z.string().email().min(1,"Email is required"),
-  linkedinProfile: z.string().min(1,"LinkedIn Profile is required"),
-  instagramProfile: z.string().min(1,"Instagram Profile is required"),
-  twitterProfile: z.string().min(1,"Twitter Profile is required"),
+  email: z.string().email().min(1, "Email is required"),
+  linkedinProfile: z.string().optional(),
+  instagramProfile: z.string().optional(),
+  twitterProfile: z.string().optional(),
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   password: z.string().min(8, "Password is required"),
