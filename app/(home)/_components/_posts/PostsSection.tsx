@@ -23,6 +23,7 @@ function PostsSection({
               height={500}
               quality={100}
               alt={title}
+              unoptimized={true}
             />
           </Link>
         </figure>

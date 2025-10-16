@@ -9,6 +9,7 @@ function Banner({ banner }: { banner: string }) {
         objectFit="cover"
         priority={true}
         className="mx-auto rounded-lg"
+        unoptimized={true}
       />
     </div>
   );

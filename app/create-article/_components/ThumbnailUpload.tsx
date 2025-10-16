@@ -97,7 +97,7 @@ export function ThumbnailUpload({
               alt="Thumbnail preview"
               fill
               className="object-cover"
-              unoptimized
+              unoptimized={true}
             />
             <Button
               type="button"
