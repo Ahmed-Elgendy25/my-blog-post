@@ -1,8 +1,9 @@
 "use client";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import Preloader from "./Preloader";
+import { usePreloaderContext } from "./PreloaderContext";
 
 function GlobalPreloader() {
   const pathname = usePathname();
@@ -11,6 +12,7 @@ function GlobalPreloader() {
   const preloaderRef = useRef<HTMLDivElement>(null);
   const isInitialLoad = useRef(true);
   const prevPathname = useRef(pathname);
+  const { setPreloaderFinished } = usePreloaderContext();
 
   // Prevent scrolling during preloader
   useEffect(() => {
@@ -36,7 +38,7 @@ function GlobalPreloader() {
   }, [isLoading, pathname]);
 
   // Handle preloader exit animation
-  const handlePreloaderExit = () => {
+  const handlePreloaderExit = useCallback(() => {
     if (!preloaderRef.current) return;
 
     const tl = gsap.timeline({ defaults: { ease: "power3.inOut" } });
@@ -72,15 +74,17 @@ function GlobalPreloader() {
             ease: "power2.out",
             onComplete: () => {
               setShowPreloader(false);
+              setPreloaderFinished(true); // Notify that preloader is finished
             },
           });
         } else {
           setTimeout(() => {
             setShowPreloader(false);
+            setPreloaderFinished(true); // Notify that preloader is finished
           }, 100);
         }
       });
-  };
+  }, [setPreloaderFinished]);
 
   // Start preloader on mount and path changes
   useEffect(() => {
@@ -88,6 +92,7 @@ function GlobalPreloader() {
     if (!isInitialLoad.current && pathname !== prevPathname.current) {
       setIsLoading(true);
       setShowPreloader(true);
+      setPreloaderFinished(false); // Reset preloader finished state on navigation
       // Hide content immediately on route change
       const pageContent =
         typeof document !== "undefined" ? document.querySelector("main") : null;
@@ -108,7 +113,7 @@ function GlobalPreloader() {
     prevPathname.current = pathname;
 
     return () => clearTimeout(timer);
-  }, [pathname]);
+  }, [pathname, handlePreloaderExit, setPreloaderFinished]);
 
   if (!showPreloader) {
     return null;

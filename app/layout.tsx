@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 import { PostHogProvider } from "@/lib/posthog/PostHogProvider";
 import GlobalPreloader from "@/app/shared/_preloader/GlobalPreloader";
+import { PreloaderProvider } from "@/app/shared/_preloader/PreloaderContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,8 +22,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className="min-h-screen">
         <PostHogProvider>
-          <GlobalPreloader />
-          {children}
+          <PreloaderProvider>
+            <GlobalPreloader />
+            {children}
+          </PreloaderProvider>
         </PostHogProvider>
       </body>
     </html>
