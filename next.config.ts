@@ -1,15 +1,29 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  experimental: {
+  reactStrictMode: true,
 
-    serverActions: {
-      bodySizeLimit: '4mb' // Increase the limit to 4MB
-    }
-
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "wyhuqismvawczoawlkhd.supabase.co",
+      },
+    ],
   },
-  
+
+  turbopack: {
+    // ✅ updated name — replaces "turbo"
+    rules: {
+      // Configure Turbopack rules here
+    },
+  },
+
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "4mb",
+    },
+  },
 };
 
 export default nextConfig;
