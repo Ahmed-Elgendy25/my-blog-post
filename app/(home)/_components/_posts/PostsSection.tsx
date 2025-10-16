@@ -14,11 +14,11 @@ function PostsSection({
   return (
     <section className=" border-b-1   border-b-[#222222] last:border-b-0">
       <article className=" flex lg:flex-row lg:gap-y-0 lg:p-5 lg:items-center lg:justify-between   flex-col items-center  gap-x-5   ">
-        <figure className=" my-3 h-fit   ">
+        <figure className=" my-3 h-fit overflow-hidden rounded-lg">
           <Link href={`/magazine/${id}`}>
             <Image
               src={imageUrl || placeholderImage}
-              className=" rounded-lg"
+              className="rounded-lg transition-transform duration-300 ease-in-out hover:scale-105"
               width={500}
               height={500}
               quality={100}

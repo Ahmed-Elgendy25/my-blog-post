@@ -1,25 +1,30 @@
-import Link from "next/link"
+import { User, Calendar, Clock } from "lucide-react";
 
-function ArticleInfoListComponent({author,date,readTime}: {author: string,date: string,readTime: string}) {
-    return (
-        <ul
-            className="md:flex sm:flex-col md:flex-row  md:justify-between md:gap-x-12  gap-y-2 list-none  flex-wrap  ">
-            <li className="md:min-w-fit  flex-auto  sm:px-2 sm:py-1 md:px-0 md:py-0 ">
-                <span className="font-bold md:ms-3 ">Text</span>
-                <Link href="#" className=" underline font-normal text-md ms-2 text-nowrap">
-                    {author}
-                </Link>
-            </li>
-            <li className="md:min-w-fit  flex-auto sm:px-2 sm:py-1 md:px-0 md:py-0">
-                <span className="font-bold md:ms-3 me-2  ">Date</span>
-                <p className="inline-block">{date}</p>
-            </li>
-            <li className="md:min-w-fit  flex-auto  sm:px-2 sm:py-1 md:px-0 md:py-0">
-                <span className="font-bold md:ms-3 me-2 w-fit  ">Read</span>
-                <p className="inline-block">{readTime}</p>
-            </li>
-        </ul>
-    )
+function ArticleInfoListComponent({
+  author,
+  date,
+  readTime,
+}: {
+  author: string;
+  date: string;
+  readTime: string;
+}) {
+  return (
+    <ul className="mt-6 flex list-none flex-wrap items-center gap-4 text-sm text-muted-foreground lg:gap-6">
+      <li className="flex items-center gap-2">
+        <User className="h-4 w-4" aria-hidden="true" />
+        <span className="font-medium">{author}</span>
+      </li>
+      <li className="flex items-center gap-2">
+        <Calendar className="h-4 w-4" aria-hidden="true" />
+        <time dateTime={date}>{date}</time>
+      </li>
+      <li className="flex items-center gap-2">
+        <Clock className="h-4 w-4" aria-hidden="true" />
+        <span>{readTime}</span>
+      </li>
+    </ul>
+  );
 }
 
-export default ArticleInfoListComponent
+export default ArticleInfoListComponent;
