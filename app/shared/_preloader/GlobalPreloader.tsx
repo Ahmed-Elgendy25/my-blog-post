@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import Preloader from "./Preloader";
@@ -8,91 +8,12 @@ function GlobalPreloader() {
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(true);
   const [showPreloader, setShowPreloader] = useState(true);
-  const [shouldExclude, setShouldExclude] = useState(false);
   const preloaderRef = useRef<HTMLDivElement>(null);
   const isInitialLoad = useRef(true);
   const prevPathname = useRef(pathname);
 
-  // Check if we should exclude preloader for this route
-  const shouldExcludePreloader = useCallback(() => {
-    // Check various ways to detect error/404 pages
-    const isNotFoundPage =
-      pathname === "/not-found" ||
-      pathname.includes("not-found") ||
-      pathname.includes("error");
-
-    // Check if URL doesn't match any valid routes (indicates 404)
-    const validRoutes = [
-      "/",
-      "/magazine",
-      "/podcast",
-      "/authors",
-      "/create-article",
-      "/dashboard",
-      "/signin",
-      "/signup",
-    ];
-    const isValidRoute = validRoutes.some(
-      (route) =>
-        pathname === route ||
-        pathname.startsWith(route + "/") ||
-        pathname.startsWith("/magazine/"), // For dynamic magazine routes
-    );
-
-    const isPotential404 =
-      !isValidRoute &&
-      !pathname.startsWith("/_next") &&
-      !pathname.startsWith("/api") &&
-      !pathname.startsWith("/__nextjs") &&
-      pathname !== "/favicon.ico";
-
-    // Check document title if available
-    const hasTitleIndicator =
-      typeof document !== "undefined" &&
-      (document.title.includes("404") ||
-        document.title.includes("Not Found") ||
-        document.title.includes("Page Not Found") ||
-        document.title.includes("Error"));
-
-    const isExcluded =
-      isNotFoundPage || isPotential404 || hasTitleIndicator || shouldExclude;
-
-    return isExcluded;
-  }, [pathname, shouldExclude]);
-
-  // Use effect to detect 404 pages after component mount
-  useEffect(() => {
-    // Small delay to allow page to render and set title
-    const timer = setTimeout(() => {
-      if (typeof document !== "undefined") {
-        const has404Title =
-          document.title.includes("404") ||
-          document.title.includes("Not Found") ||
-          document.title.includes("Page Not Found");
-        if (has404Title) {
-          setShouldExclude(true);
-        }
-      }
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [pathname]);
-
   // Prevent scrolling during preloader
   useEffect(() => {
-    // Check if we should exclude preloader for this route
-    const isExcluded = shouldExcludePreloader();
-
-    if (isExcluded) {
-      // Don't apply preloader styles for excluded routes
-      if (typeof document !== "undefined") {
-        document.body.style.overflow = "";
-        document.documentElement.style.overflow = "";
-        document.body.classList.remove("preloader-active");
-      }
-      return;
-    }
-
     if (typeof document !== "undefined") {
       if (isLoading) {
         document.body.style.overflow = "hidden";
@@ -112,7 +33,7 @@ function GlobalPreloader() {
         document.body.classList.remove("preloader-active");
       }
     };
-  }, [isLoading, pathname, shouldExcludePreloader]);
+  }, [isLoading, pathname]);
 
   // Handle preloader exit animation
   const handlePreloaderExit = () => {
@@ -163,24 +84,6 @@ function GlobalPreloader() {
 
   // Start preloader on mount and path changes
   useEffect(() => {
-    // Check if we should exclude preloader for this route
-    if (shouldExcludePreloader()) {
-      setIsLoading(false);
-      setShowPreloader(false);
-      // Ensure content is visible
-      const pageContent =
-        typeof document !== "undefined" ? document.querySelector("main") : null;
-      if (pageContent) {
-        gsap.set(pageContent, { opacity: 1 });
-      }
-      // Update refs and exit early
-      if (isInitialLoad.current) {
-        isInitialLoad.current = false;
-      }
-      prevPathname.current = pathname;
-      return;
-    }
-
     // On route changes, show preloader again
     if (!isInitialLoad.current && pathname !== prevPathname.current) {
       setIsLoading(true);
@@ -205,12 +108,7 @@ function GlobalPreloader() {
     prevPathname.current = pathname;
 
     return () => clearTimeout(timer);
-  }, [pathname, shouldExcludePreloader]);
-
-  // Early return - don't render the component at all for excluded routes
-  if (shouldExcludePreloader()) {
-    return null;
-  }
+  }, [pathname]);
 
   if (!showPreloader) {
     return null;

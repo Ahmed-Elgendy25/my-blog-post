@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { getCookie } from "cookies-next";
 import Link from "next/link";
 import {
-  InstagramLogo,
   LinkedinLogo,
   XLogo,
   SignOut,
@@ -61,11 +60,9 @@ function Navbar() {
                 <Link href="/magazine?page=1">Magazine</Link>
               </li>
               <li>
-                <Link href="/podcast">Podcast</Link>
+                <Link href="/podcast">Who Am I</Link>
               </li>
-              <li>
-                <Link href="/authors">Authors</Link>
-              </li>
+
               {isAuthor && (
                 <li>
                   <Link href="/create-article">Create Article</Link>
@@ -76,9 +73,14 @@ function Navbar() {
             <div className="w-5 h-[1px] bg-black"></div>
 
             <div className="flex gap-x-3 items-center">
-              <InstagramLogo size={22} />
-              <XLogo size={22} />
-              <LinkedinLogo size={22} />
+              <Link href={"https://x.com/shoffaa__"}>
+                <XLogo size={22} />
+              </Link>
+              <Link
+                href={"https://www.linkedin.com/in/ahmed-ashraf-37319522a/"}
+              >
+                <LinkedinLogo size={22} />
+              </Link>
 
               {user ? (
                 <SignOut
