@@ -21,20 +21,9 @@ function PostHero({ articles }: { articles: Post[] }) {
         />
       </div>
       <Link href={`/magazine/${articles[0].id}`}>
-        {/* <Image
-          className="my-5"
-          src={articles[0].postImg}
-          width={1550}
-          height={200}
-          alt={articles[0].title}
-          unoptimized={true}
-        /> */}
-        zzz
         <Image
           className="my-5"
-          src={
-            "https://wyhuqismvawczoawlkhd.supabase.co/storage/v1/object/public/posts/upload/YEAAAAAAAAT/banner/YEAT.webp"
-          }
+          src={articles[0].postImg}
           width={1550}
           height={200}
           alt={articles[0].title}
