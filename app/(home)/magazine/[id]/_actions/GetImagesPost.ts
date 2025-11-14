@@ -1,11 +1,10 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/client";
+import { supabaseRequest } from "@/lib/supabase/request";
 import { imageUrls } from "../_schema/PostById";
 
 export async function GetImagesPost(folderName: string): Promise<imageUrls[]> {
-    const supabase = createClient();
-
+  return await supabaseRequest(async (supabase) => {
     // Clean the folder name and construct the path
     const cleanedFolder = folderName.trim();
     const path = `upload/${cleanedFolder}`;
@@ -14,24 +13,23 @@ export async function GetImagesPost(folderName: string): Promise<imageUrls[]> {
     const { data, error } = await supabase.storage.from("posts").list(path);
 
     if (error) {
-        console.error("❌ Error fetching images:", error.message);
-        return [];
+      console.error("❌ Error fetching images:", error.message);
+      return [];
     }
 
     if (!data || data.length === 0) {
-        console.warn("⚠️ No images found in folder:", path);
-        return [];
+      console.warn("⚠️ No images found in folder:", path);
+      return [];
     }
 
     // Get public URLs for all files
     const imageUrls = await Promise.all(
-        data
-            .filter((file) => file.id !== null)
-            .map((file) =>
-                supabase.storage
-                    .from("posts")
-                    .getPublicUrl(`${path}/${file.name}`)
-            )
+      data
+        .filter((file) => file.id !== null)
+        .map((file) =>
+          supabase.storage.from("posts").getPublicUrl(`${path}/${file.name}`),
+        ),
     );
     return imageUrls;
+  });
 }

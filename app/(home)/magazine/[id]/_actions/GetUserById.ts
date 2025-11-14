@@ -1,27 +1,27 @@
-import { API_BASE_URL, API_ENDPOINTS } from "@/constants/apiEndPoints";
+import { supabaseRequest } from "@/lib/supabase/request";
 
-export async function GetUserById(id: number) {
+export async function GetUserById(id: number | undefined) {
+  // Validate the id parameter
+  if (id === undefined || id === null || isNaN(id)) {
+    console.error("GetUserById: Invalid id parameter:", id);
+    return null;
+  }
+
   try {
-    const response = await fetch(
-      `${API_BASE_URL}${API_ENDPOINTS.GET_USER_BY_ID}${id}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        cache: "no-store",
-      },
-    );
+    return await supabaseRequest(async (supabase) => {
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", id)
+        .single();
 
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error("API Error:", errorData);
-      throw new Error(
-        `API request failed with status ${response.status}: ${errorData}`,
-      );
-    }
+      if (error) {
+        console.error("API Error:", error);
+        throw new Error(`API request failed: ${error.message}`);
+      }
 
-    const data = await response.json();
-    return data;
+      return data;
+    });
   } catch (error) {
     console.error("Error in GetUserById:", error);
     return null;

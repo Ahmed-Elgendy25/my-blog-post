@@ -9,6 +9,7 @@ function PostsSection({
   date,
   readTime,
   title,
+  subtitle,
   id,
 }: PostTyped) {
   return (
@@ -22,7 +23,7 @@ function PostsSection({
               width={500}
               height={500}
               quality={100}
-              alt={title}
+              alt={title || "Should be there a text"}
               unoptimized={true}
             />
           </Link>
@@ -34,6 +35,7 @@ function PostsSection({
             date={date}
             readTime={readTime}
             title={title}
+            subtitle={subtitle}
           />
         </div>
       </article>

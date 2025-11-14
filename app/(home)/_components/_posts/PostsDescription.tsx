@@ -2,7 +2,14 @@ import { PostTyped } from "@/app/create-article/_schema/posts.model";
 import ArticleInfoListComponent from "@/app/shared/ArticleInfoListComponent";
 import Link from "next/link";
 
-function PostsDescription({ title, author, date, readTime, id }: PostTyped) {
+function PostsDescription({
+  title,
+  author,
+  date,
+  readTime,
+  subtitle,
+  id,
+}: PostTyped) {
   return (
     <div className="flex flex-col gap-y-5 xl:w-1/2  ">
       {title && (
@@ -13,7 +20,7 @@ function PostsDescription({ title, author, date, readTime, id }: PostTyped) {
           </h2>
         </Link>
       )}
-      <p className="font-normal text-lg">{title}</p>
+      <p className="font-normal text-lg">{subtitle}</p>
       <ArticleInfoListComponent
         author={author}
         date={date}

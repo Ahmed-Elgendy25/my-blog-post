@@ -33,7 +33,21 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
   }
 
   const images: imageUrls[] = await GetImagesPost(post.title);
-  const user: UserTyped = await GetUserById(post.authorId);
+  const user: UserTyped | null = await GetUserById(post.authorId);
+
+  // Handle case where user is not found
+  if (!user) {
+    return (
+      <>
+        <Navbar />
+        <main>
+          <div className="container mx-auto px-4 sm:px-6 md:px-8 py-5">
+            <p>Error: User not found for this post</p>
+          </div>
+        </main>
+      </>
+    );
+  }
 
   return (
     <>
@@ -42,19 +56,19 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
         <div className="container mx-auto px-4 sm:px-6 md:px-8 py-5">
           <div className="grid grid-cols-1 md:grid-cols-12 p-0 md:p-5 gap-6 md:gap-8">
             <HeadingDetails
-              subTitle={post.subTitle}
+              subTitle={post.sub_title}
               title={post.title}
-              durationRead={post.durationRead}
+              durationRead={post.duration_read}
               author={user.firstName + " " + user.lastName}
               date={post.date}
             />
-            <Banner banner={post.postImg} />
+            <Banner banner={post.banner} />
             <Article
               userImg={user.userImg}
               content={post.content}
               user={user}
               date={post.date}
-              durationRead={post.durationRead}
+              durationRead={post.duration_read}
               images={images}
             />
           </div>

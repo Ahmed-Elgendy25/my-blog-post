@@ -10,22 +10,23 @@ function PostHero({ articles }: { articles: Post[] }) {
       <div className=" flex lg:flex-row lg:gap-y-0 gap-y-3 flex-col justify-between    items-start lg:p-5 p-3">
         <div className=" xl:w-1/2 ">
           <h1 className=" uppercase  leading-[1.3] font-extrabold lg:text-[2.5vmax] text-4xl   ">
-            {articles[0].title}
+            {articles[1].title}
           </h1>
         </div>
         <PostsDescription
-          title={articles[0].title}
-          author={articles[0].authorName.toLocaleUpperCase()}
-          date={articles[0].date}
-          readTime={articles[0].durationRead}
+          author={articles[1]?.authorName?.toLocaleUpperCase() || ""}
+          subtitle={articles[1]?.sub_title}
+          date={articles[1].date}
+          readTime={articles[1].duration_read}
         />
       </div>
-      <Link href={`/magazine/${articles[0].id}`}>
+      <Link href={`/magazine/${articles[1].id}`}>
         <Image
           className="my-5"
-          src={articles[0].postImg}
+          src={articles[1].banner}
           width={1550}
           height={200}
+          priority={true}
           alt={articles[0].title}
           unoptimized={true}
         />
@@ -38,10 +39,11 @@ function PostHero({ articles }: { articles: Post[] }) {
               key={post.id}
               id={post.id}
               title={post.title}
+              subtitle={post.sub_title}
               author={post.authorName}
               date={post.date}
-              readTime={post.durationRead}
-              imageUrl={post.postImg}
+              readTime={post.duration_read}
+              imageUrl={post.banner}
             />
           ))}
         </div>

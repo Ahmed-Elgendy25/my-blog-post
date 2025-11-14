@@ -1,4 +1,4 @@
-import { API_BASE_URL, API_ENDPOINTS } from "@/constants/apiEndPoints";
+import { supabaseRequest } from "@/lib/supabase/request";
 import { BlogPostsResponse } from "../_schema/PaginatedArticles";
 
 export async function GetPaginateArticles(
@@ -6,27 +6,36 @@ export async function GetPaginateArticles(
   direction: string,
   size = 6,
 ): Promise<BlogPostsResponse | null> {
-  // Add timestamp to URL to force fresh request
-  const url = `${API_BASE_URL}${API_ENDPOINTS.GET_PAGINATED_ARTICLES}?page=${page}&size=${size}&sortBy=date&direction=${direction}`;
-
   try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Cache-Control": "no-cache",
-      },
-      cache: "no-store",
+    return await supabaseRequest(async (supabase) => {
+      // Build the query
+      let query = supabase
+        .from("posts")
+        .select("*", { count: "exact" })
+        .range(page * size, (page + 1) * size - 1);
+
+      // Apply sorting
+      if (direction === "asc") {
+        query = query.order("date", { ascending: true });
+      } else {
+        query = query.order("date", { ascending: false });
+      }
+
+      const { data, error, count } = await query;
+
+      if (error) {
+        console.error("Fetch error:", error);
+        throw error;
+      }
+
+      return {
+        content: data || [],
+        totalElements: count || 0,
+        totalPages: Math.ceil((count || 0) / size),
+        size,
+        number: page,
+      } as BlogPostsResponse;
     });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(
-        `Failed to fetch articles: ${response.status} ${errorText}`,
-      );
-    }
-
-    const data = await response.json();
-    return data;
   } catch (error) {
     console.error("Fetch error:", error);
     throw error;

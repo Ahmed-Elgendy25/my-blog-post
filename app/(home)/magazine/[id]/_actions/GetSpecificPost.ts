@@ -1,17 +1,31 @@
 "use server";
 
-import { API_BASE_URL } from "@/constants/apiEndPoints";
-import { API_ENDPOINTS } from "@/constants/apiEndPoints";
+import { supabaseRequest } from "@/lib/supabase/request";
 
 export async function GetSpecificPost(id: string) {
-  const url = `${API_BASE_URL}${API_ENDPOINTS.GET_SPECIFIC_POST}${id}`;
+  return await supabaseRequest(async (supabase) => {
+    const { data, error } = await supabase
+      .from("posts")
+      .select(
+        `
+        *,
+        author_id
+      `,
+      )
+      .eq("id", id)
+      .single();
 
-  const res = await fetch(url, {
-    method: "GET",
-    cache: "no-store",
+    if (error) {
+      throw new Error(`Failed to fetch post: ${error.message}`);
+    }
+
+    // Map snake_case to camelCase if needed
+    if (data && data.author_id !== undefined && data.authorId === undefined) {
+      data.authorId = data.author_id;
+    }
+
+    console.log("GetSpecificPost - data:", data); // Debug log
+
+    return data;
   });
-
-  const data = await res.json();
-
-  return data;
 }

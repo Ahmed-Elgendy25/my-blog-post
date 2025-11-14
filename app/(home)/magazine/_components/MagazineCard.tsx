@@ -10,8 +10,8 @@ const cleanImageUrl = (url: string) => url.replace(/([^:]\/)\/+/g, "$1"); // rem
 
 function MagazineCard(article: Post) {
   const [isHovered, setIsHovered] = useState(false);
-  const cleanedUrl = cleanImageUrl(article.postImg);
-  const imageSource = article.postImg === "" ? placeholderImage : cleanedUrl;
+  const cleanedUrl = cleanImageUrl(article.banner);
+  const imageSource = article.banner === "" ? placeholderImage : cleanedUrl;
 
   return (
     <Link href={`/magazine/${article.id}`}>
@@ -56,7 +56,7 @@ function MagazineCard(article: Post) {
               Article
             </span>
             <span className="text-muted-foreground">
-              {article.durationRead}
+              {article.duration_read}
             </span>
           </div>
         </div>

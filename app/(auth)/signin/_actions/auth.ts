@@ -1,6 +1,6 @@
 "use server";
 
-import { API_BASE_URL, API_ENDPOINTS } from "@/constants/apiEndPoints";
+import { supabaseRequest } from "@/lib/supabase/request";
 import { ZodError } from "zod";
 import { signInSchema } from "../_schema/signin.schema";
 
@@ -30,25 +30,33 @@ export async function signIn(
     // Validate form data with Zod
     const validatedData = signInSchema.parse(rawFormData);
 
-    const response = await fetch(API_BASE_URL + API_ENDPOINTS.LOGIN, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    // Use Supabase authentication
+    return await supabaseRequest(async (supabase) => {
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: validatedData.email,
         password: validatedData.password,
-      }),
+      });
+
+      if (error) {
+        return {
+          error: error.message || "Invalid email or password",
+          success: false,
+        };
+      }
+
+      if (!data.user) {
+        return { error: "Invalid email or password", success: false };
+      }
+
+      // Extract user metadata or construct response
+      const responseData: SignInResponse = {
+        token: data.session?.access_token || "",
+        roles: data.user.user_metadata?.roles || [],
+        userId: parseInt(data.user.id) || 0,
+      };
+
+      return { data: responseData, success: true };
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      const errorMessage = errorData.error || "Invalid email or password";
-      return { error: errorMessage, success: false };
-    }
-
-    const data: SignInResponse = await response.json();
-    return { data, success: true };
   } catch (error) {
     // Handle Zod validation errors
     if (error instanceof ZodError) {
