@@ -8,7 +8,7 @@ export async function GetPaginateArticles(
 ): Promise<BlogPostsResponse | null> {
   try {
     return await supabaseRequest(async (supabase) => {
-      // Build the query
+      // Build the query for posts
       let query = supabase
         .from("posts")
         .select("*", { count: "exact" })
@@ -28,8 +28,49 @@ export async function GetPaginateArticles(
         throw error;
       }
 
+      if (!data || data.length === 0) {
+        return {
+          content: [],
+          totalElements: 0,
+          totalPages: 0,
+          size,
+          number: page,
+        } as unknown as BlogPostsResponse;
+      }
+
+      // Get unique author IDs
+      const authorIds = [
+        ...new Set(data.map((post) => post.author_id).filter(Boolean)),
+      ];
+
+      // Fetch all authors in one query
+      const { data: authors, error: authorsError } = await supabase
+        .from("users")
+        .select("id, first_name, last_name")
+        .in("id", authorIds);
+
+      if (authorsError) {
+        console.error("Authors fetch error:", authorsError);
+      }
+
+      // Create a map of author_id to full name
+      const authorMap = new Map(
+        authors?.map((author) => [
+          author.id,
+          `${author.first_name || ""} ${author.last_name || ""}`.trim() ||
+            "Unknown Author",
+        ]) || [],
+      );
+
+      // Map the data to include author details
+      const mappedData = data.map((post) => ({
+        ...post,
+        authorId: post.author_id,
+        authorName: authorMap.get(post.author_id) || "Unknown Author",
+      }));
+
       return {
-        content: data || [],
+        content: mappedData || [],
         totalElements: count || 0,
         totalPages: Math.ceil((count || 0) / size),
         size,
