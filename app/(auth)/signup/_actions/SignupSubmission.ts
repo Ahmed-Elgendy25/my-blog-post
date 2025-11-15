@@ -1,6 +1,7 @@
 "use server";
 
 import { supabaseRequest } from "@/lib/supabase/request";
+import { createClient } from "@supabase/supabase-js";
 import { SignupFormFields } from "../_schema/SignupSchema";
 
 export default async function signupSubmit(data: SignupFormFields) {
@@ -19,8 +20,6 @@ export default async function signupSubmit(data: SignupFormFields) {
 
   try {
     return await supabaseRequest(async (supabase) => {
-      console.log("Calling Supabase Auth signUp...");
-
       // Create user with Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
@@ -29,33 +28,63 @@ export default async function signupSubmit(data: SignupFormFields) {
 
       if (authError) {
         console.error("Supabase Auth signUp error:", authError);
-
         let userMessage = authError.message || "Signup failed";
         if (authError.message?.includes("Signups not allowed")) {
-          userMessage =
-            "Account registration is currently disabled. Please contact an administrator.";
+          userMessage = "Account registration is currently disabled.";
         } else if (authError.message?.includes("User already registered")) {
-          userMessage =
-            "An account with this email already exists. Please sign in instead.";
+          userMessage = "An account with this email already exists.";
         }
-
-        return {
-          success: false,
-          error: userMessage,
-          errorDetails: authError,
-        };
+        return { success: false, error: userMessage, errorDetails: authError };
       }
 
       if (!authData.user) {
-        console.error("No user data returned from signUp");
-        return {
-          success: false,
-          error: "Failed to create user account",
-        };
+        return { success: false, error: "Failed to create user account" };
       }
 
       console.log("Signup successful for user:", authData.user.id);
-      console.log("Session created:", !!authData.session);
+
+      let profileImageUrl: string | null = null;
+
+      // Upload profile image using service role client
+      if (profileImage && profileImage instanceof File) {
+        console.log("Uploading profile image:", profileImage.name);
+
+        // Create a service role client for bypassing RLS
+        const supabaseAdmin = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.SUPABASE_SERVICE_ROLE_KEY!, // Service role key
+          {
+            auth: {
+              autoRefreshToken: false,
+              persistSession: false,
+            },
+          },
+        );
+
+        const fileExt = profileImage.name.split(".").pop();
+        const fileName = `${authData.user.id}-${Date.now()}.${fileExt}`;
+
+        const { data: uploadData, error: uploadError } =
+          await supabaseAdmin.storage
+            .from("user-img")
+            .upload(fileName, profileImage, {
+              cacheControl: "3600",
+              upsert: false,
+            });
+
+        if (uploadError) {
+          console.error("Error uploading profile image:", uploadError);
+        } else {
+          console.log("Image uploaded successfully:", uploadData.path);
+
+          const { data: urlData } = supabaseAdmin.storage
+            .from("user-img")
+            .getPublicUrl(fileName);
+
+          profileImageUrl = urlData.publicUrl;
+          console.log("Profile image URL:", profileImageUrl);
+        }
+      }
 
       // Insert user data into users table
       const { error: insertError } = await supabase.from("users").insert({
@@ -64,7 +93,7 @@ export default async function signupSubmit(data: SignupFormFields) {
         first_name: firstName,
         last_name: lastName,
         password: password,
-        user_img: profileImage || null,
+        user_img: profileImageUrl,
         linkedin_profile: linkedinProfile || null,
         twitter_profile: twitterProfile || null,
         instagram_profile: instagramProfile || null,
@@ -77,8 +106,6 @@ export default async function signupSubmit(data: SignupFormFields) {
           error: "Failed to save user profile: " + insertError.message,
         };
       }
-
-      console.log("User profile data saved successfully");
 
       return {
         success: true,

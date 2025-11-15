@@ -1,5 +1,5 @@
 "use server";
-import { API_BASE_URL, API_ENDPOINTS } from "@/constants/apiEndPoints";
+import { supabaseRequest } from "@/lib/supabase/request";
 import { verifySession } from "@/dal";
 import { cookies } from "next/headers";
 
@@ -37,16 +37,10 @@ export default async function createPost(
   banner: string,
 ): Promise<CreatePostResponse | null> {
   const session = await verifySession();
-  let { token } = session;
   if (!session) return null;
 
   const cookieStore = await cookies();
   const userId = cookieStore.get("userId")?.value || "";
-
-  if (token.startsWith('"') && token.endsWith('"'))
-    token = token.substring(1, token.length - 1);
-  if (token.startsWith("Bearer ")) token = token.substring(7);
-  const authHeader = `Bearer ${token}`;
 
   // Replace <img src="..."> with {{image:filename.jpg}}
 
@@ -65,65 +59,47 @@ export default async function createPost(
   const cleanedSubTitle = cleanSubTitle(postData.subTitle);
 
   try {
-    const requestBody = {
-      authorId: userId,
-      content: parsedContent,
-      title: postData.title,
-      durationRead: postData.durationRead,
-      postImg: banner,
-      subTitle: cleanedSubTitle,
-    };
+    return await supabaseRequest(async (supabase) => {
+      // Insert post into Supabase
+      const { data, error } = await supabase
+        .from("posts")
+        .insert({
+          author_id: userId,
+          content: parsedContent,
+          title: postData.title,
+          duration_read: postData.durationRead,
+          banner,
+          sub_title: cleanedSubTitle,
+        })
+        .select()
+        .single();
 
-    const response = await fetch(API_BASE_URL + API_ENDPOINTS.CREATE_POST, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": authHeader,
-      },
-      body: JSON.stringify(requestBody),
-    });
-
-    let data = null;
-    const contentType = response.headers.get("content-type");
-    const text = await response.text();
-
-    if (text && contentType && contentType.includes("application/json")) {
-      try {
-        data = JSON.parse(text);
-      } catch (parseError) {
-        // Parsing failed, but we got a response body
-        console.error("Error parsing response as JSON:", parseError);
+      if (error) {
+        console.error("Error creating post in Supabase:", error);
+        return {
+          success: false,
+          error: error,
+          status: 400,
+        };
       }
-    }
 
-    // Check if the HTTP status is successful (2xx)
-    if (response.ok) {
-      // Create a safe copy of the data to avoid circular references
-      const safeData = {
-        id: data?.id || "unknown-id",
-        postData: {
-          content:
-            typeof data?.postData?.content === "string"
-              ? data.postData.content.length > 1000
-                ? data.postData.content.substring(0, 1000) + "..."
-                : data.postData.content
-              : postData.content,
-          title: data?.postData?.title || postData.title,
-          durationRead: data?.postData?.durationRead || postData.durationRead,
-        },
-        createdAt: data?.createdAt || new Date().toISOString(),
-        message: data?.message || "Post created successfully",
-      };
+      console.log("Post created successfully:", data);
 
-      return { success: true, data: safeData, status: response.status };
-    } else {
-      // The request completed but the server returned an error status
       return {
-        success: false,
-        error: new Error(data?.message),
-        status: response.status,
+        success: true,
+        data: {
+          id: data.id,
+          postData: {
+            content: data.content,
+            title: data.title,
+            durationRead: data.durationRead,
+          },
+          createdAt: data.created_at || new Date().toISOString(),
+          message: "Post created successfully",
+        },
+        status: 200,
       };
-    }
+    });
   } catch (error) {
     console.error("Error creating post:", error);
     return {

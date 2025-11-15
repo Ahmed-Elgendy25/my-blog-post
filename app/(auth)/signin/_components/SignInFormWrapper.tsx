@@ -39,15 +39,10 @@ export default function SignInFormWrapper() {
       console.log("Sign in successful! Token received:", state.data.token);
       console.log("User data:", {
         userId: state.data.userId,
-        roles: state.data.roles,
       });
 
       // Use server action to set cookies and redirect
-      setCookiesAndRedirect(
-        state.data.token,
-        state.data.roles,
-        state.data.userId,
-      );
+      setCookiesAndRedirect(state.data.token, state.data.userId);
     }
   }, [state]);
 

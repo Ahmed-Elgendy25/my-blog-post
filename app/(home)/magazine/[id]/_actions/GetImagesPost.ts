@@ -6,9 +6,11 @@ import { imageUrls } from "../_schema/PostById";
 export async function GetImagesPost(folderName: string): Promise<imageUrls[]> {
   return await supabaseRequest(async (supabase) => {
     // Clean the folder name and construct the path
+    console.log("Foldername: ", folderName);
     const cleanedFolder = folderName.trim();
-    const path = `upload/${cleanedFolder}`;
 
+    const path = `upload/${cleanedFolder}`;
+    console.log("path: ", path);
     // List files in the directory
     const { data, error } = await supabase.storage.from("posts").list(path);
 

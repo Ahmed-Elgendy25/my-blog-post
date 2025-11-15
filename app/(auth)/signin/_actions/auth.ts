@@ -6,8 +6,7 @@ import { signInSchema } from "../_schema/signin.schema";
 
 interface SignInResponse {
   token: string;
-  roles: string[];
-  userId: number;
+  userId: string;
 }
 
 export interface SignInState {
@@ -60,36 +59,20 @@ export async function signIn(
         };
       }
 
-      if (!data.user) {
-        console.error("No user data returned from Supabase");
+      if (!data.user || !data.session) {
+        console.error("No user data or session returned from Supabase");
         return { error: "Invalid email or password", success: false };
       }
 
       console.log("Sign in successful:", data.user.email);
+      console.log("User ID (UUID):", data.user.id);
+      console.log("Access Token:", data.session.access_token);
 
-      // Fetch user data from users table to get role
-      const { data: userData, error: userError } = await supabase
-        .from("users")
-        .select("id, role")
-        .eq("id", data.user.id)
-        .single();
-
-      if (userError) {
-        console.error("Error fetching user data:", userError);
-      }
-
-      console.log("User role from table:", userData?.role);
-
-      // Extract user metadata or construct response
+      // Return only token and UUID
       const responseData: SignInResponse = {
-        token: data.session?.access_token || "",
-        roles: userData?.role ? [userData.role] : ["user"],
-        userId: userData?.id || 0,
+        token: data.session.access_token,
+        userId: data.user.id, // This is the UUID from Supabase Auth
       };
-
-      console.log("Access Token:", responseData.token);
-      console.log("User ID:", responseData.userId);
-      console.log("Roles:", responseData.roles);
 
       return { data: responseData, success: true };
     });

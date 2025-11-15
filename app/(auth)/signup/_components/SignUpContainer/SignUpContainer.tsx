@@ -33,12 +33,19 @@ function SignUpContainer() {
     console.log("Form submitted with data:", {
       ...data,
       password: "[REDACTED]",
+      profileImage: profileImageFile ? profileImageFile.name : null,
     });
     setIsSubmitting(true);
     setSubmitMessage(null);
 
+    // Use the actual File object from state instead of form data
+    const submissionData = {
+      ...data,
+      profileImage: profileImageFile,
+    };
+
     console.log("Submitting signup data...");
-    const result = await signupSubmit(data);
+    const result = await signupSubmit(submissionData);
     console.log("Signup result:", result);
 
     setIsSubmitting(false);

@@ -1,7 +1,6 @@
 export type SpecificPostTyped = {
   content: string;
-  authorId: number;
-  author_id?: number; // Support snake_case from database
+  author_id: string; // Support snake_case from database
   duration_read: string;
   banner: string;
   title: string;
@@ -11,9 +10,10 @@ export type SpecificPostTyped = {
 
 export type UserTyped = {
   email: string;
-  firstName: string;
-  lastName: string;
-  userImg: string;
+  first_name: string;
+  last_name: string;
+  user_img: string;
+  author_id: string;
 };
 
 export type imageUrls = {

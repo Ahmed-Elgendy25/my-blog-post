@@ -1,29 +1,28 @@
 import { supabaseRequest } from "@/lib/supabase/request";
 
-export async function GetUserById(id: number | undefined) {
-  // Validate the id parameter
-  if (id === undefined || id === null || isNaN(id)) {
-    console.error("GetUserById: Invalid id parameter:", id);
-    return null;
-  }
+export async function GetUserById(id: string) {
+  if (!id) return null;
 
-  try {
-    return await supabaseRequest(async (supabase) => {
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("id", id)
-        .single();
+  return await supabaseRequest(async (supabase) => {
+    console.log("GetUserById - Searching for user with id:", id);
+    
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", id)
+      .maybeSingle();
 
-      if (error) {
-        console.error("API Error:", error);
-        throw new Error(`API request failed: ${error.message}`);
-      }
+    if (error) {
+      console.error("GetUserById - Error:", error);
+      return null;
+    }
 
-      return data;
-    });
-  } catch (error) {
-    console.error("Error in GetUserById:", error);
-    return null;
-  }
+    if (!data) {
+      console.warn("GetUserById - No user found in users table for id:", id);
+      return null;
+    }
+
+    console.log("GetUserById - User found:", data);
+    return data;
+  });
 }
