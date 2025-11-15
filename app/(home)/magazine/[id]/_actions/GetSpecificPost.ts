@@ -24,8 +24,6 @@ export async function GetSpecificPost(id: string) {
       data.authorId = data.author_id;
     }
 
-    console.log("GetSpecificPost - data:", data); // Debug log
-
     return data;
   });
 }

@@ -26,15 +26,11 @@ export async function signIn(
       password: formData.get("password"),
     };
 
-    console.log("Sign in attempt for email:", rawFormData.email);
-
     // Validate form data with Zod
     const validatedData = signInSchema.parse(rawFormData);
 
     // Use Supabase authentication
     return await supabaseRequest(async (supabase) => {
-      console.log("Attempting Supabase sign in...");
-
       const { data, error } = await supabase.auth.signInWithPassword({
         email: validatedData.email,
         password: validatedData.password,
@@ -63,10 +59,6 @@ export async function signIn(
         console.error("No user data or session returned from Supabase");
         return { error: "Invalid email or password", success: false };
       }
-
-      console.log("Sign in successful:", data.user.email);
-      console.log("User ID (UUID):", data.user.id);
-      console.log("Access Token:", data.session.access_token);
 
       // Return only token and UUID
       const responseData: SignInResponse = {

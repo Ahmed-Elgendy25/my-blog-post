@@ -57,6 +57,7 @@ export default async function createPost(
 
   const parsedContent = replaceImagesWithPlaceholders(postData.content);
   const cleanedSubTitle = cleanSubTitle(postData.subTitle);
+  const currentDate = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
 
   try {
     return await supabaseRequest(async (supabase) => {
@@ -70,6 +71,7 @@ export default async function createPost(
           duration_read: postData.durationRead,
           banner,
           sub_title: cleanedSubTitle,
+          date: currentDate,
         })
         .select()
         .single();
@@ -82,8 +84,6 @@ export default async function createPost(
           status: 400,
         };
       }
-
-      console.log("Post created successfully:", data);
 
       return {
         success: true,

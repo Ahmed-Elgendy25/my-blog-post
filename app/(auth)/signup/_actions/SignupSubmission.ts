@@ -16,8 +16,6 @@ export default async function signupSubmit(data: SignupFormFields) {
     instagramProfile,
   } = data;
 
-  console.log("Starting signup for email:", email);
-
   try {
     return await supabaseRequest(async (supabase) => {
       // Create user with Supabase Auth
@@ -41,14 +39,10 @@ export default async function signupSubmit(data: SignupFormFields) {
         return { success: false, error: "Failed to create user account" };
       }
 
-      console.log("Signup successful for user:", authData.user.id);
-
       let profileImageUrl: string | null = null;
 
       // Upload profile image using service role client
       if (profileImage && profileImage instanceof File) {
-        console.log("Uploading profile image:", profileImage.name);
-
         // Create a service role client for bypassing RLS
         const supabaseAdmin = createClient(
           process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -75,14 +69,11 @@ export default async function signupSubmit(data: SignupFormFields) {
         if (uploadError) {
           console.error("Error uploading profile image:", uploadError);
         } else {
-          console.log("Image uploaded successfully:", uploadData.path);
-
           const { data: urlData } = supabaseAdmin.storage
             .from("user-img")
             .getPublicUrl(fileName);
 
           profileImageUrl = urlData.publicUrl;
-          console.log("Profile image URL:", profileImageUrl);
         }
       }
 

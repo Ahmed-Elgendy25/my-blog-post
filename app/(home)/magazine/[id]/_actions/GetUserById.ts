@@ -4,8 +4,6 @@ export async function GetUserById(id: string) {
   if (!id) return null;
 
   return await supabaseRequest(async (supabase) => {
-    console.log("GetUserById - Searching for user with id:", id);
-    
     const { data, error } = await supabase
       .from("users")
       .select("*")
@@ -22,7 +20,6 @@ export async function GetUserById(id: string) {
       return null;
     }
 
-    console.log("GetUserById - User found:", data);
     return data;
   });
 }

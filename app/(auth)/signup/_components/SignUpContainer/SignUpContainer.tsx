@@ -30,11 +30,6 @@ function SignUpContainer() {
   } | null>(null);
 
   const onSubmit = async (data: SignupFormFields) => {
-    console.log("Form submitted with data:", {
-      ...data,
-      password: "[REDACTED]",
-      profileImage: profileImageFile ? profileImageFile.name : null,
-    });
     setIsSubmitting(true);
     setSubmitMessage(null);
 
@@ -44,9 +39,7 @@ function SignUpContainer() {
       profileImage: profileImageFile,
     };
 
-    console.log("Submitting signup data...");
     const result = await signupSubmit(submissionData);
-    console.log("Signup result:", result);
 
     setIsSubmitting(false);
 
@@ -79,7 +72,6 @@ function SignUpContainer() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onError = (errors: Record<string, any>) => {
-    console.log("Form validation errors:", errors);
     setSubmitMessage({
       type: "error",
       text: "Please fix the errors in the form",
@@ -350,7 +342,6 @@ function SignUpContainer() {
             type="submit"
             disabled={isSubmitting}
             className="w-full h-12 bg-black hover:bg-black/90 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-            onClick={() => console.log("Sign up button clicked")}
           >
             {isSubmitting ? "Creating Account..." : "Sign Up"}
           </Button>
