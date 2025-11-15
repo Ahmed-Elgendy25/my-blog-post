@@ -323,23 +323,13 @@ sequenceDiagram
    npm install
    ```
 
-3. **Set up environment variables**
-
-   Create a `.env.local` file in the root directory:
-
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_key
-   SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-   ```
-
-4. **Run the development server**
+3. **Run the development server**
 
    ```bash
    npm run dev
    ```
 
-5. **Open your browser**
+4. **Open your browser**
 
    Navigate to [http://localhost:3000](http://localhost:3000)
 
@@ -418,26 +408,6 @@ The Tiptap editor provides:
 - Automatic image optimization
 - CDN delivery via Supabase
 
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
-
 ## 👤 Author
 
 **Ahmed Elgendy**
@@ -446,12 +416,3 @@ This project is licensed under the MIT License.
 - Repository: [my-blog-post](https://github.com/Ahmed-Elgendy25/my-blog-post)
 
 ---
-
-## 🙏 Acknowledgments
-
-- [Next.js](https://nextjs.org/)
-- [Supabase](https://supabase.com/)
-- [Shadcn/UI](https://ui.shadcn.com/)
-- [Tiptap](https://tiptap.dev/)
-- [GSAP](https://greensock.com/gsap/)
-- [Giscus](https://giscus.app/)
