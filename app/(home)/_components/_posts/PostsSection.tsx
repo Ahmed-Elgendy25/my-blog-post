@@ -22,7 +22,6 @@ function PostsSection({
               className="rounded-lg transition-transform duration-300 ease-in-out hover:scale-105"
               width={500}
               height={500}
-              quality={100}
               alt={title || "Should be there a text"}
               unoptimized={true}
             />

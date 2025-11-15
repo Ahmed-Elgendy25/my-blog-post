@@ -27,37 +27,75 @@ export async function signIn(
       password: formData.get("password"),
     };
 
+    console.log("Sign in attempt for email:", rawFormData.email);
+
     // Validate form data with Zod
     const validatedData = signInSchema.parse(rawFormData);
 
     // Use Supabase authentication
     return await supabaseRequest(async (supabase) => {
+      console.log("Attempting Supabase sign in...");
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email: validatedData.email,
         password: validatedData.password,
       });
 
       if (error) {
+        console.error("Supabase Auth Error:", error);
+
+        // Provide helpful error messages
+        let userMessage = "Invalid email or password";
+        if (error.message.includes("Email not confirmed")) {
+          userMessage =
+            "Please confirm your email before signing in. Check your inbox for a confirmation link.";
+        } else if (error.message.includes("Invalid login credentials")) {
+          userMessage =
+            "Invalid email or password. If you haven't registered yet, please sign up first.";
+        }
+
         return {
-          error: error.message || "Invalid email or password",
+          error: userMessage,
           success: false,
         };
       }
 
       if (!data.user) {
+        console.error("No user data returned from Supabase");
         return { error: "Invalid email or password", success: false };
       }
+
+      console.log("Sign in successful:", data.user.email);
+
+      // Fetch user data from users table to get role
+      const { data: userData, error: userError } = await supabase
+        .from("users")
+        .select("id, role")
+        .eq("id", data.user.id)
+        .single();
+
+      if (userError) {
+        console.error("Error fetching user data:", userError);
+      }
+
+      console.log("User role from table:", userData?.role);
 
       // Extract user metadata or construct response
       const responseData: SignInResponse = {
         token: data.session?.access_token || "",
-        roles: data.user.user_metadata?.roles || [],
-        userId: parseInt(data.user.id) || 0,
+        roles: userData?.role ? [userData.role] : ["user"],
+        userId: userData?.id || 0,
       };
+
+      console.log("Access Token:", responseData.token);
+      console.log("User ID:", responseData.userId);
+      console.log("Roles:", responseData.roles);
 
       return { data: responseData, success: true };
     });
   } catch (error) {
+    console.error("Sign in error:", error);
+
     // Handle Zod validation errors
     if (error instanceof ZodError) {
       const firstError = error.errors[0];

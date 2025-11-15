@@ -9,8 +9,15 @@ export async function setCookiesAndRedirect(
   userId: number,
 ) {
   const cookieStore = await cookies();
-  cookieStore.set("token", JSON.stringify(token));
+
+  console.log("Setting cookies:");
+  console.log("Token:", token);
+  console.log("Roles:", roles);
+  console.log("User ID:", userId);
+
+  cookieStore.set("token", token);
   cookieStore.set("roles", JSON.stringify(roles));
-  cookieStore.set("userId", JSON.stringify(userId));
+  cookieStore.set("userId", userId.toString());
+
   redirect("/");
 }

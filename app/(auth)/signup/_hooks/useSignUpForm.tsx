@@ -9,14 +9,12 @@ function useSignUpForm() {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<SignupFormFields>({
-    defaultValues: {
-      role: [],
-    },
     resolver: zodResolver(SignupSchema),
   });
 
-  return { register, handleSubmit, errors, reset };
+  return { register, handleSubmit, errors, reset, setValue };
 }
 
 export default useSignUpForm;

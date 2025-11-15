@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Eye,
   EyeOff,
@@ -23,24 +22,61 @@ function SignUpContainer() {
   const { register, handleSubmit, errors, reset } = useSignUpForm();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isAuthor, setIsAuthor] = useState(false);
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const onSubmit = async (data: SignupFormFields) => {
-    // Prepare data with isAuthor state
-    const submissionData = {
+    console.log("Form submitted with data:", {
       ...data,
-      role: isAuthor ? ["author"] : ["user"],
-    };
+      password: "[REDACTED]",
+    });
+    setIsSubmitting(true);
+    setSubmitMessage(null);
 
-    const result = await signupSubmit(submissionData);
+    console.log("Submitting signup data...");
+    const result = await signupSubmit(data);
+    console.log("Signup result:", result);
+
+    setIsSubmitting(false);
+
     if (result.success) {
+      setSubmitMessage({
+        type: "success",
+        text:
+          result.message ||
+          "Account created successfully! You can now sign in.",
+      });
       reset();
       setShowPassword(false);
       setShowConfirmPassword(false);
-      setIsAuthor(false);
       setProfileImageFile(null);
+
+      // Redirect to signin after 2 seconds
+      setTimeout(() => {
+        window.location.href = "/signin";
+      }, 2000);
+    } else {
+      setSubmitMessage({
+        type: "error",
+        text:
+          typeof result.error === "string"
+            ? result.error
+            : "Signup failed. Please try again.",
+      });
     }
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onError = (errors: Record<string, any>) => {
+    console.log("Form validation errors:", errors);
+    setSubmitMessage({
+      type: "error",
+      text: "Please fix the errors in the form",
+    });
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,8 +101,23 @@ function SignUpContainer() {
           </p>
         </div>
 
+        {/* Success/Error Message */}
+        {submitMessage && (
+          <div
+            className={`px-4 py-3 rounded-lg border ${
+              submitMessage.type === "success"
+                ? "bg-green-50 border-green-200 text-green-700"
+                : "bg-red-50 border-red-200 text-red-700"
+            }`}
+          >
+            <p className="text-sm text-center font-medium">
+              {submitMessage.text}
+            </p>
+          </div>
+        )}
+
         {/* Sign Up Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-6">
           {/* Email & First Name */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -251,22 +302,6 @@ function SignUpContainer() {
             </div>
           </div>
 
-          {/* Author Checkbox */}
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="author"
-              checked={isAuthor}
-              onCheckedChange={(checked) => setIsAuthor(checked as boolean)}
-            />
-            <label
-              htmlFor="author"
-              className="cursor-pointer select-none"
-              style={{ fontWeight: 400 }}
-            >
-              Register as an Author
-            </label>
-          </div>
-
           {/* Upload Profile Image */}
           <div className="space-y-3">
             <Label>Profile Image</Label>
@@ -306,9 +341,11 @@ function SignUpContainer() {
           {/* Sign Up Button */}
           <Button
             type="submit"
-            className="w-full h-12 bg-black hover:bg-black/90"
+            disabled={isSubmitting}
+            className="w-full h-12 bg-black hover:bg-black/90 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={() => console.log("Sign up button clicked")}
           >
-            Sign Up
+            {isSubmitting ? "Creating Account..." : "Sign Up"}
           </Button>
 
           {/* Login Link */}

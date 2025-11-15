@@ -7,17 +7,21 @@ declare global {
   }
 }
 
-export const SignupSchema = z.object({
-  email: z.string().email().min(1, "Email is required"),
-  linkedinProfile: z.string().optional(),
-  instagramProfile: z.string().optional(),
-  twitterProfile: z.string().optional(),
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  password: z.string().min(8, "Password is required"),
-  confirmPassword: z.string().min(8, "Confirm password is required"),
-  role: z.array(z.string()).min(1, "At least one role is required"),
-  profileImage: z.any().optional(), // Changed from z.instanceof(File) to z.any() to avoid issues
-});
+export const SignupSchema = z
+  .object({
+    email: z.string().email().min(1, "Email is required"),
+    linkedinProfile: z.string().optional(),
+    instagramProfile: z.string().optional(),
+    twitterProfile: z.string().optional(),
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().min(1, "Last name is required"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string().min(8, "Confirm password is required"),
+    profileImage: z.any().optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 export type SignupFormFields = z.infer<typeof SignupSchema>;
