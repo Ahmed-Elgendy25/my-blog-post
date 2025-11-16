@@ -51,7 +51,7 @@ Stack Stories follows a modern **Monolithic Next.js** architecture with **Supaba
 
 ### Future Roadmap
 
-- **Analytics Dashboard**: Angular-based Microfrontend architecture
+- **Analytics Dashboard**: Angular-based Microfrontend architecture using Webpack Module Federation
 - **Premium Features**: Subscription system for exclusive content
 - **Real-time Features**: Live notifications and updates
 - **Password Recovery**: Forgot password functionality for account recovery
