@@ -2,13 +2,24 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
+  // Check for required environment variables
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+  ) {
+    console.error("Missing Supabase environment variables in middleware");
+    return NextResponse.next({
+      request,
+    });
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   });
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {
       cookies: {
         getAll() {
@@ -38,14 +49,16 @@ export async function updateSession(request: NextRequest) {
 
   const user = data?.claims;
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith("/login") &&
-    !request.nextUrl.pathname.startsWith("/auth")
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
+  // Public routes that don't require authentication
+  const publicPaths = ["/signin", "/auth", "/api", "/"];
+  const isPublicPath = publicPaths.some((path) =>
+    request.nextUrl.pathname.startsWith(path),
+  );
+
+  if (!user && !isPublicPath) {
+    // no user, potentially respond by redirecting the user to the signin page
     const url = request.nextUrl.clone();
-    url.pathname = "/login";
+    url.pathname = "/signin";
     return NextResponse.redirect(url);
   }
 
