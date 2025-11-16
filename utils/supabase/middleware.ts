@@ -2,12 +2,23 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
-  // Check for required environment variables
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  // Check for required environment variables and validate they're not placeholders
   if (
-    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    !supabaseUrl ||
+    !supabaseAnonKey ||
+    supabaseUrl.includes("your-project-url-here") ||
+    supabaseAnonKey.includes("your-anon-key-here")
   ) {
-    console.error("Missing Supabase environment variables in middleware");
+    console.error(
+      "Missing or invalid Supabase environment variables in middleware",
+    );
+    console.error(
+      "Please update .env.local with your actual credentials from:",
+    );
+    console.error("https://supabase.com/dashboard/project/_/settings/api");
     return NextResponse.next({
       request,
     });
@@ -17,28 +28,24 @@ export async function updateSession(request: NextRequest) {
     request,
   });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value),
-          );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
-          cookiesToSet.forEach(({ name, value }) =>
-            supabaseResponse.cookies.set(name, value),
-          );
-        },
+  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value }) =>
+          request.cookies.set(name, value),
+        );
+        supabaseResponse = NextResponse.next({
+          request,
+        });
+        cookiesToSet.forEach(({ name, value }) =>
+          supabaseResponse.cookies.set(name, value),
+        );
       },
     },
-  );
+  });
 
   // IMPORTANT: Avoid writing any logic between createServerClient and
   // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
