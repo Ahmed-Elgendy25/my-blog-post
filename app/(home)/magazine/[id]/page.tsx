@@ -14,6 +14,17 @@ export const revalidate = 60;
 
 // Pre-generate all existing posts at build time
 export async function generateStaticParams() {
+  // Skip static generation if environment variables are not available
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+  ) {
+    console.warn(
+      "Supabase environment variables not found. Skipping static generation.",
+    );
+    return [];
+  }
+
   try {
     // Use anonymous client for build-time data fetching
     const supabase = createAnonymousClient();
