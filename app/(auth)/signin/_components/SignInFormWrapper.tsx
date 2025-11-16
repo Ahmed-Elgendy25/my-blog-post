@@ -5,7 +5,6 @@ import { useFormStatus } from "react-dom";
 import { signIn, type SignInState } from "../_actions/auth";
 import { setCookiesAndRedirect } from "../_actions/cookies";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -130,16 +129,6 @@ export default function SignInFormWrapper() {
 
           {/* Login Button */}
           <SubmitButton />
-
-          {/* Sign Up Link */}
-          <div className="text-center">
-            <span className="text-muted-foreground font-normal">
-              Don&apos;t have an account?{" "}
-            </span>
-            <Link href="/signup" className="hover:underline font-medium">
-              Sign Up
-            </Link>
-          </div>
         </form>
       </div>
     </div>
