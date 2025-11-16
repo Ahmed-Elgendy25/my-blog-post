@@ -8,8 +8,13 @@ A modern, full-featured blog platform built with Next.js 14+, Supabase, and Type
 
 ### Core Functionality
 
-- **Rich Text Editor**: Tiptap-powered markdown editor with AI assistance
-- **Image Management**: Upload and manage post banners and user profile pictures
+- **Rich Text Editor**: Tiptap-powered markdown editor with AI-assisted content generation
+- **AI Content Generation**: Integrated Google Gemini LLM for intelligent content creation
+- **Thumbnail Upload**: Upload custom thumbnails/banners for posts
+- **Inline Image Upload**: Upload and embed images directly within post content
+- **Content Parsing**: Automatic markdown to HTML conversion with rich formatting
+- **Profile Picture Upload**: Upload custom profile pictures during sign-up and profile editing
+- **Image Management**: Comprehensive media library for post banners and user avatars
 - **Authentication**: Secure user authentication and authorization via Supabase
 - **Comments & Engagement**: Giscus integration for comments and post likes
 - **Pagination**: Clean, responsive post browsing with pagination support
@@ -93,13 +98,16 @@ graph TB
     subgraph "Stack Stories Application"
         NextApp["📱 Next.js Application<br/>(React, TypeScript)<br/>UI, Routing, SSR/ISR"]
         SupabaseClient["🔌 Supabase Client<br/>(JavaScript SDK)<br/>Auth & Data Operations"]
-        TiptapEditor["✍️ Tiptap Editor<br/>(React Component)<br/>Rich Text Editing"]
+        TiptapEditor["✍️ Tiptap Editor<br/>(React Component)<br/>Rich Text Editing & Parsing"]
+        ImageUploader["📸 Image Upload Module<br/>(Thumbnails & Inline Images)"]
+        AIIntegration["🤖 AI Content Generator<br/>(Gemini LLM Integration)"]
 
         NextApp --> SupabaseClient
         NextApp --> TiptapEditor
-    end
-
-    subgraph "External Services"
+        NextApp --> ImageUploader
+        NextApp --> AIIntegration
+        ImageUploader --> SupabaseClient
+    end    subgraph "External Services"
         SupabaseCloud["☁️ Supabase Cloud"]
         PostgreSQL[("🗄️ PostgreSQL<br/>Database")]
         Storage["📦 Storage Buckets<br/>(Images & Files)"]
@@ -137,10 +145,12 @@ graph TB
         end
 
         subgraph "Feature Modules"
-            AuthModule["🔐 Auth Module<br/>(Sign In/Up, Profile)"]
+            AuthModule["🔐 Auth Module<br/>(Sign In/Up, Profile Picture)"]
             PostModule["📝 Post Module<br/>(Create, Edit, List)"]
             CommentModule["💬 Comment Module<br/>(Giscus Integration)"]
-            EditorModule["✍️ Editor Module<br/>(Tiptap, AI, Upload)"]
+            EditorModule["✍️ Editor Module<br/>(Tiptap, Markdown Parser)"]
+            UploadModule["📸 Upload Module<br/>(Thumbnails, Inline Images, Profiles)"]
+            AIModule["🤖 AI Module<br/>(Gemini Content Generation)"]
         end
 
         subgraph "Data Layer"
@@ -160,8 +170,12 @@ graph TB
         Pages --> EditorModule
         PostModule --> Actions
         AuthModule --> Actions
+        AuthModule --> UploadModule
         EditorModule --> Actions
-        EditorModule --> GeminiAPI
+        EditorModule --> UploadModule
+        EditorModule --> AIModule
+        AIModule --> GeminiAPI
+        UploadModule --> Actions
         Actions --> Schemas
         Actions --> SupabaseLib
         PostModule --> CommentModule
@@ -191,6 +205,8 @@ graph TB
             PostSection["PostSection.tsx<br/>Post list item"]
             PostDescription["PostDescription.tsx<br/>Metadata display"]
             MagazineCard["MagazineCard.tsx<br/>Grid card view"]
+            ThumbnailUpload["ThumbnailUpload.tsx<br/>Banner image uploader"]
+            ContentPreview["content-preview.tsx<br/>Markdown renderer"]
         end
 
         subgraph "Actions (Server)"
@@ -198,9 +214,10 @@ graph TB
             GetSpecific["GetSpecificPost.ts<br/>Fetch single post"]
             GetImages["GetImagesPost.ts<br/>Fetch post images"]
             GetUser["GetUserById.ts<br/>Fetch author info"]
-        end
-
-        subgraph "Schema & Types"
+            UploadImage["UploadImage.ts<br/>Upload inline images"]
+            UploadBanner["UploadBanner.ts<br/>Upload post thumbnails"]
+            FetchAI["FetchStreamedAI.ts<br/>Generate content via Gemini"]
+        end        subgraph "Schema & Types"
             PostSchema["posts.model.ts<br/>Post type definitions"]
             PaginatedSchema["PaginatedArticles.ts<br/>Pagination types"]
         end
@@ -214,11 +231,16 @@ graph TB
         PostHero --> GetUser
         PostSection --> PostDescription
         MagazineCard --> GetSpecific
+        ThumbnailUpload --> UploadBanner
+        ContentPreview --> GetImages
 
         GetPosts --> SupabaseRequest
         GetSpecific --> SupabaseRequest
         GetImages --> SupabaseRequest
         GetUser --> SupabaseRequest
+        UploadImage --> SupabaseRequest
+        UploadBanner --> SupabaseRequest
+        FetchAI --> GeminiAPI
 
         SupabaseRequest --> ServerClient
 
@@ -244,28 +266,62 @@ graph TB
 sequenceDiagram
     actor User
     participant Editor as Tiptap Editor
+    participant Parser as Markdown Parser
     participant AI as Gemini API
-    participant Upload as Image Upload
+    participant ThumbUpload as Thumbnail Upload
+    participant ImageUpload as Inline Image Upload
     participant Action as CreatePost Action
     participant Supabase as Supabase
     participant DB as PostgreSQL
     participant Storage as Storage Bucket
 
-    User->>Editor: Write content
-    User->>AI: Request AI generation
-    AI-->>Editor: Return generated text
-    User->>Upload: Upload banner image
-    Upload->>Storage: Store image
-    Storage-->>Upload: Return image URL
-    User->>Editor: Submit post
+    User->>Editor: Start writing post
+    User->>AI: Request AI-generated content
+    AI-->>Editor: Stream generated text
+    Editor->>Parser: Parse markdown to HTML
+    Parser-->>Editor: Render formatted content
+    User->>ImageUpload: Upload inline image
+    ImageUpload->>Storage: Store in posts bucket
+    Storage-->>ImageUpload: Return image URL
+    ImageUpload-->>Editor: Insert image in content
+    User->>ThumbUpload: Upload post thumbnail/banner
+    ThumbUpload->>Storage: Store banner image
+    Storage-->>ThumbUpload: Return banner URL
+    User->>Editor: Submit complete post
     Editor->>Action: Call CreatePost()
     Action->>Supabase: Validate & authenticate
-    Supabase->>DB: Insert post record
+    Supabase->>DB: Insert post with parsed content
     DB-->>Supabase: Confirm insertion
-    Supabase->>Storage: Store content images
-    Storage-->>Supabase: Confirm storage
-    Supabase-->>Action: Return success
-    Action-->>User: Redirect to post
+    Supabase-->>Action: Return post ID & success
+    Action-->>User: Redirect to published post
+```
+
+### Data Flow - Sign Up with Profile Picture
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant SignUpForm as Sign Up Form
+    participant ProfileUpload as Profile Picture Upload
+    participant Action as SignupSubmission Action
+    participant Supabase as Supabase
+    participant Auth as Supabase Auth
+    participant Storage as Storage Bucket
+    participant DB as PostgreSQL (users table)
+
+    User->>SignUpForm: Enter details (email, password, name)
+    User->>ProfileUpload: Upload profile picture
+    ProfileUpload->>ProfileUpload: Validate image (type, size)
+    User->>SignUpForm: Submit registration
+    SignUpForm->>Action: Call signupSubmit()
+    Action->>Auth: Create auth account
+    Auth-->>Action: Return user ID
+    Action->>Storage: Upload profile image to user-img bucket
+    Storage-->>Action: Return image URL
+    Action->>DB: Insert user profile data
+    DB-->>Action: Confirm user created
+    Action-->>SignUpForm: Registration success
+    SignUpForm-->>User: Redirect to sign in
 ```
 
 ---
