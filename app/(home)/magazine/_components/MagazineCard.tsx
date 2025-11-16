@@ -5,13 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { Post } from "../_schema/PaginatedArticles";
 import placeholderImage from "@/public/landscape-placeholder-svgrepo-com.png";
+import { Calendar } from "@phosphor-icons/react/dist/ssr";
 
 const cleanImageUrl = (url: string) => url.replace(/([^:]\/)\/+/g, "$1"); // removes double slashes except after 'https://'
 
 function MagazineCard(article: Post) {
   const [isHovered, setIsHovered] = useState(false);
-  const cleanedUrl = cleanImageUrl(article.postImg);
-  const imageSource = article.postImg === "" ? placeholderImage : cleanedUrl;
+  const cleanedUrl = cleanImageUrl(article.banner);
+  const imageSource = article.banner === "" ? placeholderImage : cleanedUrl;
 
   return (
     <Link href={`/magazine/${article.id}`}>
@@ -47,7 +48,14 @@ function MagazineCard(article: Post) {
 
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>{article.authorName}</span>
-            <span>•</span>
+            <span>
+              {" "}
+              <Calendar
+                size={16}
+                weight="regular"
+                className="sm:w-[18px] sm:h-[18px]"
+              />
+            </span>
             <span>{article.date}</span>
           </div>
 
@@ -56,7 +64,7 @@ function MagazineCard(article: Post) {
               Article
             </span>
             <span className="text-muted-foreground">
-              {article.durationRead}
+              {article.duration_read}
             </span>
           </div>
         </div>

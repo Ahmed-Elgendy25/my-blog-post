@@ -3,14 +3,11 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export async function setCookiesAndRedirect(
-  token: string,
-  roles: string[],
-  userId: number,
-) {
+export async function setCookiesAndRedirect(token: string, userId: string) {
   const cookieStore = await cookies();
-  cookieStore.set("token", JSON.stringify(token));
-  cookieStore.set("roles", JSON.stringify(roles));
-  cookieStore.set("userId", JSON.stringify(userId));
+
+  cookieStore.set("token", token);
+  cookieStore.set("userId", userId.toString());
+
   redirect("/");
 }

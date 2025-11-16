@@ -1,16 +1,19 @@
 import Image from "next/image";
+
 function Banner({ banner }: { banner: string }) {
   return (
-    <div className="col-span-12 relative  w-auto h-[50rem]   ">
-      <Image
-        src={banner}
-        alt="Mr.Robot"
-        fill={true}
-        objectFit="cover"
-        priority={true}
-        className="mx-auto rounded-lg"
-        unoptimized={true}
-      />
+    <div className="w-full">
+      <div className="relative w-full rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+        <Image
+          src={banner}
+          alt="Article Banner"
+          width={1200}
+          height={675}
+          className="w-full h-auto object-contain"
+          unoptimized={true}
+          priority={true}
+        />
+      </div>
     </div>
   );
 }

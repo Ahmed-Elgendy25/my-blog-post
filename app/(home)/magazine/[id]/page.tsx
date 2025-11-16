@@ -33,33 +33,57 @@ async function page({ params }: { params: Promise<{ id: string }> }) {
   }
 
   const images: imageUrls[] = await GetImagesPost(post.title);
-  const user: UserTyped = await GetUserById(post.authorId);
+  const user: UserTyped | null = await GetUserById(post.author_id);
+  // Handle case where user is not found
+  if (!user) {
+    return (
+      <>
+        <Navbar />
+        <main>
+          <div className="container mx-auto px-4 sm:px-6 md:px-8 py-5">
+            <p>Error: User not found for this post</p>
+          </div>
+        </main>
+      </>
+    );
+  }
 
   return (
     <>
       <Navbar />
-      <main>
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 py-5">
-          <div className="grid grid-cols-1 md:grid-cols-12 p-0 md:p-5 gap-6 md:gap-8">
+      <main className="min-h-screen bg-background flex flex-col items-center">
+        {/* Hero Section - Title */}
+        <div className="w-full bg-white dark:bg-gray-900">
+          <div className="w-full py-6 sm:py-8 lg:py-10">
             <HeadingDetails
-              subTitle={post.subTitle}
+              subTitle={post.sub_title}
               title={post.title}
-              durationRead={post.durationRead}
-              author={user.firstName + " " + user.lastName}
+              durationRead={post.duration_read}
+              author={
+                user.first_name.toUpperCase() +
+                " " +
+                user.last_name.toUpperCase()
+              }
               date={post.date}
-            />
-            <Banner banner={post.postImg} />
-            <Article
-              userImg={user.userImg}
-              content={post.content}
-              user={user}
-              date={post.date}
-              durationRead={post.durationRead}
-              images={images}
             />
           </div>
+        </div>
 
-          <hr className="my-5 border-t border-gray-300" />
+        {/* Article Content */}
+        <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          {/* Banner */}
+          <div className="mb-8 sm:mb-12 flex justify-center">
+            <Banner banner={post.banner} />
+          </div>
+
+          <Article
+            userImg={user.user_img}
+            content={post.content}
+            user={user}
+            images={images || null}
+          />
+
+          <hr className="my-12 sm:my-16 border-t border-gray-200 dark:border-gray-800" />
 
           <Comments />
         </div>
