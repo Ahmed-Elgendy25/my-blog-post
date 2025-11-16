@@ -1,29 +1,25 @@
-import { API_BASE_URL, API_ENDPOINTS } from "@/constants/apiEndPoints";
+import { supabaseRequest } from "@/lib/supabase/request";
 
-export async function GetUserById(id: number) {
-  try {
-    const response = await fetch(
-      `${API_BASE_URL}${API_ENDPOINTS.GET_USER_BY_ID}${id}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        cache: "no-store",
-      },
-    );
+export async function GetUserById(id: string) {
+  if (!id) return null;
 
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error("API Error:", errorData);
-      throw new Error(
-        `API request failed with status ${response.status}: ${errorData}`,
-      );
+  return await supabaseRequest(async (supabase) => {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (error) {
+      console.error("GetUserById - Error:", error);
+      return null;
     }
 
-    const data = await response.json();
+    if (!data) {
+      console.warn("GetUserById - No user found in users table for id:", id);
+      return null;
+    }
+
     return data;
-  } catch (error) {
-    console.error("Error in GetUserById:", error);
-    return null;
-  }
+  });
 }

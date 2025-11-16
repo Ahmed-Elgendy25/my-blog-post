@@ -1,13 +1,12 @@
 "use server";
 
-import { API_BASE_URL, API_ENDPOINTS } from "@/constants/apiEndPoints";
+import { supabaseRequest } from "@/lib/supabase/request";
 import { ZodError } from "zod";
 import { signInSchema } from "../_schema/signin.schema";
 
 interface SignInResponse {
   token: string;
-  roles: string[];
-  userId: number;
+  userId: string;
 }
 
 export interface SignInState {
@@ -30,26 +29,48 @@ export async function signIn(
     // Validate form data with Zod
     const validatedData = signInSchema.parse(rawFormData);
 
-    const response = await fetch(API_BASE_URL + API_ENDPOINTS.LOGIN, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    // Use Supabase authentication
+    return await supabaseRequest(async (supabase) => {
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: validatedData.email,
         password: validatedData.password,
-      }),
+      });
+
+      if (error) {
+        console.error("Supabase Auth Error:", error);
+
+        // Provide helpful error messages
+        let userMessage = "Invalid email or password";
+        if (error.message.includes("Email not confirmed")) {
+          userMessage =
+            "Please confirm your email before signing in. Check your inbox for a confirmation link.";
+        } else if (error.message.includes("Invalid login credentials")) {
+          userMessage =
+            "Invalid email or password. If you haven't registered yet, please sign up first.";
+        }
+
+        return {
+          error: userMessage,
+          success: false,
+        };
+      }
+
+      if (!data.user || !data.session) {
+        console.error("No user data or session returned from Supabase");
+        return { error: "Invalid email or password", success: false };
+      }
+
+      // Return only token and UUID
+      const responseData: SignInResponse = {
+        token: data.session.access_token,
+        userId: data.user.id, // This is the UUID from Supabase Auth
+      };
+
+      return { data: responseData, success: true };
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      const errorMessage = errorData.error || "Invalid email or password";
-      return { error: errorMessage, success: false };
-    }
-
-    const data: SignInResponse = await response.json();
-    return { data, success: true };
   } catch (error) {
+    console.error("Sign in error:", error);
+
     // Handle Zod validation errors
     if (error instanceof ZodError) {
       const firstError = error.errors[0];

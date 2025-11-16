@@ -14,21 +14,18 @@ import { clearAuthCookies } from "@/utils/auth/logout";
 function Navbar() {
   const [user, setUser] = useState<{
     token?: string;
-    roles?: string[];
     userId?: number;
   } | null>(null);
 
   // Get cookies on mount
   useEffect(() => {
     const token = getCookie("token");
-    const roles = getCookie("roles");
     const userId = getCookie("userId");
 
-    if (token && roles && userId) {
+    if (token && userId) {
       try {
         setUser({
           token: String(token),
-          roles: JSON.parse(String(roles)),
           userId: parseInt(String(userId)),
         });
       } catch {
@@ -44,7 +41,7 @@ function Navbar() {
     setUser(null); // instantly reflect logout
   };
 
-  const isAuthor = user?.roles?.includes("author");
+  const isAuthor = user?.token;
 
   return (
     <header className="mx-3 md:container md:mx-auto p-3 border-b text-[#222] md:flex md:justify-between md:items-center">

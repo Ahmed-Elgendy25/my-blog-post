@@ -7,8 +7,7 @@ import { Label } from "@/components/ui/label";
 import createPost from "../_actions/CreatePost";
 import { editorReducer, initialState } from "../_hooks/editorReducer";
 import { toast } from "sonner";
-import { usePathname } from "next/navigation";
-import { NotifyUsers } from "../_actions/NotifyUsers";
+
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ContentPreview } from "@/app/create-article/_components/content-preview";
@@ -33,7 +32,6 @@ function EditorWrapper() {
   }>({});
 
   // Get the current pathname
-  const pathname = usePathname();
 
   // Set initial time on client side only
   useEffect(() => {
@@ -107,18 +105,18 @@ function EditorWrapper() {
         toast("Post created successfully");
 
         // Notify users about the new post using Promise.allSettled for independent execution
-        Promise.allSettled([NotifyUsers(state.title, pathname)])
-          .then(([notificationResult]) => {
-            if (notificationResult.status === "fulfilled") {
-              toast("Subscribers notified! 🎉");
-            } else {
-              console.error("Notification failed:", notificationResult.reason);
-              toast("Post published, but notification failed");
-            }
-          })
-          .catch((error) => {
-            console.error("Unexpected notification error:", error);
-          });
+        // Promise.allSettled([NotifyUsers(state.title, pathname)])
+        //   .then(([notificationResult]) => {
+        //     if (notificationResult.status === "fulfilled") {
+        //       toast("Subscribers notified! 🎉");
+        //     } else {
+        //       console.error("Notification failed:", notificationResult.reason);
+        //       toast("Post published, but notification failed");
+        //     }
+        //   })
+        //   .catch((error) => {
+        //     console.error("Unexpected notification error:", error);
+        //   });
       } else {
         toast(`${response?.error}`);
       }

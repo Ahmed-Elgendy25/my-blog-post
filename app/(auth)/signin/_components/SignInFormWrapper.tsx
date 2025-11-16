@@ -37,11 +37,7 @@ export default function SignInFormWrapper() {
   useEffect(() => {
     if (state.success && state.data) {
       // Use server action to set cookies and redirect
-      setCookiesAndRedirect(
-        state.data.token,
-        state.data.roles,
-        state.data.userId,
-      );
+      setCookiesAndRedirect(state.data.token, state.data.userId);
     }
   }, [state]);
 
