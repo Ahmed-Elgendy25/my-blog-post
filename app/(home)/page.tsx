@@ -2,8 +2,7 @@ import MainComponent from "./_components/MainComponent";
 import { BlogPostsResponse } from "./magazine/_schema/PaginatedArticles";
 import { GetPaginateArticles } from "./magazine/_actions/GetPaginatedArticles";
 
-// Enable ISR with revalidation every 60 seconds
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   let articles: BlogPostsResponse | null = null;
