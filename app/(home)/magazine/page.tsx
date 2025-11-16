@@ -3,8 +3,8 @@ import MagazineGrid from "./_components/MagazineGrid";
 import { GetPaginateArticles } from "./_actions/GetPaginatedArticles";
 import PaginationList from "./_components/PaginationList";
 import { BlogPostsResponse } from "./_schema/PaginatedArticles";
-import Footer from "../_components/_footer/Footer";
 import Navbar from "@/app/shared/Navbar";
+import Footer from "@/app/shared/_footer/Footer";
 
 // Enable ISR with revalidation every 60 seconds
 export const revalidate = 60;

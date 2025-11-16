@@ -21,7 +21,7 @@ function SubmitButton() {
   return (
     <Button
       type="submit"
-      className="w-full h-12 bg-black hover:bg-black/90"
+      className="w-full h-12 bg-black hover:bg-black/90 cursor-pointer"
       disabled={pending}
     >
       {pending ? "Logging in..." : "Login"}
@@ -121,7 +121,7 @@ export default function SignInFormWrapper() {
             </div>
             <button
               type="button"
-              className="text-sm hover:underline font-normal"
+              className="text-sm hover:underline font-normal cursor-not-allowed"
             >
               Forgot password?
             </button>

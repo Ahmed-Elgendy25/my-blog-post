@@ -7,18 +7,18 @@ import Link from "next/link";
 function PostHero({ articles }: { articles: Post[] }) {
   return (
     <section className="container text-[#222222] mx-auto px-3 py-5 sm:px-5 relative">
-      <div className="flex flex-col lg:flex-row justify-between items-start gap-4 sm:gap-5 lg:gap-6 p-3 sm:p-4 lg:p-5">
-        <div className="w-full lg:w-1/2 xl:w-1/2">
-          <h1 className="uppercase leading-[1.2] sm:leading-[1.25] lg:leading-[1.3] font-extrabold text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[2.5vmax]">
-            {articles[1].title}
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 md:gap-8 lg:gap-10 p-3 sm:p-4 lg:p-5">
+        <div className="w-full sm:w-3/5 md:w-2/3 lg:w-3/5 xl:w-2/3">
+          <h1 className="uppercase leading-tight font-extrabold text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl">
+            {articles[0].title}
           </h1>
         </div>
-        <div className="w-full lg:w-auto lg:flex-shrink-0">
+        <div className="w-full sm:w-2/5 md:w-1/3 lg:w-2/5 xl:w-1/3 flex-shrink-0">
           <PostsDescription
-            author={articles[1]?.authorName?.toLocaleUpperCase() || ""}
-            subtitle={articles[1]?.sub_title}
-            date={articles[1].date}
-            readTime={articles[1].duration_read}
+            author={articles[0]?.authorName?.toLocaleUpperCase() || ""}
+            subtitle={articles[0]?.sub_title}
+            date={articles[0].date}
+            readTime={articles[0].duration_read}
           />
         </div>
       </div>
@@ -28,7 +28,7 @@ function PostHero({ articles }: { articles: Post[] }) {
       >
         <Image
           className="my-5 p-[2rem]"
-          src={articles[1].banner}
+          src={articles[0].banner}
           width={1550}
           height={200}
           priority={true}
@@ -39,7 +39,7 @@ function PostHero({ articles }: { articles: Post[] }) {
 
       <div className="grid grid-cols-1 lg:grid-cols-7 gap-y-8 lg:gap-x-12 xl:gap-x-16">
         <div className="lg:col-start-1 lg:col-end-6">
-          {articles.map((post) => (
+          {articles.slice(1).map((post) => (
             <PostsSection
               key={post.id}
               id={post.id}

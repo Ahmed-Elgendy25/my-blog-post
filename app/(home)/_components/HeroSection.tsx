@@ -6,14 +6,14 @@ import React from "react";
 
 function HeroSection() {
   const tickerItems = [
-    "React 19 introduces server components support.",
-    "Next.js 15 TurboPack speeds up dev builds.",
-    "Angular 19 adds better hydration for SSR apps.",
-    "Vite 6 launches with improved HMR performance.",
-    "Tailwind CSS 4.0 brings new design tokens.",
-    "ShadCN/UI components simplify design workflows.",
-    "React Testing Library updates with async utils.",
-    "TypeScript 6 enhances JSX type safety.",
+    "Big things start with small steps.",
+    "Don’t wait for perfect — ship, learn, improve.",
+    "Upgrade your mindset like you upgrade your stack.",
+    "Trust the process — even slow progress is progress.",
+    "Great products start with brave first attempts.",
+    "Keep building. Someone will notice your work.",
+    "No excuses. Just commits.",
+    "Hungry devs outwork talented devs.",
   ];
 
   return (

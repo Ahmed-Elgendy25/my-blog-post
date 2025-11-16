@@ -47,7 +47,7 @@ function MagazineCard(article: Post) {
           </h2>
 
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span>{article.authorName}</span>
+            <span>{article.authorName.toLocaleUpperCase()}</span>
             <span>
               {" "}
               <Calendar

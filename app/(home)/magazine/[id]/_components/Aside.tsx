@@ -1,14 +1,25 @@
+"use client";
+
 import React from "react";
 import {
-  InstagramLogo,
+  FacebookLogoIcon,
   LinkedinLogo,
   XLogo,
 } from "@phosphor-icons/react/dist/ssr";
-import Link from "next/link";
 import placeholderImage from "@/public/landscape-placeholder-svgrepo-com.png";
 import Image from "next/image";
 import { UserTyped } from "../_schema/PostById";
+import { shareArticle } from "../_actions/ShareArticle";
+
 function Aside({ userImg, user }: { userImg: string; user: UserTyped }) {
+  const handleShare = async (platform: "linkedin" | "twitter" | "facebook") => {
+    const url = window.location.href;
+    const title = document.title;
+
+    const shareUrl = await shareArticle(platform, url, title);
+    window.open(shareUrl, "_blank", "width=600,height=400");
+  };
+
   return (
     <div className="flex items-center gap-4 sm:gap-6 pb-6 border-b border-gray-200 dark:border-gray-800">
       {/* Author Image */}
@@ -43,33 +54,33 @@ function Aside({ userImg, user }: { userImg: string; user: UserTyped }) {
             </h3>
           </div>
 
-          {/* Social Links */}
+          {/* Social Share Links */}
           <div className="flex items-center gap-2 sm:gap-3">
-            <Link
-              href={"https://www.linkedin.com/"}
-              className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
-              aria-label="LinkedIn"
+            <button
+              onClick={() => handleShare("linkedin")}
+              className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors cursor-pointer"
+              aria-label="Share on LinkedIn"
             >
               <LinkedinLogo size={20} weight="fill" className="sm:w-6 sm:h-6" />
-            </Link>
-            <Link
-              href={"https://www.x.com/"}
-              className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
-              aria-label="X (Twitter)"
+            </button>
+            <button
+              onClick={() => handleShare("twitter")}
+              className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer"
+              aria-label="Share on X (Twitter)"
             >
               <XLogo size={20} weight="fill" className="sm:w-6 sm:h-6" />
-            </Link>
-            <Link
-              href={"https://www.instagram.com/"}
-              className="text-gray-500 hover:text-pink-600 dark:text-gray-400 dark:hover:text-pink-400 transition-colors"
-              aria-label="Instagram"
+            </button>
+            <button
+              onClick={() => handleShare("facebook")}
+              className="text-gray-500 hover:text-pink-600 dark:text-gray-400 dark:hover:text-pink-400 transition-colors cursor-pointer"
+              aria-label="Share on Facebook"
             >
-              <InstagramLogo
+              <FacebookLogoIcon
                 size={20}
                 weight="fill"
                 className="sm:w-6 sm:h-6"
               />
-            </Link>
+            </button>
           </div>
         </div>
       </div>

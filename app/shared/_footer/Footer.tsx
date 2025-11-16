@@ -37,12 +37,14 @@ export default function Footer() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email address"
-                className="flex-1 px-6 py-4 bg-background text-foreground border-none outline-none"
+                disabled={true}
+                className="flex-1 px-6 py-4 bg-background text-foreground border-none outline-none cursor-not-allowed"
                 required
               />
               <button
                 type="submit"
-                className="px-8 py-4 bg-background text-foreground font-medium hover:opacity-80 transition-opacity"
+                disabled={true}
+                className="px-8 py-4 bg-background text-foreground font-medium hover:opacity-80 transition-opacity cursor-not-allowed"
               >
                 SIGN UP
               </button>

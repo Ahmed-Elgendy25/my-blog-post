@@ -14,9 +14,9 @@ function PostsDescription({
     <div className="flex flex-col gap-y-3 sm:gap-y-4 lg:gap-y-5 w-full">
       {title && (
         <Link href={`/magazine/${id}`}>
-          <h2 className="font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl relative inline-block group">
+          <h2 className="font-bold text-xl pb-2 sm:text-2xl md:text-3xl lg:text-4xl relative inline-block group">
             {title}
-            <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-current transition-all duration-300 ease-in-out group-hover:w-full"></span>
+            <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-current transition-all duration-300 ease-in-out group-hover:w-full"></span>
           </h2>
         </Link>
       )}
