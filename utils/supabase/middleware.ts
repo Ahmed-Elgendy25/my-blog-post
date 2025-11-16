@@ -5,7 +5,7 @@ export async function updateSession(request: NextRequest) {
   // Check for required environment variables
   if (
     !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   ) {
     console.error("Missing Supabase environment variables in middleware");
     return NextResponse.next({
@@ -19,7 +19,7 @@ export async function updateSession(request: NextRequest) {
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
       cookies: {
         getAll() {
@@ -44,22 +44,24 @@ export async function updateSession(request: NextRequest) {
   // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
   // issues with users being randomly logged out.
 
-  // IMPORTANT: Don't remove getClaims()
-  const { data } = await supabase.auth.getClaims();
-
-  const user = data?.claims;
-
-  // Public routes that don't require authentication
-  const publicPaths = ["/signin", "/auth", "/api", "/"];
-  const isPublicPath = publicPaths.some((path) =>
+  // Only protect /create-article route, all other routes are public
+  const protectedPaths = ["/create-article"];
+  const isProtectedPath = protectedPaths.some((path) =>
     request.nextUrl.pathname.startsWith(path),
   );
 
-  if (!user && !isPublicPath) {
-    // no user, potentially respond by redirecting the user to the signin page
-    const url = request.nextUrl.clone();
-    url.pathname = "/signin";
-    return NextResponse.redirect(url);
+  // Only check authentication for protected routes
+  if (isProtectedPath) {
+    // IMPORTANT: Don't remove getClaims()
+    const { data } = await supabase.auth.getClaims();
+    const user = data?.claims;
+
+    if (!user) {
+      // Redirect to signin if user is not authenticated
+      const url = request.nextUrl.clone();
+      url.pathname = "/signin";
+      return NextResponse.redirect(url);
+    }
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
