@@ -17,6 +17,7 @@ A modern, full-featured blog platform built with Next.js 14+, Supabase, and Type
 - **Image Management**: Comprehensive media library for post banners and user avatars
 - **Authentication**: Secure user authentication and authorization via Supabase
 - **Comments & Engagement**: Giscus integration for comments and post likes
+- **Social Sharing**: Share articles on social media platforms (Twitter, Facebook, LinkedIn, etc.)
 - **Pagination**: Clean, responsive post browsing with pagination support
 - **Responsive Design**: Mobile-first design with Tailwind CSS
 
@@ -53,6 +54,7 @@ Stack Stories follows a modern **Monolithic Next.js** architecture with **Supaba
 - **Analytics Dashboard**: Angular-based Microfrontend architecture
 - **Premium Features**: Subscription system for exclusive content
 - **Real-time Features**: Live notifications and updates
+- **Password Recovery**: Forgot password functionality for account recovery
 
 > **Note**: Spring Boot is used only for local development practice and is **not deployed in production**.
 
