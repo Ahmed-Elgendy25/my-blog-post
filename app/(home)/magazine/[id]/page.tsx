@@ -7,7 +7,7 @@ import { GetUserById } from "./_actions/GetUserById";
 import { imageUrls, SpecificPostTyped, UserTyped } from "./_schema/PostById";
 import Navbar from "@/app/shared/Navbar";
 import Comments from "./_components/Comments";
-import { supabaseRequest } from "@/lib/supabase/request";
+import { createAnonymousClient } from "@/lib/supabase/anonymous";
 
 // Enable ISR with revalidation every 60 seconds
 export const revalidate = 60;
@@ -15,21 +15,20 @@ export const revalidate = 60;
 // Pre-generate all existing posts at build time
 export async function generateStaticParams() {
   try {
-    const posts = await supabaseRequest(async (supabase) => {
-      const { data, error } = await supabase
-        .from("posts")
-        .select("id")
-        .order("date", { ascending: false })
-        .limit(100); // Limit to most recent 100 posts for build performance
+    // Use anonymous client for build-time data fetching
+    const supabase = createAnonymousClient();
+    const { data, error } = await supabase
+      .from("posts")
+      .select("id")
+      .order("date", { ascending: false })
+      .limit(100); // Limit to most recent 100 posts for build performance
 
-      if (error) {
-        console.error("Error fetching posts for static params:", error);
-        return [];
-      }
+    if (error) {
+      console.error("Error fetching posts for static params:", error);
+      return [];
+    }
 
-      return data || [];
-    });
-
+    const posts = data || [];
     return posts.map((post) => ({
       id: post.id,
     }));
