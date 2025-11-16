@@ -6,9 +6,20 @@ import { BlogPostsResponse } from "./_schema/PaginatedArticles";
 import Footer from "../_components/_footer/Footer";
 import Navbar from "@/app/shared/Navbar";
 
+// Enable ISR with revalidation every 60 seconds
+export const revalidate = 60;
+
 type SearchParamsTyped = Promise<{
   [key: string]: string | string[] | undefined;
 }>;
+
+// Pre-generate the first 10 pages at build time
+export async function generateStaticParams() {
+  // Generate params for pages 1-10
+  return Array.from({ length: 2 }, (_, i) => ({
+    page: String(i + 1),
+  }));
+}
 
 export async function generateMetadata(props: {
   searchParams: SearchParamsTyped;
