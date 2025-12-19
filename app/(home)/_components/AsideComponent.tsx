@@ -1,5 +1,4 @@
 import Image from "next/image";
-import computer from "/public/computer.jpg";
 
 function AsideComponent() {
   return (
@@ -12,7 +11,7 @@ function AsideComponent() {
       <figure className="relative  ">
         <Image
           className="brightness-75"
-          src={computer}
+          src="/computer.jpg"
           width={500}
           height={250}
           alt="90's Computer Desktop"
